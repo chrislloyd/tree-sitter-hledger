@@ -1,29 +1,52 @@
 ==================
-Simple
+basic
 ==================
 
-2019/01/01 Wells Fargo
-  assets:wells      $100
-  ! expenses:beer     $100
+2019/01/01 Salary
+  Account  $100
+  Income
 
 ---
 
 (source_file
   (transaction
-    (date
-      (year)
-      (month)
-      (day))
-    (payee)
-    (postings
-      (posting
-        (account)
-        (amount
-          (commodity)
-          (quantity)))
-      (posting
-        (status)
-        (account)
-        (amount
-          (commodity)
-          (quantity))))))
+    (entry
+      (date
+        (year)
+        (month)
+        (day))
+      (status)
+      (payee)
+      (comment))
+    (posting
+      (account)
+      (amount
+        (commodity)
+        (quantity)))
+    (posting
+      (account))))
+
+==================
+complete entry
+==================
+
+2019/01/01 ! Salary ; foo
+  Account  $100
+
+---
+
+(source_file
+  (transaction
+    (entry
+      (date
+        (year)
+        (month)
+        (day))
+      (status)
+      (payee)
+      (comment))
+    (posting
+      (account)
+      (amount
+        (commodity)
+        (quantity)))))

@@ -1,0 +1,10 @@
+==================
+basic
+==================
+
+; Hello world
+
+---
+
+(source_file
+  (comment))

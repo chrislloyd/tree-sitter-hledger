@@ -2,11 +2,17 @@ module.exports = grammar({
   name: "hledger",
 
   rules: {
-    source_file: $ => repeat1($.transaction),
+    source_file: $ => repeat(choice($.transaction, "\n", $.comment)),
 
-    transaction: $ => seq($._entry, "\n", $.postings),
+    transaction: $ => seq($.entry, repeat1(seq(/\s{1,}/, $.posting, "\n"))),
 
-    _entry: $ => seq($.date, optional(seq($.status, /\s+/)), optional($.payee)),
+    entry: $ =>
+      seq(
+        $.date,
+        optional(seq(/\s*/, $.status)),
+        optional($.payee),
+        optional(seq(/\s*/, $.comment))
+      ),
 
     date: $ => {
       function createDate(separator) {
@@ -20,7 +26,6 @@ module.exports = grammar({
 
     payee: $ => /[^\n;]+/,
 
-    postings: $ => repeat1(seq(/\s{1,}/, $.posting, "\n")),
     posting: $ =>
       seq(
         optional(seq($.status, " ")),
@@ -30,8 +35,8 @@ module.exports = grammar({
 
     status: $ => choice("*", "!"),
 
-    account: $ => seq($._part, repeat(seq(":", $._part))),
-    _part: $ => /\w+/,
+    account: $ => seq($._accountPart, repeat(seq(":", $._accountPart))),
+    _accountPart: $ => /\w+/,
 
     amount: $ => seq($.commodity, $.quantity),
 
@@ -42,6 +47,8 @@ module.exports = grammar({
     // ),
 
     commodity: $ => /[\w\$]+/,
-    quantity: $ => "100"
+    quantity: $ => /\d+/,
+
+    comment: $ => seq(";", /[^\n]*/)
   }
 });
