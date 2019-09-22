@@ -1,0 +1,29 @@
+==================
+Simple
+==================
+
+2019/01/01 Wells Fargo
+  assets:wells      $100
+  ! expenses:beer     $100
+
+---
+
+(source_file
+  (transaction
+    (date
+      (year)
+      (month)
+      (day))
+    (payee)
+    (postings
+      (posting
+        (account)
+        (amount
+          (commodity)
+          (quantity)))
+      (posting
+        (status)
+        (account)
+        (amount
+          (commodity)
+          (quantity))))))

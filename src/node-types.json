@@ -1,0 +1,192 @@
+[
+  {
+    "type": "account",
+    "named": true,
+    "fields": {}
+  },
+  {
+    "type": "amount",
+    "named": true,
+    "fields": {},
+    "children": {
+      "multiple": true,
+      "required": true,
+      "types": [
+        {
+          "type": "commodity",
+          "named": true
+        },
+        {
+          "type": "quantity",
+          "named": true
+        }
+      ]
+    }
+  },
+  {
+    "type": "date",
+    "named": true,
+    "fields": {},
+    "children": {
+      "multiple": true,
+      "required": true,
+      "types": [
+        {
+          "type": "day",
+          "named": true
+        },
+        {
+          "type": "month",
+          "named": true
+        },
+        {
+          "type": "year",
+          "named": true
+        }
+      ]
+    }
+  },
+  {
+    "type": "day",
+    "named": true,
+    "fields": {}
+  },
+  {
+    "type": "month",
+    "named": true,
+    "fields": {}
+  },
+  {
+    "type": "posting",
+    "named": true,
+    "fields": {},
+    "children": {
+      "multiple": true,
+      "required": true,
+      "types": [
+        {
+          "type": "account",
+          "named": true
+        },
+        {
+          "type": "amount",
+          "named": true
+        },
+        {
+          "type": "status",
+          "named": true
+        }
+      ]
+    }
+  },
+  {
+    "type": "postings",
+    "named": true,
+    "fields": {},
+    "children": {
+      "multiple": true,
+      "required": true,
+      "types": [
+        {
+          "type": "posting",
+          "named": true
+        }
+      ]
+    }
+  },
+  {
+    "type": "source_file",
+    "named": true,
+    "fields": {},
+    "children": {
+      "multiple": true,
+      "required": true,
+      "types": [
+        {
+          "type": "transaction",
+          "named": true
+        }
+      ]
+    }
+  },
+  {
+    "type": "status",
+    "named": true,
+    "fields": {}
+  },
+  {
+    "type": "transaction",
+    "named": true,
+    "fields": {},
+    "children": {
+      "multiple": true,
+      "required": true,
+      "types": [
+        {
+          "type": "date",
+          "named": true
+        },
+        {
+          "type": "payee",
+          "named": true
+        },
+        {
+          "type": "postings",
+          "named": true
+        },
+        {
+          "type": "status",
+          "named": true
+        }
+      ]
+    }
+  },
+  {
+    "type": "\n",
+    "named": false
+  },
+  {
+    "type": "-",
+    "named": false
+  },
+  {
+    "type": "/",
+    "named": false
+  },
+  {
+    "type": ".",
+    "named": false
+  },
+  {
+    "type": "year",
+    "named": true
+  },
+  {
+    "type": "payee",
+    "named": true
+  },
+  {
+    "type": " ",
+    "named": false
+  },
+  {
+    "type": "*",
+    "named": false
+  },
+  {
+    "type": "!",
+    "named": false
+  },
+  {
+    "type": ":",
+    "named": false
+  },
+  {
+    "type": "commodity",
+    "named": true
+  },
+  {
+    "type": "quantity",
+    "named": true
+  }
+]
