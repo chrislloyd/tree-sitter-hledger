@@ -1,4 +1,7 @@
 build
-src
+/src/parser.c
+/src/tree_sitter
+/src/node-types.json
+/src/grammar.json
 log.html
 node_modules

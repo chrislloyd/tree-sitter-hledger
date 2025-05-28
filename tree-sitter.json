@@ -3,7 +3,9 @@
     {
       "name": "tree-sitter-hledger",
       "path": ".",
-      "scope": "source.hledger"
+      "scope": "source.hledger",
+      "grammar-path": "src/grammar.js",
+      "test-corpus-path": "test/corpus"
     }
   ],
   "metadata": {
