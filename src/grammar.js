@@ -31,6 +31,7 @@ module.exports = grammar({
         $._whitespace,
         $.account,
         optional($.amount),
+        optional($.balance_assertion),
         optional($.comment),
         $._newline,
       ),
@@ -57,6 +58,11 @@ module.exports = grammar({
       ),
 
     comment_line: ($) => seq(";", /[^\r\n]*/, $._newline),
+
+    balance_assertion: ($) => choice(
+      seq("=", optional($._whitespace), $.amount),    // = $100
+      seq("==", optional($._whitespace), $.amount),   // == $100  
+    ),
 
     comment: ($) => seq(";", /[^\r\n]*/),
 

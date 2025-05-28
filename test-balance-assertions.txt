@@ -1,0 +1,11 @@
+2023-01-01 opening balances
+    assets:checking      $500 = $500
+    equity:opening
+
+2023-01-02 deposit
+    assets:checking      $100 == $600
+    income:salary
+
+2023-01-03 withdrawal  
+    assets:checking     -$50 = $550
+    expenses:coffee

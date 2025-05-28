@@ -1,0 +1,119 @@
+================================================================================
+Simple balance assertion
+================================================================================
+
+2023-01-01 test
+    assets:checking    $100 = $100
+
+--------------------------------------------------------------------------------
+
+(source_file
+  (transaction
+    (date)
+    (description)
+    (posting
+      (account)
+      (amount)
+      (balance_assertion
+        (amount)))))
+
+================================================================================
+Double equals balance assertion
+================================================================================
+
+2023-01-01 test
+    assets:checking    $100 == $100
+
+--------------------------------------------------------------------------------
+
+(source_file
+  (transaction
+    (date)
+    (description)
+    (posting
+      (account)
+      (amount)
+      (balance_assertion
+        (amount)))))
+
+================================================================================
+Balance assertion with space
+================================================================================
+
+2023-01-01 test
+    assets:checking    $100 =   $100
+
+--------------------------------------------------------------------------------
+
+(source_file
+  (transaction
+    (date)
+    (description)
+    (posting
+      (account)
+      (amount)
+      (balance_assertion
+        (amount)))))
+
+================================================================================
+Balance assertion with comment
+================================================================================
+
+2023-01-01 test
+    assets:checking    $100 = $100  ; reconciled balance
+
+--------------------------------------------------------------------------------
+
+(source_file
+  (transaction
+    (date)
+    (description)
+    (posting
+      (account)
+      (amount)
+      (balance_assertion
+        (amount))
+      (comment))))
+
+================================================================================
+Multiple balance assertions
+================================================================================
+
+2023-01-01 test
+    assets:checking    $100 = $100
+    assets:savings     $500 == $500
+
+--------------------------------------------------------------------------------
+
+(source_file
+  (transaction
+    (date)
+    (description)
+    (posting
+      (account)
+      (amount)
+      (balance_assertion
+        (amount)))
+    (posting
+      (account)
+      (amount)
+      (balance_assertion
+        (amount)))))
+
+================================================================================
+Balance assertion without posting amount
+================================================================================
+
+2023-01-01 test
+    assets:checking = $100
+
+--------------------------------------------------------------------------------
+
+(source_file
+  (transaction
+    (date)
+    (description)
+    (posting
+      (account)
+      (balance_assertion
+        (amount)))))

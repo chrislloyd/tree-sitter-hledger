@@ -1,0 +1,5 @@
+2023-01-01 advanced balance assertions
+    assets:checking:USD    1000 USD = 1000 USD
+    assets:checking:EUR    500 EUR == 500 EUR  
+    assets:crypto         -0.1 BTC = 0.9 BTC
+    liabilities:credit    -$500 = -$500
