@@ -26,6 +26,61 @@ The general goal is full support for the hledger format as described in the [off
 - [ ] Periodic rules
 - [ ] Auto-postings
 
+## Development
+
+### Test Corpus Sync with hledger
+
+This project automatically syncs test cases from the official hledger repository to ensure compatibility:
+
+```bash
+# Initial setup (already done)
+git submodule add https://github.com/simonmichael/hledger.git hledger
+
+# Update to latest hledger tests
+git submodule update --remote hledger
+node extract-tests.js
+
+# Build and test
+npm run build
+npm run test
+```
+
+The `extract-tests.js` script:
+- Extracts 674+ real test cases from hledger's test suite
+- Preserves any manual parse tree assertions you've written
+- Generates `corpus/extracted_from_hledger.txt` with smart merging
+- Never clobbers your manual work
+
+### Writing Manual Assertions
+
+Add detailed parse trees for important test cases in `corpus/extracted_from_hledger.txt`:
+
+```
+==================
+test_name
+==================
+
+journal content here
+
+---
+
+(source_file
+  (transaction
+    (entry
+      (date ...)
+      (payee ...))
+    (posting ...)))
+```
+
+These assertions are automatically preserved when syncing with hledger updates.
+
+### Workflow
+
+1. **Develop grammar**: Edit `grammar.js` and add manual assertions
+2. **Sync tests**: Run `node extract-tests.js` periodically
+3. **Validate**: Run `npm test` to ensure parsing works
+4. **Your assertions survive** - never lost during hledger updates
+
 ## Contributing
 
 This is a side project for me. I'm happy to accept contributions as pull-requests but don't have time (or the energy) to answer issues. If you find a bug, please add it to the corpus or submit a fix.

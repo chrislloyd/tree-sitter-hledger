@@ -1,0 +1,10033 @@
+==================
+1__simple_alias_directive
+==================
+
+alias checking = assets:bank:checking
+1/1
+    (checking:a)  1
+
+---
+
+(source_file
+  (alias_directive)
+  (transaction
+    (entry
+      (date
+        (month)
+        (day)))
+    (posting
+      (account)
+      (amount
+        (quantity)))))
+
+==================
+2__simple_alias_matches_whole_account_name_components_only
+==================
+
+alias a:b = A:B
+1/1
+    (a:b:c)   1  ; should match this
+1/1
+    (a:bb:d)  1  ; should not match this
+
+---
+
+(source_file)
+
+==================
+3__a_simple_alias_matching_the_whole_account_name_works
+==================
+
+alias a:b = A:B
+1/1
+    (a:b)   1
+
+---
+
+(source_file)
+
+==================
+4__regex_alias_directive
+==================
+
+alias /^(.+):bank:([^:]+):?(.*)/ = \1:\2 \3
+1/1
+    (assets:bank:B:checking:a)  1
+
+---
+
+(source_file)
+
+==================
+test_12
+==================
+
+alias /a/ = b
+2011/01/01
+    A a  1
+    a a  2
+    c
+alias /A (.)/=\1
+2011/01/01
+    A a  1
+    a a  2
+    c
+
+---
+
+(source_file)
+
+==================
+test_16
+==================
+
+2011/01/01
+    a a  1
+    A a  2
+    c
+
+---
+
+(source_file)
+
+==================
+7__alias_options_are_applied_after_alias_directives_
+==================
+
+alias /^a/=B
+alias /^a/=E
+alias E=F
+2011/01/01
+    [a:x]    1
+    [x:a:x]
+
+---
+
+(source_file)
+
+==================
+8__alias_options
+==================
+
+01/01 Opening balances
+	(bank)         100
+	(credit-card)  -10
+01/02
+	expenses  5
+	cc
+01/03
+	expenses  5
+	b
+01/04 Credit card charge
+	cc  = 0
+    b
+01/05
+	expenses  5
+	b         = 75
+
+---
+
+(source_file)
+
+==================
+9__query_will_search_both_origin_and_substitution_in_alias
+==================
+
+alias a = b
+2017/1/1
+    a  1
+    b  -1
+
+---
+
+(source_file)
+
+==================
+10__recursive_command_line_simple_aliases_
+==================
+
+2000/01/01
+  (one)  1
+
+---
+
+(source_file)
+
+==================
+test_23
+==================
+
+alias two = three
+alias one = two
+2000/01/01
+  (one)  1
+
+---
+
+(source_file)
+
+==================
+12__only_one_of_these_is_applied_
+==================
+
+alias one = three
+alias one = two
+2000/01/01
+  (one)  1
+
+---
+
+(source_file)
+
+==================
+13__recursive_command_line_regexp_aliases_
+==================
+
+2000/01/01
+  (one)  1
+
+---
+
+(source_file)
+
+==================
+test_27
+==================
+
+alias /two/ = three
+alias /one/ = two
+2000/01/01
+  (one)  1
+
+---
+
+(source_file)
+
+==================
+15__only_one_of_these_is_applied_
+==================
+
+alias /one/ = three
+alias /one/ = two
+2000/01/01
+  (one)  1
+
+---
+
+(source_file)
+
+==================
+16__for_example__you_can_erase_an_account_name_
+==================
+
+alias /a:.*/=
+2021-01-01
+  a:aa     1
+  b
+
+---
+
+(source_file)
+
+==================
+test_32
+==================
+
+2021-01-01
+  old    1
+  other
+
+---
+
+(source_file)
+
+==================
+18__make_sure_you_can_match_forward_slashes_in_regexps_by_escaping_them____982_
+==================
+
+alias /\// = :
+2021-01-01
+  hi/there    1
+  b
+
+---
+
+(source_file)
+
+==================
+19__make_sure_you_can_escape_special_regexp_characters_
+==================
+
+alias /\./ = :
+2021-01-01
+  hi.there    1
+  b
+
+---
+
+(source_file)
+
+==================
+20__including_backslashes
+==================
+
+alias /\\/ = :
+2021-01-01
+  hi\there    1
+  b
+
+---
+
+(source_file)
+
+==================
+test_3
+==================
+
+2018/1/1
+  (b:j)  1
+2018/1/1
+  (c)    1
+2018/1/1
+  (b:i)  1
+2018/1/1
+  (a:k)  1
+
+---
+
+(source_file)
+
+==================
+test_9
+==================
+
+account b:k
+account b:j
+account d
+2018/1/1
+  (a:l)  1
+2018/1/1
+  (b:i)  1
+2018/1/1
+  (b:j)  1
+2018/1/1
+  (b:k)  1
+2018/1/1
+  (c)    1
+2018/1/1
+  (d)    1
+
+---
+
+(source_file)
+
+==================
+1__basic_accounts_report
+==================
+
+account a
+2018/1/1  ; foo:
+  (a:aa)  1
+
+---
+
+(source_file)
+
+==================
+6__show_account_types_
+==================
+
+account asset
+2022-01-01
+  (unknown)  1
+
+---
+
+(source_file)
+
+==================
+7__equity_conversion__and_several_other_names__are_detected_as_v_conversion_type_by_default_
+==================
+
+account equity:conversion
+account equity:trade
+account equity:trades
+account equity:trading
+
+---
+
+(source_file)
+
+==================
+8__if_any_other_account_name_is_declared_with_v_type__those_default_names_become_just_ordinary_equity_accounts_
+==================
+
+account trade  ; type: V
+account equity:conversion
+account equity:trade
+account equity:trades
+account equity:trading
+
+---
+
+(source_file)
+
+==================
+9____infer_equity_uses_equity_conversion_as_its_base_account_by_default_
+==================
+
+2024-01-01
+  a    1A
+  b   -1B
+
+---
+
+(source_file)
+
+==================
+10__with_a_custom_conversion_account_declared____infer_equity_uses_that_instead_
+==================
+
+account trade  ; type:V
+2024-01-01
+  a    1A
+  b   -1B
+
+---
+
+(source_file)
+
+==================
+1__activity_report_is_daily_by_default_
+==================
+
+2023-01-01
+  (a)  1
+2023-01-06
+  (a)  1
+
+---
+
+(source_file)
+
+==================
+2__a_weekly_activity_report_
+==================
+
+2023-01-01
+  (a)  1
+2023-01-06
+  (a)  1
+
+---
+
+(source_file)
+
+==================
+2__a_7_day_activity_report_starting_on_an_date_
+==================
+
+2023-01-01
+  (a)  1
+2023-01-06
+  (a)  1
+
+---
+
+(source_file)
+
+==================
+1__should_prompt_again_for_a_bad_date
+==================
+
+2009/1/32
+
+---
+
+(source_file)
+
+==================
+3__simple_add_with_no_existing_journal__no_commodity_entered
+==================
+
+a
+1000.0
+b
+.
+
+---
+
+(source_file)
+
+==================
+4__default_commodity_with_greater_precision_does_not_alter_entered_precision
+==================
+
+a
+A1000.0
+b
+.
+
+---
+
+(source_file)
+
+==================
+5__default_commodity_with_less_precision_does_not_alter_entered_precision
+==================
+
+a
+A1000.00
+b
+.
+
+---
+
+(source_file)
+
+==================
+6__default_commodity_symbol_is_not_added_when_not_provided___815_
+==================
+
+a
+1000
+b
+.
+
+---
+
+(source_file)
+
+==================
+7__existing_commodity_with_greater_precision
+==================
+
+a
+A1000.0
+b
+.
+
+---
+
+(source_file)
+
+==================
+8__existing_commodity_with_less_precision
+==================
+
+a
+A1000.00
+b
+.
+
+---
+
+(source_file)
+
+==================
+9__default_amounts_should_not_fail_to_balance_due_to_precision
+==================
+
+2010/1/1
+x
+a
+0.25
+b
+0.5
+c
+
+---
+
+(source_file)
+
+==================
+test_13
+==================
+
+#
+#
+
+---
+
+(source_file)
+
+==================
+1__print
+==================
+
+2010/1/1
+    a  EUR 1  ; a euro
+    b  USD 1  ; a dollar
+    c         ; a euro and a dollar
+
+---
+
+(source_file)
+
+==================
+2__register
+==================
+
+2010/1/1
+    a  EUR 1  ; a euro
+    b  USD 1  ; a dollar
+    c         ; a euro and a dollar
+
+---
+
+(source_file)
+
+==================
+3__balance
+==================
+
+2010/1/1
+    a  EUR 1  ; a euro
+    b  USD 1  ; a dollar
+    c         ; a euro and a dollar
+
+---
+
+(source_file)
+
+==================
+4__a_single_commodity_zero_amount_s_commodity_decimal_places_price_is_preserved__when_possible
+==================
+
+2010/3/1 x
+  a  $0.00 @ 3EUR
+  b
+
+---
+
+(source_file)
+
+==================
+test_9
+==================
+
+D 1000,00€
+1/1
+      a:b         0
+1/2
+      a:1      4000,58
+      a:D     -1000,58
+      e       -3000
+
+---
+
+(source_file)
+
+==================
+aregister_command
+==================
+
+2021-01-01
+  (b)  1
+2021-01-02
+  a   1
+  b  -1
+
+---
+
+(source_file)
+
+==================
+1__aregister_only_shows_transactions_matching_the_account_query__and_displays_other_accounts_involved
+==================
+
+2023-01-01
+    assets:checking   1
+    income:salary    -1
+2023-01-02
+    assets:checking  -2
+    expenses:food     2
+
+---
+
+(source_file)
+
+==================
+test_11
+==================
+
+~ 2021-01-03  sixth, because forecast transactions come after normal transactions
+    (a)           6
+2021-01-03 fifth
+    (a)           5
+2021-01-02 third
+    (a)           3
+2021-01-02 fourth, because same day is in parse order
+    (a)           4
+2021-01-01 first
+    (a)           1
+2021-01-03 second, because of posting date
+    (a)           2  ; date:2021-01-01
+2021-01-04 seventh, because posting date is not matching
+    (a)           7
+    (b)           0  ; date:2021-01-01
+
+---
+
+(source_file)
+
+==================
+test_13
+==================
+
+2021-01-01=2021-02-02
+  (a)   1
+
+---
+
+(source_file)
+
+==================
+test_1
+==================
+
+commodity A1,000.0
+2024-04-25
+   (revenues)    A 1000.12
+
+---
+
+(source_file)
+
+==================
+test_3
+==================
+
+2015-01-01
+  1                                          1
+  1:2                                       -1
+2015-01-02
+  1:2:3                                      1
+  1:2:3:4                                   -1
+2015-01-03
+  1:2:3:4:5                                  1
+  1                                         -1
+
+---
+
+(source_file)
+
+==================
+1__hledger_should_give_this_balance_
+==================
+
+1/1
+    a  -553.653 X @@ 2609.92
+    a    -5.684 X @@ 26.10
+    a   -50.833 X @@ 234.90
+    a   -49.714 X @@ 234.90
+    a   -49.957 X @@ 234.90
+    a   -49.778 X @@ 234.90
+    a  -142.316 X @@ 674.01
+    a   -49.029 X @@ 234.90
+    a   -51.233 X @@ 234.90
+    a   -49.204 X @@ 234.90
+    a   -49.474 X @@ 234.90
+    a   -47.773 X @@ 234.90
+    a  -109.439 X @@ 576.96
+    a   -31.133 X @@ 171.51
+    a  -438.249 X @@ 2537.90
+    a   -11.927 X @@ 72.03
+    a  -170.721 X @@ 990.18
+    a  1910.117 X @@ 10742.52
+    b
+>>>
+             -969.81  b
+>>>= 0
+
+---
+
+(source_file)
+
+==================
+2__as_above__but_the_prices_have_a_commodity___should_work_the_same_
+==================
+
+1/1
+    a  -553.653 X @@ 2609.92 Y
+    a    -5.684 X @@ 26.10 Y
+    a   -50.833 X @@ 234.90 Y
+    a   -49.714 X @@ 234.90 Y
+    a   -49.957 X @@ 234.90 Y
+    a   -49.778 X @@ 234.90 Y
+    a  -142.316 X @@ 674.01 Y
+    a   -49.029 X @@ 234.90 Y
+    a   -51.233 X @@ 234.90 Y
+    a   -49.204 X @@ 234.90 Y
+    a   -49.474 X @@ 234.90 Y
+    a   -47.773 X @@ 234.90 Y
+    a  -109.439 X @@ 576.96 Y
+    a   -31.133 X @@ 171.51 Y
+    a  -438.249 X @@ 2537.90 Y
+    a   -11.927 X @@ 72.03 Y
+    a  -170.721 X @@ 990.18 Y
+    a  1910.117 X @@ 10742.52 Y
+    b
+>>>
+           -969.81 Y  b
+>>>= 0
+
+---
+
+(source_file)
+
+==================
+3__period_reporting_works_for_a_specific_year
+==================
+
+2015/10/10 Client A | Invoice #1
+    assets:receivables      $10,000.00
+    revenue:clients:A      -$10,000.00
+2015/11/02 Deposit | Invoice #1
+    assets:checking         $10,000.00
+    assets:receivables     -$10,000.00
+2016/02/01 Client B | Invoice #2
+    assets:receivables          $10.00
+    revenue:clients:B          -$10.00
+2016/02/15 ACME | Hosting Costs
+    expense:hosting             $50.00
+    assets:checking            -$50.00
+2016/03/01 Deposit | Invoice #2
+    assets:checking             $10.00
+    assets:receivables         -$10.00
+
+---
+
+(source_file)
+
+==================
+4__period_reporting_works_for_two_years
+==================
+
+2015/10/10 Client A | Invoice #1
+    assets:receivables      $10,000.00
+    revenue:clients:A      -$10,000.00
+2015/11/02 Deposit | Invoice #1
+    assets:checking         $10,000.00
+    assets:receivables     -$10,000.00
+2016/02/01 Client B | Invoice #2
+    assets:receivables          $10.00
+    revenue:clients:B          -$10.00
+2016/02/15 ACME | Hosting Costs
+    expense:hosting             $50.00
+    assets:checking            -$50.00
+2016/03/01 Deposit | Invoice #2
+    assets:checking             $10.00
+    assets:receivables         -$10.00
+
+---
+
+(source_file)
+
+==================
+5__period_reporting_works_for_one_month
+==================
+
+2015/10/10 Client A | Invoice #1
+    assets:receivables      $10,000.00
+    revenue:clients:A      -$10,000.00
+2015/11/02 Deposit | Invoice #1
+    assets:checking         $10,000.00
+    assets:receivables     -$10,000.00
+2016/02/01 Client B | Invoice #2
+    assets:receivables          $10.00
+    revenue:clients:B          -$10.00
+2016/02/15 ACME | Hosting Costs
+    expense:hosting             $50.00
+    assets:checking            -$50.00
+2016/03/01 Deposit | Invoice #2
+    assets:checking             $10.00
+    assets:receivables         -$10.00
+
+---
+
+(source_file)
+
+==================
+6__period_reporting_works_for_one_month_in_another_year
+==================
+
+2015/10/10 Client A | Invoice #1
+    assets:receivables      $10,000.00
+    revenue:clients:A      -$10,000.00
+2015/11/02 Deposit | Invoice #1
+    assets:checking         $10,000.00
+    assets:receivables     -$10,000.00
+2016/02/01 Client B | Invoice #2
+    assets:receivables          $10.00
+    revenue:clients:B          -$10.00
+2016/02/15 ACME | Hosting Costs
+    expense:hosting             $50.00
+    assets:checking            -$50.00
+2016/03/01 Deposit | Invoice #2
+    assets:checking             $10.00
+    assets:receivables         -$10.00
+
+---
+
+(source_file)
+
+==================
+7__default_csv_output_
+==================
+
+2021-01-01 Test
+    Assets:ABC   "AB.C" 1
+    Assets:Cash       -$1
+
+---
+
+(source_file)
+
+==================
+8__csv_output_in_tree_mode_
+==================
+
+2021-01-01 Test
+    Assets:ABC   "AB.C" 1
+    Assets:Cash       -$1
+
+---
+
+(source_file)
+
+==================
+9__csv_output_always_does_not_show_thousands_separators
+==================
+
+2021-01-01 Test
+    Assets:ABC    $10 000.00
+    Assets:Cash  -$10 000.00
+
+---
+
+(source_file)
+
+==================
+test_13
+==================
+
+account a
+account a:aa
+account a:ab
+account a:ac:aca
+account b
+
+---
+
+(source_file)
+
+==================
+11__in_list_mode_we_can_see_that_non_leaf_declared_accounts_are_excluded_
+==================
+
+account a
+account a:aa
+account a:ab
+account a:ac:aca
+account b
+
+---
+
+(source_file)
+
+==================
+12__not_acct_queries_work_with_declared_accounts_
+==================
+
+account a
+account a:aa
+account a:ab
+account a:ac:aca
+account b
+
+---
+
+(source_file)
+
+==================
+15____count_counts_postings_
+==================
+
+2023-01-01
+  a      10
+  a:aa   20
+  b
+
+---
+
+(source_file)
+
+==================
+test_3
+==================
+
+~ daily from 2016/1/1
+    expenses:food     $10
+    expenses:leisure  $15
+    assets:cash
+2016/12/01
+    expenses:food  $10
+    assets:cash
+2016/12/02
+    expenses:food  $9
+    assets:cash
+2016/12/03
+    expenses:food  $11
+    assets:cash
+2016/12/02
+    expenses:leisure  $5
+    assets:cash
+2016/12/03
+    expenses:movies  $25
+    assets:cash
+2016/12/03
+    expenses:cab  $15
+    assets:cash
+
+---
+
+(source_file)
+
+==================
+test_6
+==================
+
+2016/12/01
+    expenses:food  £10 @@ $15
+    assets:cash
+2016/12/02
+    expenses:food  10 CAD @ $1
+    assets:cash
+2016/12/02
+    expenses:food  10 CAD @ $1.1
+    assets:cash
+2016/12/03
+    expenses:food  $11
+    assets:cash
+2016/12/02
+    expenses:leisure  $5
+    assets:cash
+2016/12/03
+    expenses:movies  $25
+    assets:cash
+2016/12/03
+    expenses:cab  $15
+    assets:cash
+~ daily from 2016/1/1
+    expenses:food     $10
+    expenses:leisure  $15
+    assets:cash
+
+---
+
+(source_file)
+
+==================
+test_8
+==================
+
+~ daily
+  (a)  10
+~weekly
+  (b)  100
+~weekly
+  (c)  1000
+2018/1/1
+  (a)  1
+  (b)  1
+  (c)  1
+2018/1/3
+  (a)  1
+  (b)  1
+  (c)  1
+
+---
+
+(source_file)
+
+==================
+7__a_bounded_two_day_budget__the_end_date_is_exclusive_as_usual_
+==================
+
+~ daily from 2018/1/2 to 2018/1/4
+  (a)  1
+2018/1/1
+  (a)  1
+  (b)  1
+2018/1/2
+  (a)  1
+  (b)  1
+2018/1/3
+  (a)  1
+  (b)  1
+2018/1/4
+  (a)  1
+  (b)  1
+
+---
+
+(source_file)
+
+==================
+8__multiple_bounded_budgets_
+==================
+
+~ daily from 2018/1/1 to 2018/1/3
+  (a)  1
+~ daily from 2018/1/3 to 2018/1/5
+  (a)  10
+2018/1/1
+  (a)  1
+2018/1/2
+  (a)  1
+2018/1/3
+  (a)  1
+2018/1/4
+  (a)  1
+
+---
+
+(source_file)
+
+==================
+9__a__from_a_to_b__budget_should_not_be_included_in_a_report_beginning_on_b_
+==================
+
+~ daily
+  (a)  1
+2018/1/2
+  (a)  2
+2018/1/2
+  (a)  -2
+
+---
+
+(source_file)
+
+==================
+12__subaccounts_of_budgeted_accounts_count_towards_budget
+==================
+
+~ daily
+  (a)      1
+2018/1/1
+  (a:b)    1
+
+---
+
+(source_file)
+
+==================
+13__budget_goals_on_both_parent_and_subaccounts_are_counted
+==================
+
+~ daily
+  (a)        100
+  (a:b:c)      1
+2018/1/1
+  (a)          1
+  (a:b:c)      1
+
+---
+
+(source_file)
+
+==================
+15__respect___value
+==================
+
+P 2018/01/26 SHARE €10
+2018/05/17 Dividend
+    revenue:dividend       €-10
+    assets:pension          €10
+2018/05/17 Buy
+    assets:pension:shares   1 SHARE @ €10
+    assets:pension          €-10
+~ monthly from 2018/06 to 2018/07
+    assets:pension                    €1
+    assets:bank
+
+---
+
+(source_file)
+
+==================
+16__with_subaccounts__child_accounts_are_properly_included_in_the_parent_balance_when_budget_is_checked
+==================
+
+~ monthly from 2019/01
+    expenses:personal             $1000.00
+    liabilities
+2019/01/01 Google home hub and home mini x2
+    expenses:personal:electronics          $10.00
+    liabilities                           $-10.00
+2019/01/02 Google Home Hub Permium Subscription
+    expenses:personal:electronics:upgrades          $10.00
+    liabilities                           $-10.00
+2019/01/03 Something else
+    expenses:personal          $30.00
+    liabilities                           $-30.00
+
+---
+
+(source_file)
+
+==================
+22__subaccounts___nested_budgets
+==================
+
+~ monthly from 2019/01
+    expenses:personal             $1000.00
+    expenses:personal:electronics  $100.00
+    liabilities
+2019/01/01 Google home hub and home mini x2
+    expenses:personal:electronics          $10.00
+    liabilities                           $-10.00
+2019/01/02 Google Home Hub Permium Subscription
+    expenses:personal:electronics:upgrades          $10.00
+    liabilities                           $-10.00
+2019/01/03 Something else
+    expenses:personal          $30.00
+    liabilities                           $-30.00
+
+---
+
+(source_file)
+
+==================
+26__zero_budget____no_budget
+==================
+
+~ monthly from 2019-01
+  expenses:bills     $100  ; bills has a $100 budget of its own, separate from subaccounts
+  expenses:bills:a    $20  ; a has non-zero budget and non-zero posted amount
+  expenses:bills:b   $200  ; b's budget is larger than bills'; we can see it's added to, not part of, that
+  expenses:bills:c    $50  ; c has a budget but no postings
+  expenses:bills:f     $0  ; f has an explicit zero budget
+  income:cash              ; cash has a negative $370 budget balancing the above
+2019-01-01 transaction1
+  income:cash
+  expenses:bills:a    $10
+  expenses:bills:b    $40
+  expenses:bills:d    $20  ; d has postings but no budget
+  expenses:bills:e    $10  ; e has postings summing to zero, and no budget
+  expenses:bills:f    $10
+2019-01-02 transaction2
+  income:cash
+  expenses:bills:e    -$10
+
+---
+
+(source_file)
+
+==================
+test_49
+==================
+
+~ monthly in 2020
+  (expenses:food)  $500
+2020-01-15
+  expenses:food    $400
+  assets:checking
+2020-03-15
+  expenses:food    $600
+  assets:checking
+
+---
+
+(source_file)
+
+==================
+33__34__select_from_multiple_named_budgets_
+==================
+
+~ weekly   weekly budget
+  (aaa)   1
+~ monthly  monthly budget
+  (bbb)   10
+
+---
+
+(source_file)
+
+==================
+35__cumulative_budget_report_
+==================
+
+~ monthly
+  (a)  10
+2022-01-05
+  (a)   10
+2022-02-03
+  (a)   5
+
+---
+
+(source_file)
+
+==================
+37__historical_budget_report_where_the_periodic_transaction_has_date_bounds_
+==================
+
+~ every february 2nd from 2020/01
+    (a)  1
+
+---
+
+(source_file)
+
+==================
+38__budget_report_applies_command_line_commodity_styles_to_goal_amounts___1905__
+==================
+
+~ daily
+    (a)  1
+2022-01-01
+    (a)  1
+
+---
+
+(source_file)
+
+==================
+39__tall_budget_report_adds_per_column_zeroes_properly_
+==================
+
+2020-01-15
+  (a)    A 100
+2020-02-15
+  (a)    A 200
+  (b)    B 200
+
+---
+
+(source_file)
+
+==================
+test_58
+==================
+
+2023-07-01
+    expenses:rent                  $100
+    income:gifts:cash
+~ monthly 2023-08
+    (income:employment)           $-100
+    (income:gifts:cash)           $-100
+
+---
+
+(source_file)
+
+==================
+balance_command_with___date2_flag
+==================
+
+2009/1/1 x
+  a  1
+  b
+2009/1/1=2010/1/1 x
+  a  10
+  b
+
+---
+
+(source_file)
+
+==================
+1__drop_works_in_flat_mode
+==================
+
+2018/1/1
+  (b:j)  1
+2018/1/1
+  (b:j:q)  1
+2018/1/1
+  (c)    1
+2018/1/1
+  (b:i:p)  1
+2018/1/1
+  (a:k)  1
+
+---
+
+(source_file)
+
+==================
+1_
+==================
+
+1/1
+ (a:aa)       1
+ (a:aa:aaa)   1
+ (a:aa:bbb)   1
+ (b)          1
+ (b:bb:bbb)   1
+
+---
+
+(source_file)
+
+==================
+2_
+==================
+
+1/1
+ (a:aa)       1
+ (a:aa:aaa)   1
+ (a:aa:bbb)   1
+ (b)          1
+ (b:bb:bbb)   1
+
+---
+
+(source_file)
+
+==================
+test_0
+==================
+
+2020-09-01 Test
+    a  -500 AAA
+    b
+
+---
+
+(source_file)
+
+==================
+3__with___empty__includes_leading_trailing_empty_periods
+==================
+
+2012/12/31
+  (a)  10
+2013/1/1
+  (a)  1
+2013/3/1
+  (a)  1
+
+---
+
+(source_file)
+
+==================
+17____date2_should_work
+==================
+
+2014/1/1
+ (a)  1
+2014/2/1=2014/1/31
+ (b)  1
+
+---
+
+(source_file)
+
+==================
+test_27
+==================
+
+2014/1/5
+ (before report period)  1ew
+2014/2/1
+ (explicit report period)  10
+2014/2/25
+ (expanded report period)  100
+2014/3/10
+ (after report period)  1000
+
+---
+
+(source_file)
+
+==================
+15__multicolumn_balance_report_with___layout_bare_and_null_commodity
+==================
+
+2018/1/1
+  (a)          1
+  (a:b:c)      1
+2018/1/2
+  (a)          1 EUR
+
+---
+
+(source_file)
+
+==================
+17__multicolumn_budget_report_with___layout_bare___transpose_
+==================
+
+~ daily from 2016/1/1
+    expenses:food     $10
+    expenses:leisure  $15
+    assets:cash
+2016/12/01
+    expenses:food  $10
+    assets:cash
+2016/12/02
+    expenses:food  $9
+    assets:cash
+2016/12/03
+    expenses:food  $11
+    assets:cash
+2016/12/02
+    expenses:leisure  $5
+    assets:cash
+2016/12/03
+    expenses:movies  $25
+    assets:cash
+2016/12/03
+    expenses:cab  $15
+    assets:cash
+
+---
+
+(source_file)
+
+==================
+23__should_omit_commodity_from_totals_row_when_the_sum_is_zero_with___layout_bare____1789_
+==================
+
+2021-01-01 Test
+    Assets:Bank           INR 1.00
+    Equity:Opening       INR -1.00
+
+---
+
+(source_file)
+
+==================
+balance_reports_with_multiple_commodities
+==================
+
+2020-01-01
+  (a)  1.00A
+  (a)  1.00B
+  (a)  1.00C
+  (a)  1.00D
+2021-01-01
+  (a)  1.00D
+  (a)  1.00E
+  (a)  1.00F
+
+---
+
+(source_file)
+
+==================
+4__display_elided_to_a_specific_width_if_requested
+==================
+
+2020-02-22
+    26018c6e:ced6cffd:c3c182f1:7b433efb          $ 9.41
+    ea50865f:3bfb86b7:bf72f75a:a7cad1ac        $ -10.00
+    ea50865f:325566ed:216fec7e:7b433efb          $ 0.59
+2020-02-27
+    26018c6e:ced6cffd:c3c182f1:7b433efb        £ -19.16
+    ea50865f:325566ed:216fec7e:7b433efb          £ 0.91
+    ea50865f:325566ed:47134948                  £ 18.25
+2020-04-12
+    26018c6e:ced6cffd:c3c182f1:7b433efb          € 9.21
+    ea50865f:3bfb86b7:bf72f75a:a7cad1ac        € -10.00
+    ea50865f:325566ed:216fec7e:7b433efb          € 0.79
+2020-05-16
+    26018c6e:ced6cffd:c3c182f1:7b433efb        C$ 24.56
+    ea50865f:3bfb86b7:bf72f75a:a7cad1ac       C$ -26.00
+    ea50865f:325566ed:216fec7e:7b433efb         C$ 1.44
+
+---
+
+(source_file)
+
+==================
+balance_command___no_total_and___no_elide_flags
+==================
+
+2010/04/01 tr1
+  a   16$
+  b   -16$
+2010/04/02 tr2
+  a   -16$
+  b   16$
+
+---
+
+(source_file)
+
+==================
+1__one_commodity__zero_accounts_should_be_elided_but_the_final_total_should_not_
+==================
+
+1/1
+  (a:b)   1
+
+---
+
+(source_file)
+
+==================
+3__but_not_with___no_elide
+==================
+
+1/1
+  (a:b)    1
+  (a:c)   -1
+
+---
+
+(source_file)
+
+==================
+4__nor_when_it_has_more_than_one_subaccount
+==================
+
+2020/1/1
+ (a)          1
+ (a:aa)       1
+ (a:aa)      -1
+ (a:aa:aaa)   1
+ (a:aa:aaa)  -1
+
+---
+
+(source_file)
+
+==================
+test_0
+==================
+
+1/1
+  a   1.00
+  b  -1
+
+---
+
+(source_file)
+
+==================
+default_sort__without_account_declarations
+==================
+
+2018/1/1
+  (b:j)  1
+2018/1/1
+  (c)    1
+2018/1/1
+  (b:i)  1
+2018/1/1
+  (a:k)  1
+
+---
+
+(source_file)
+
+==================
+default_sort__with_account_declarations
+==================
+
+account b:k
+account b:j
+account d
+2018/1/1
+  (a:l)  1
+2018/1/1
+  (b:i)  1
+2018/1/1
+  (b:j)  1
+2018/1/1
+  (b:k)  1
+2018/1/1
+  (c)    1
+2018/1/1
+  (d)    1
+
+---
+
+(source_file)
+
+==================
+5__in_flat_mode_with__s__largest__most_positive__amounts_are_shown_first_
+==================
+
+2018/1/1
+  (b:j)  2
+2018/1/1
+  (c)    1
+2018/1/1
+  (b:i)  1
+2018/1/1
+    (a:k)                                          1
+
+---
+
+(source_file)
+
+==================
+test_17
+==================
+
+2018/1/1
+  (a)  2X @ 1Y
+  (a)  2X @ 2Y
+2018/1/1
+  (b)  3X
+
+---
+
+(source_file)
+
+==================
+9___1279_in_hledger_1_11_1_18__bal__s_did_not_respect_the_hierarchy__should_work_now_
+==================
+
+2020-01-01
+    (a:aa)                                         1
+    (a:ab)                                         3
+    (b)                                            2
+
+---
+
+(source_file)
+
+==================
+12___1283_most_negative_amounts_are_sorted_last__so_eg_largest_revenues_liabilities_are_last_
+==================
+
+2020-01-01
+  (revenues:a)  -1
+  (revenues:b)  -3
+  (revenues:c)  -2
+
+---
+
+(source_file)
+
+==================
+14__or_a_sign_flipping_command_like_incomestatement_
+==================
+
+2021-01-01 Post in X
+    (f)   1 X
+2021-01-01 Post in X
+    (b)  -1 X
+2021-01-01 Post in X
+    (e)   1 X
+    (e)  -1 Y
+2021-01-01 Post in Y
+    (d)  -1 Y
+2021-01-01 Post in X
+    (c)  -1 X
+2021-01-01 Post in X
+    (a)  -1 X
+
+---
+
+(source_file)
+
+==================
+test_0
+==================
+
+2016/12/01
+    expenses:food  $10
+    assets:cash
+2016/12/02
+    expenses:food  $9
+    assets:cash
+2016/12/03
+    expenses:food  $11
+    assets:cash
+2016/12/02
+    expenses:leisure  $5
+    assets:cash
+2016/12/03
+    expenses:movies  $25
+    assets:cash
+2016/12/03
+    expenses:cab  $15
+    assets:cash
+~ daily from 2016/1/1
+    expenses:food     $10
+    expenses:leisure  $15
+    assets:cash
+
+---
+
+(source_file)
+
+==================
+test_3
+==================
+
+2016/1/1
+  assets  1
+  b
+
+---
+
+(source_file)
+
+==================
+2__account_type_autodetection_is_case_insensitive_
+==================
+
+2016/1/1
+  ASSETS  1
+  b
+
+---
+
+(source_file)
+
+==================
+6__tree_output_still_works___565
+==================
+
+2017/1/1
+  (assets:b)  1
+
+---
+
+(source_file)
+
+==================
+7__flat_output_still_works___552
+==================
+
+2017/1/1
+  (assets:b)  1
+
+---
+
+(source_file)
+
+==================
+8__an_empty_section_does_not_disrupt_the_overall_totals___588
+==================
+
+2017/1/1
+  (assets)  $1
+
+---
+
+(source_file)
+
+==================
+9__with___pretty__tables_use_box_drawing_characters_and_more_borders_
+==================
+
+2016/1/1
+  assets  1
+  b
+
+---
+
+(source_file)
+
+==================
+test_40
+==================
+
+2018-10-01
+   income:whatever
+   assets:bank      $100
+   assets:bank:subaccount  $10
+   assets:bank:this subaccount should disappear  $10
+2018-10-02
+   assets:bank:this subaccount should disappear  -$10
+   assets:bank
+2018-10-03
+   assets:this account should not disappear:subaccount   -$10
+   assets:this account should not disappear
+
+---
+
+(source_file)
+
+==================
+11__check_that_starting_balances_are_also_filtered_by_subreport_query___see_issue__1335_
+==================
+
+2020-03-01 * Rent
+    assets:a     -$1
+    expenses
+2020-03-25 * Salary
+    assets:a      $2
+    income
+
+---
+
+(source_file)
+
+==================
+13__csv_output_supports___drop_
+==================
+
+2020-03-01 * Rent
+    assets:a     -$10 000.00
+    expenses
+
+---
+
+(source_file)
+
+==================
+test_48
+==================
+
+account assets:cash       ; type: Cash
+account assets:checking   ; type: Asset
+; ^ disables auto-detection of Asset type, "assets" will not be considered an Asset
+2019-12-01
+  (assets:cash)    3
+2020-01-01
+  (assets:cash)    2
+
+---
+
+(source_file)
+
+==================
+1_
+==================
+
+2016/1/1
+  assets:cash  1
+  b
+
+---
+
+(source_file)
+
+==================
+10__exclude_fixed_assets_from_cashflow
+==================
+
+2016/1/1
+  assets:cash  1
+  b
+2016/1/1
+  assets:fixed assets:equipment  1
+  b
+
+---
+
+(source_file)
+
+==================
+1__check_accounts_succeeds_when_all_accounts_are_declared
+==================
+
+account a
+2020-01-01
+  (a)  1
+
+---
+
+(source_file)
+
+==================
+2__and_otherwise_fails_
+==================
+
+2020-01-01
+  (a)  1
+
+---
+
+(source_file)
+
+==================
+3__also_fails_for_forecast_accounts
+==================
+
+commodity $
+account a
+~ 2022-01-31
+    a  $1
+    b
+
+---
+
+(source_file)
+
+==================
+5__also_fails_for_auto_accounts
+==================
+
+commodity $
+account a
+= a
+  (b)    $1
+2022-01-31
+    (a)  $1
+2022-02-01
+
+---
+
+(source_file)
+
+==================
+1__check_that_prices_balance_without_auto_inferring_prices
+==================
+
+2011/01/01 x
+  a  -10£
+  b  16$
+
+---
+
+(source_file)
+
+==================
+1__check_commodities_succeeds_when_all_commodities_are_declared
+==================
+
+commodity $1.
+2020-01-01
+  (a)  $1
+
+---
+
+(source_file)
+
+==================
+2__and_otherwise_fails
+==================
+
+2020-01-01
+  (a)  $1
+
+---
+
+(source_file)
+
+==================
+3__but_commodityless_zero_amounts_will_not_fail
+==================
+
+2020-01-01
+  (a)  0
+
+---
+
+(source_file)
+
+==================
+4__but_zero_amounts_with_undeclared_commodities_still_fail
+==================
+
+2020-01-01
+  (a)  $0
+
+---
+
+(source_file)
+
+==================
+1__check_ordereddates_succeeds_when_transaction_dates_are_ordered
+==================
+
+2020-01-01
+2020-01-01
+2020-01-02
+
+---
+
+(source_file)
+
+==================
+2__and_otherwise_fails
+==================
+
+2020-01-01
+2020-01-02
+2020-01-01
+  (a)  1
+
+---
+
+(source_file)
+
+==================
+3____date2_and_secondary_dates_are_ignored
+==================
+
+2020-01-02
+2020-01-01=2020-01-03
+
+---
+
+(source_file)
+
+==================
+4__ordereddates_is_checked_before_balance_assertions__when_both_are_enabled
+==================
+
+2024-01-02
+  (a)      1 = 9
+2024-01-01
+  (a)      1
+
+---
+
+(source_file)
+
+==================
+5__enabling_the_ordereddates_check_does_not_disable_the_balance_assertions_check
+==================
+
+2024-01-01
+  (a)      1
+2024-01-02
+  (a)      1 = 9
+
+---
+
+(source_file)
+
+==================
+test_1
+==================
+
+payee foo
+2020-01-01 foo
+2020-01-02 foo | some description
+
+---
+
+(source_file)
+
+==================
+test_2
+==================
+
+2020-01-01 foo
+
+---
+
+(source_file)
+
+==================
+test_3
+==================
+
+payee foo
+2020-01-01 the payee | foo
+
+---
+
+(source_file)
+
+==================
+1__tags_can_be_declared
+==================
+
+tag atag  ; this is atag. tags: on tags are not allowed and will be ignored.
+  indented subdirectives are ignored.
+
+---
+
+(source_file)
+
+==================
+2__check_tags_succeeds_when_all_tags_are_declared
+==================
+
+tag atag
+tag ttag
+tag ptag
+account a  ; atag:
+2023-01-01 ; ttag:
+  (a)  0   ; ptag:
+
+---
+
+(source_file)
+
+==================
+3__it_detects_an_undeclared_account_tag
+==================
+
+account a  ; atag:
+
+---
+
+(source_file)
+
+==================
+4__it_detects_an_undeclared_transaction_tag
+==================
+
+2023-01-01 ; ttag:
+
+---
+
+(source_file)
+
+==================
+5__it_detects_an_undeclared_posting_tag
+==================
+
+2023-01-01
+  (a)  0   ; ptag:
+
+---
+
+(source_file)
+
+==================
+test_8
+==================
+
+2024-01-01
+  ; date:
+  ; date2:
+  ; type:
+  ; t:
+  ; assert:
+  ; retain:
+  ; start:
+  ; generated-transaction:
+  ; modified-transaction:
+  ; generated-posting:
+  ; cost-posting:
+  ; conversion-posting:
+  ; _generated-transaction:
+  ; _modified-transaction:
+  ; _generated-posting:
+  ; _cost-posting:
+  ; _conversion-posting:
+
+---
+
+(source_file)
+
+==================
+test_10
+==================
+
+tag date                    ; overrides a posting's date
+tag date2                   ; overrides a posting's secondary date
+tag type                    ; declares an account's type
+tag t                       ; generated by letters in timedot data (with the letter as tag value)
+tag assert                  ; appears on txns generated by close --assert
+tag retain                  ; appears on txns generated by close --retain
+tag start                   ; appears on txns generated by close --migrate/--close/--open/--assign
+tag generated-transaction   ; with --verbose-tags, appears on generated periodic txns
+tag modified-transaction    ; with --verbose-tags, appears on txns which have had auto postings added
+tag generated-posting       ; with --verbose-tags, appears on generated auto postings
+tag cost-posting            ; with --verbose-tags, appears on cost postings
+tag conversion-posting      ; with --verbose-tags, appears on conversion postings
+tag _generated-transaction  ; always exists on generated periodic txns
+tag _modified-transaction   ; always exists on txns which have had auto postings added
+tag _generated-posting      ; always exists on generated auto postings
+tag _cost-posting           ; exists on postings which have been matched with a nearby @/@@ cost notation
+tag _conversion-posting     ; exists on postings which have been matched with a nearby @/@@ cost notation
+
+---
+
+(source_file)
+
+==================
+test_1
+==================
+
+2020-01-01
+  (a)     1
+  (a:aa)  1
+
+---
+
+(source_file)
+
+==================
+test_2
+==================
+
+2020-01-01
+  (a)     1
+  (b:a)   1
+
+---
+
+(source_file)
+
+==================
+1__test_whether_only_the_style_without_a_symbol_is_changed
+==================
+
+2021-07-09 no symbol
+    (a)   1234
+2021-07-09 Euro
+    (a)    EUR 1.234,56
+2021-07-09 Dollar
+    (a)      $ 1,234.56
+
+---
+
+(source_file)
+
+==================
+2__test_whether_setting_the_style_of_multiple_symbols_work
+==================
+
+2021-07-09 Euro
+    (a)    EUR 1,234.56
+2021-07-09 Dollar
+    (a)      $ 1.234,56
+
+---
+
+(source_file)
+
+==================
+3__when_setting_the_same_symbol_multiple_times__the_last_one_is_in_effect
+==================
+
+2021-07-09 Euro
+    (a)    EUR 1234
+
+---
+
+(source_file)
+
+==================
+4__commodity_styles_are_applied_to_quantity_and_price_of_a_commodity__except_for_precision_
+==================
+
+2021-09-12 buy A
+    (a)    1,234 A @ 1234,56 $
+
+---
+
+(source_file)
+
+==================
+0__a__every_nth_day__of_month___periodic_rule_will_generate_occurrences_only_after_the_start_date____2218_
+==================
+
+~ every 31st day from 2024-07 to 2024-09
+  (a)  1
+
+---
+
+(source_file)
+
+==================
+1__account_pattern_with_space
+==================
+
+2010/3/1 x
+  a a  1
+  b
+2010/3/1 y
+  a    1
+  b
+
+---
+
+(source_file)
+
+==================
+2__description_pattern_with_space
+==================
+
+2010/3/1 x
+  a  1
+  b
+2010/3/2 x x
+  a  1
+  b
+
+---
+
+(source_file)
+
+==================
+3__multiple_patterns__spaced_and_punctuated_patterns
+==================
+
+2011/9/11
+  a a  1
+  'b
+
+---
+
+(source_file)
+
+==================
+4__patterns_with_quotation_marks_in_them
+==================
+
+2020-09-19 Quoting
+    assets:bank           -5
+    assets:unquoted        5
+2020-09-20 Quoting
+    assets:bank           -5
+    assets:"quoted"        5
+
+---
+
+(source_file)
+
+==================
+close_command
+==================
+
+2016/1/1 open
+    assets:bank         $100
+    assets:cash         $20
+    equity:opening
+2016/1/15 spend
+    expenses:sweets     $5
+    assets:cash
+2016/1/19 withdraw
+    assets:cash         $20
+    assets:bank
+2016/1/20 lend
+    liabilities         $25
+    assets:cash
+
+---
+
+(source_file)
+
+==================
+7__closing_a_multi_priced_balance__by_default_the_transaction_prices_are_ignored_
+==================
+
+2019/01/01
+    assets                          1A @ 1B
+    assets                          1A @ 1C
+    equity
+
+---
+
+(source_file)
+
+==================
+test_14
+==================
+
+2019/01/01
+    (assets)                        1A @ 1B
+2019/01/02
+    (assets)                        1A @ 2B
+
+---
+
+(source_file)
+
+==================
+test_18
+==================
+
+2016/01/31
+    liabilities:employer                      $5,000.00
+    income:salary
+2016/02/05
+    liabilities:employer                     $-5,000.00 @ 0.95 EUR
+    expenses:tax                               1,852.50 EUR
+    assets:bank                                2,897.00 EUR
+    liabilities:employer
+2016/02/29
+    liabilities:employer                      $5,000.00
+    income:salary
+2016/03/04
+    liabilities:employer                     $-5,000.00 @ 0.93 EUR
+    expenses:tax                               1,813.50 EUR
+    assets:bank                                2,836.00 EUR
+    liabilities:employer
+
+---
+
+(source_file)
+
+==================
+13__a_tricky_case_where_a_closing_posting_was_rounded_and_failed_to_balance___1164_
+==================
+
+commodity $0.00
+commodity AAA 0.00000000
+2019-01-01 opening balance
+    (assets:usd)                                 $49.50
+2019-01-02 buy some AAA
+    assets:usd                                  -$49.2619200
+    assets:aaa                               AAA 510
+    assets:usd                                   -$0.1280810
+    expenses:banking                              $0.1280810
+
+---
+
+(source_file)
+
+==================
+15___the_default_closing_date_is_yesterday__or_the_journal_s_end_date__whichever_is_later__
+==================
+
+999999-12-31
+  (a)  1
+
+---
+
+(source_file)
+
+==================
+17__close__and_print__should_add_trailing_decimal_marks_when_needed_to_posting_amounts_and_costs_
+==================
+
+commodity $1,000.00
+2000-01-01
+    (assets:a)  $1,000 @@ $1,000
+
+---
+
+(source_file)
+
+==================
+codes_command
+==================
+
+1/1 (123)
+ (a)  1
+1/1 ()
+ (a)  1
+1/1
+ (a)  1
+1/1 (124)
+ (a)  1
+1/1 (123)
+ (a)  1
+1/1
+ (a)  1
+
+---
+
+(source_file)
+
+==================
+1__read_csv_to_hledger_journal_format
+==================
+
+10/2009/09,Flubber Co,50
+RULES
+fields date, description, amount
+date-format %d/%Y/%m
+currency $
+account1 assets:myacct
+
+---
+
+(source_file)
+
+==================
+2__reading_csv_with_in_field_and_out_field
+==================
+
+10/2009/09,Flubber Co🎅,50,
+11/2009/09,Flubber Co🎅,,50
+RULES
+account1 Assets:MyAccount
+date %1
+date-format %d/%Y/%m
+description %2
+amount-in %3
+amount-out %4
+currency $
+
+---
+
+(source_file)
+
+==================
+3__handle_conditions_assigning_multiple_fields
+==================
+
+10/2009/09,Flubber Co,50
+RULES
+fields date, description, amount
+date-format %d/%Y/%m
+currency $
+account1 assets:myacct
+if Flubber
+  account2 acct
+  comment cmt
+
+---
+
+(source_file)
+
+==================
+4__read_csv_with_balance_field
+==================
+
+10/2009/09,Flubber Co,50,123
+RULES
+fields date, description, amount, balance
+date-format %d/%Y/%m
+currency $
+account1 assets:myacct
+
+---
+
+(source_file)
+
+==================
+5__read_csv_with_empty_balance_field
+==================
+
+10/2009/09,Flubber Co,50,123
+11/2009/09,Blubber Co,60,
+RULES
+fields date, description, amount, balance
+date-format %d/%Y/%m
+currency $
+account1 assets:myacct
+
+---
+
+(source_file)
+
+==================
+6__read_csv_with_only_whitespace_in_balance_field
+==================
+
+10/2009/09,Flubber Co,50,123
+11/2009/09,Blubber Co,60,   
+RULES
+fields date, description, amount, balance
+date-format %d/%Y/%m
+currency $
+account1 assets:myacct
+
+---
+
+(source_file)
+
+==================
+7__read_csv_with_rule_double_negating_column
+==================
+
+date,payee,amount
+2009/10/9,Flubber Co,50
+2009/11/09,Merchant Credit,-60
+RULES
+skip 1
+currency $
+fields date, payee, payment
+amount -%payment
+account1 liabilities:bank
+account2 expense:other
+
+---
+
+(source_file)
+
+==================
+8__reading_with_custom_separator__ssv__semicolon_separated_
+==================
+
+10/2009/09;Flubber Co🎅;50;
+11/2009/09;Flubber Co🎅;;50
+RULES
+account1 Assets:MyAccount
+date %1
+separator ;
+date-format %d/%Y/%m
+description %2
+amount-in %3
+amount-out %4
+currency $
+
+---
+
+(source_file)
+
+==================
+9__read_csv_with_balance2_field
+==================
+
+10/2009/09,Flubber Co,50,123
+RULES
+fields date, description, amount, balance2
+date-format %d/%Y/%m
+currency $
+account1 assets:myacct
+
+---
+
+(source_file)
+
+==================
+10__read_csv_with_balance1_and_balance2_fields
+==================
+
+10/2009/09,Flubber Co,50,321,123
+RULES
+fields date, description, amount, balance1, balance2
+date-format %d/%Y/%m
+currency $
+account1 assets:myacct
+
+---
+
+(source_file)
+
+==================
+11__more_than_two_postings
+==================
+
+10/2009/09,Flubber Co,50,321,123,0.234,VAT
+RULES
+fields date, description, amount, balance1, balance2, amount3,comment3
+date-format %d/%Y/%m
+currency $
+account1 assets:myacct
+account3 expenses:tax
+account4 the:remainder
+
+---
+
+(source_file)
+
+==================
+12__more_than_two_postings_and_different_currencies
+==================
+
+10/2009/09,Flubber Co,50,321,123,£,0.234,VAT
+RULES
+fields date, description, amount, balance1, balance2, currency3, amount3,comment3
+date-format %d/%Y/%m
+currency $
+account1 assets:myacct
+account3 expenses:tax
+account4 the:remainder
+
+---
+
+(source_file)
+
+==================
+13__reading_csv_with_in_field_and_out_field__where_one_could_be_zero
+==================
+
+10/2009/09,Flubber Co🎅,50,0
+11/2009/09,Flubber Co🎅,0.00,50
+RULES
+account1 Assets:MyAccount
+date %1
+date-format %d/%Y/%m
+description %2
+amount-in %3
+amount-out %4
+currency $
+
+---
+
+(source_file)
+
+==================
+14__multiline_descriptions
+==================
+
+10/2009/09,"Flubber Co
+Co
+Co
+",50
+RULES
+fields date, description, amount
+date-format %d/%Y/%m
+currency $
+account1 assets:myacct
+
+---
+
+(source_file)
+
+==================
+15__recursive_interpolation
+==================
+
+myacct,10/2009/09,Flubber Co,50,
+RULES
+fields account1, date, description, amount-in, amount-out
+date-format %d/%Y/%m
+currency $
+if Flubber
+   account1  assets:%account1
+   amount-in  (%amount-in)
+
+---
+
+(source_file)
+
+==================
+16__real_life_ish_paypal_parsing_example
+==================
+
+"12/22/2018","06:22:50","PST","Someone","Subscription Payment","Completed","USD","10.00","-0.59","9.41","someone@some.where","simon@joyful.com","123456789","Joyful Systems","","9KCXINCOME:UNKNOWNZXXAX","","57.60",""
+RULES
+fields date, time, timezone, description, type, status_, currency, grossamount, feeamount, netamount, fromemail, toemail, code, itemtitle, itemid, referencetxnid, receiptid, balance, note
+account1 sm:assets:online:paypal
+amount1 %netamount
+account2 sm:expenses:unknown
+account3 JS:expenses:banking:paypal
+amount3 %feeamount
+balance %18
+code %13
+currency $
+date %1
+date-format %m/%d/%Y
+description %description for %itemtitle
+
+---
+
+(source_file)
+
+==================
+17__show_that__415_is_fixed
+==================
+
+"2016/01/01","$1"
+"2016/02/02","$1,000.00"
+RULES
+account1 unknown
+amount %2
+date %1
+date-format %Y/%m/%d
+
+---
+
+(source_file)
+
+==================
+18__conditional_skips
+==================
+
+HEADER
+10/2009/09,Flubber Co,50
+MIDDLE SKIP THIS LINE
+AND THIS
+AND THIS ONE
+10/2009/09,Flubber Co,50
+*** END OF FILE ***
+More lines of the trailer here
+They all should be ignored
+RULES
+fields date, description, amount
+date-format %d/%Y/%m
+currency $
+account1 assets:myacct
+if HEADER
+  skip
+if
+END OF FILE
+  end
+if MIDDLE
+  skip 3
+
+---
+
+(source_file)
+
+==================
+19__lines_with_just_balance__no_amount___1000_
+==================
+
+2018-10-15,100
+2018-10-16,200
+2018-10-17,300
+RULES
+fields date,bal
+balance EUR %bal
+date-format %Y-%m-%d
+description Assets Update
+account1 assets
+account2 income
+
+---
+
+(source_file)
+
+==================
+20__test_for__1001___empty_assignment_to_amount_show_not_eat_next_line
+==================
+
+2018-10-15,1
+RULES
+fields date,amount
+amount
+comment x
+
+---
+
+(source_file)
+
+==================
+21__amountless_postings_and_conditional_third_posting
+==================
+
+"12/22/2018","06:22:50","PST","Someone","Subscription Payment","Completed","USD","10.00","-0.59","9.41","someone@some.where","simon@joyful.com","123456789","Joyful Systems","","9KCXINCOME:UNKNOWNZXXAX","","57.60",""
+"12/22/2018","06:22:50","PST","Someone","Empty fee","Completed","USD","10.00","","6.66","someone@some.where","simon@joyful.com","987654321","Joyful Systems","","9KCXINCOME:UNKNOWNZXXAX","","99.60",""
+"12/22/2018","06:22:50","PST","Someone","Conditional Empty fee","Completed","USD","10.00","-1.23","7.77","someone@some.where","simon@joyful.com","10101010101","Joyful Systems","","9KCXINCOME:UNKNOWNZXXAX","","88.66",""
+RULES
+fields date, time, timezone, description, type, status_, currency, grossamount, feeamount, netamount, fromemail, toemail, code, itemtitle, itemid, referencetxnid, receiptid, balance, note
+account1 sm:assets:online:paypal
+amount1 %netamount
+account2 sm:expenses:unknown
+account3 JS:expenses:banking:paypal
+amount3 %feeamount
+balance %18
+code %13
+currency $
+date %1
+date-format %m/%d/%Y
+description %description for %itemtitle
+if Conditional Empty Fee
+    account3
+
+---
+
+(source_file)
+
+==================
+22__read_csv_with_balance_type_directive
+==================
+
+10/2009/09,Flubber Co,50,123
+RULES
+fields date, description, amount, balance
+date-format %d/%Y/%m
+balance-type ==*
+currency $
+account1 assets:myacct
+
+---
+
+(source_file)
+
+==================
+23__create_unbalanced_virtual_posting
+==================
+
+10/2009/09,Flubber Co,50,123
+RULES
+fields date, description, amount, balance
+date-format %d/%Y/%m
+currency $
+account1 (assets:myacct)
+
+---
+
+(source_file)
+
+==================
+24__create_balanced_virtual_posting
+==================
+
+10/2009/09,Flubber Co,50,-50
+RULES
+fields date, description, amount1, amount2
+date-format %d/%Y/%m
+currency $
+account1 [assets:myacct]
+account2 [assets:another-acct]
+
+---
+
+(source_file)
+
+==================
+25__specify_reserved_word_whitespace_separator_in_rules
+==================
+
+2009/10/01	Flubber Co	50	123
+RULES
+fields date, description, amount, balance
+currency $
+account1 (assets:myacct)
+separator TAB
+
+---
+
+(source_file)
+
+==================
+26__manually_setting_hledger_s_default__expenses_unknown___income_unknown__names_works___1192_
+==================
+
+2020-01-01,5
+RULES
+fields date, amount
+account1 a
+account2 expenses:unknown
+
+---
+
+(source_file)
+
+==================
+27__query_by_description
+==================
+
+2020-01-01, 1
+2020-01-01, 2
+RULES
+fields date, desc
+if %desc 1
+ description one
+
+---
+
+(source_file)
+
+==================
+test_35
+==================
+
+2020-01-01, 1,
+RULES
+fields date, amount,
+
+---
+
+(source_file)
+
+==================
+test_37
+==================
+
+2020-01-01, 1, a
+RULES
+fields date, amount, account1
+
+---
+
+(source_file)
+
+==================
+30__leave_unknown_account_name_as_is_when_explicitly_set_by_user___1192__
+==================
+
+2020-01-01, 1, a
+RULES
+fields date, amount, account1
+account2 expenses:unknown
+
+---
+
+(source_file)
+
+==================
+31__can_generate_a_transaction_with_amount_on_the_first_posting_only_
+==================
+
+2020-01-01, 1
+RULES
+fields date, amount1
+account2 b
+
+---
+
+(source_file)
+
+==================
+32__can_generate_a_transaction_with_an_amount_on_the_second_posting_only_
+==================
+
+2020-01-01, 1
+RULES
+fields date, amount2
+account1 a
+
+---
+
+(source_file)
+
+==================
+33__the_unnumbered_amount_rule_converts_posting_2_s_amount_to_cost_
+==================
+
+2020-01-01, 1
+RULES
+fields date, amt
+amount  %amt @@ 1 EUR
+
+---
+
+(source_file)
+
+==================
+test_43
+==================
+
+2020-01-01,1,1
+RULES
+fields date, amount-out, amount2
+
+---
+
+(source_file)
+
+==================
+35__tabular_rules_assigning_multiple_fields
+==================
+
+10/2009/09,Flubber Co,50
+RULES
+fields date, description, amount
+date-format %d/%Y/%m
+currency $
+account1 assets:myacct
+if,account2,comment
+Flubber,acct,cmt
+
+---
+
+(source_file)
+
+==================
+36__tabular_rules_assigning_multiple_fields_followed_by_regular_rules
+==================
+
+10/2009/09,Flubber Co,50
+10/2009/09,Blubber Co,150
+RULES
+fields date, description, amount
+date-format %d/%Y/%m
+currency $
+account1 assets:myacct
+if,account2,comment
+Flubber,acct,cmt
+if
+Blubber
+  account2   acct2
+  comment     cmt2
+
+---
+
+(source_file)
+
+==================
+37__tabular_rules_with_empty_values
+==================
+
+10/2009/09,Flubber Co,50
+10/2009/09,Blubber Co,150
+RULES
+fields date, description, amount
+date-format %d/%Y/%m
+currency $
+account1 assets:myacct
+if,account2,comment
+Flubber,acct,
+Blubber,acct2,
+
+---
+
+(source_file)
+
+==================
+38__tabular_rules_with_field_matchers_and_____separator
+==================
+
+10/2009/09,Flubber Co,50
+10/2009/09,Blubber Co,150
+RULES
+fields date, description, amount
+date-format %d/%Y/%m
+currency $
+account1 assets:myacct
+if|account2|comment
+%description Flubber|acct|
+%amount 150|acct2|cmt2
+
+---
+
+(source_file)
+
+==================
+39__insufficient_number_of_values_in_tabular_rules_error
+==================
+
+10/2009/09,Flubber Co,50
+10/2009/09,Blubber Co,150
+RULES
+fields date, description, amount
+date-format %d/%Y/%m
+currency $
+account1 assets:myacct
+if|account2|comment
+%amount 150|acct2
+%description Flubber|acct|
+
+---
+
+(source_file)
+
+==================
+40__unindented_condition_block_error
+==================
+
+10/2009/09,Flubber Co,50
+RULES
+fields date, description, amount
+date-format %d/%Y/%m
+currency $
+account1 assets:myacct
+if Flubber
+account2 acct
+comment cmt
+
+---
+
+(source_file)
+
+==================
+41__assignment_to_custom_field___1264____spaces_after_the_if___1120_
+==================
+
+10/2009/09,Flubber Co,50
+RULES
+fields date, description, amount
+date-format %d/%Y/%m
+currency $
+account1 assets:myacct
+if Flubber
+  myaccount2 acct
+  comment cmt
+account2 %myaccount2
+
+---
+
+(source_file)
+
+==================
+42__rules_override_each_other_in_the_order_listed_in_the_file
+==================
+
+10/2009/09,Flubber Co,50
+RULES
+fields date, description, amount
+date-format %d/%Y/%m
+currency $
+account1 assets:myacct
+if Flubber
+  account2 foo
+  comment bar
+if 10/2009/09.*Flubber
+  account2 acct
+  comment cmt
+
+---
+
+(source_file)
+
+==================
+43__attempt_to_use_space_as_a_separator_in_the_tabular_rules
+==================
+
+10/2009/09,Flubber Co,50
+10/2009/09,Blubber Co,150
+RULES
+fields date, description, amount
+date-format %d/%Y/%m
+currency $
+account1 assets:myacct
+if account2 comment
+%amount 150 acct2 
+%description Flubber acct
+
+---
+
+(source_file)
+
+==================
+44__handle_matchers_with___prefix
+==================
+
+10/2009/09,Flubber Co,50
+10/2009/09,Blubber Co,50
+RULES
+fields date, description, amount
+date-format %d/%Y/%m
+currency $
+account1 assets:myacct
+if Flubber
+& %amount 50
+  account2 acct
+
+---
+
+(source_file)
+
+==================
+45__handle_matchers_with_both___and__
+==================
+
+10/2009/09,Flubber Co,50
+10/2009/09,Blubber Co,50
+RULES
+fields date, description, amount
+date-format %d/%Y/%m
+currency $
+account1 assets:myacct
+if Flubber
+&!%amount 50
+  account2 acct
+
+---
+
+(source_file)
+
+==================
+test_60
+==================
+
+2020-01-01,"1,000"
+2020-01-02,"1.000"
+RULES
+fields date,amount
+decimal-mark .
+
+---
+
+(source_file)
+
+==================
+test_62
+==================
+
+2020-01-01,"1,000"
+2020-01-02,"1.000"
+RULES
+fields date,amount
+decimal-mark ,
+
+---
+
+(source_file)
+
+==================
+48__account_aliases_work_when_reading_from_csv_
+==================
+
+2020-01-01,10
+RULES
+fields date,amount
+
+---
+
+(source_file)
+
+==================
+49__allow_for_whitespace_in_csv_amounts
+==================
+
+2009-09-10,+ $20
+2009-09-10, $ +30
+2009-09-10, ( 40 ) 
+2009-09-10, $ - 50 
+2009-09-10,- $60 
+RULES
+fields date, amount
+date-format %Y-%m-%d
+account1 assets:myacct
+
+---
+
+(source_file)
+
+==================
+50__handle_an_entry_with_all_zeros
+==================
+
+Date;Description;Category;Debit;Credit;Balance
+"2020-01-21","Client card point of sale fee",Fees,"0","0","1068.94"
+RULES
+skip 1
+fields date, description, category, amount-out, amount-in, balance
+currency $
+account1 assets:bank:checking
+
+---
+
+(source_file)
+
+==================
+51__allow_unicode_field_references___1809_
+==================
+
+Date, Description, Id, Amount
+12/11/2019, Foo, 123, 10.23
+RULES
+skip         1
+fields       date, description, unicöde, amount
+date-format  %d/%m/%Y
+code         %unicöde
+
+---
+
+(source_file)
+
+==================
+52__throw_an_error_when_unable_to_substitute_csv_templates
+==================
+
+"2021-12-23","caffe_siciliaexpenses:cibo:dolce","-10.5"
+RULES
+account1 assets:bank:checking
+fields date, description, account2, amount
+
+---
+
+(source_file)
+
+==================
+53__we_can_t_parse_double_quotes_inside_an_unquoted_field__or_other_non_rfc4180_data____1966_
+==================
+
+2022-01-01,B"B",C
+RULES
+fields date, b, c
+
+---
+
+(source_file)
+
+==================
+54__a_top_level_skip_directive_is_able_to_skip_lines_which_would_fail_to_parse_as_csv____1967_
+==================
+
+2022-01-01,B"B",C
+RULES
+skip 1
+fields date, b, c
+
+---
+
+(source_file)
+
+==================
+test_72
+==================
+
+title
+date, amount
+2023-01-01, 1
+RULES
+skip 2
+fields date, amount
+
+---
+
+(source_file)
+
+==================
+test_74
+==================
+
+2022-01-01,1
+RULES
+fields date,amt
+account1 assets    %amt
+
+---
+
+(source_file)
+
+==================
+57__make_sure_transaction_tags_are_functional___2114___including_ones_on_subsequent_lines___2241_
+==================
+
+2020-01-01, 1
+RULES
+fields date, desc
+if %desc 1
+ comment  ttag:tval\nttag2:
+ comment1 ptag:pval\ndate:2022-02-02
+ account1 a
+
+---
+
+(source_file)
+
+==================
+59__handle_newlines_in_an_assignment_value__without_breaking_interpolations___2134_
+==================
+
+2023-01-01,1
+RULES
+fields date, amount
+account1 (a)
+comment \n %amount
+
+---
+
+(source_file)
+
+==================
+60__specify_ssv_prefix_and_no_extension
+==================
+
+12/11/2019;Foo;123;10.23
+RULES
+fields date, description, , amount
+date-format %d/%m/%Y
+
+---
+
+(source_file)
+
+==================
+61__tabular_rules_with_comments
+==================
+
+10/2009/09,Flubber Co,50
+10/2009/09,Blubber Co,150
+RULES
+fields date, description, amount
+date-format %d/%Y/%m
+currency $
+account1 assets:myacct
+if|account2|comment
+; This rule is for Flubber
+%description Flubber|acct|
+; This rule is not for Flubber
+%amount 150|acct2|cmt2  
+; commented out: %description Flubber|acct3|
+
+---
+
+(source_file)
+
+==================
+62__single_ampersands_within_a_matcher_are_part_of_the_regexp__not_an_and_operator____2352_
+==================
+
+2025-01-01,STOP & SHOP,100
+RULES
+fields date,description,amount
+if
+%description STOP & SHOP
+    account1 expenses:food
+
+---
+
+(source_file)
+
+==================
+test_2
+==================
+
+2018/1/1 foo  ; foo:
+  a
+2018/1/1 bar | baz
+  a
+
+---
+
+(source_file)
+
+==================
+test_4
+==================
+
+2016/12/31
+    expenses:housing  $600
+    assets:cash
+~ monthly from 2016/1
+    income  $-1000
+    expenses:food     $20
+    expenses:leisure  $15
+    expenses:grocery  $30
+    assets:cash
+
+---
+
+(source_file)
+
+==================
+1__a_balance_report_with_forecasted_transactions_
+==================
+
+2016/12/31
+    expenses:housing  $600
+    assets:cash
+~ monthly from 2016/1  * marked cleared, and with a description
+    income  $-1000
+    expenses:food     $20
+    expenses:leisure  $15
+    expenses:grocery  $30
+    assets:cash
+
+---
+
+(source_file)
+
+==================
+2__print_forecasted_transactions__with_status_and_description_
+==================
+
+2016/12/31
+    expenses:housing  $600
+    assets:cash
+~ monthly from 2016/1  ; or a comment, maybe with a:tag
+    income  $-1000
+    expenses:food     $20
+    expenses:leisure  $15
+    expenses:grocery  $30
+    assets:cash
+
+---
+
+(source_file)
+
+==================
+3__a_register_with_forecasted_transactions__with_a_comment_and_tag_
+==================
+
+2016/01/01
+    expenses:fun  $10 ; more fireworks
+    assets:cash
+2016/12/02
+    expenses:housing  $600
+    assets:cash
+~ yearly from 2016
+    income  $-10000 ; bonus
+    assets:cash
+
+---
+
+(source_file)
+
+==================
+4__check_that___forecast_generates_transactions_only_after_last_transaction_date_in_journal_
+==================
+
+Y 2000
+~ 2/1  forecast
+; a real transaction to set the start of the forecast window
+2000/1/1 real
+
+---
+
+(source_file)
+
+==================
+test_11
+==================
+
+Y 2000
+~ 15  forecast
+; a real transaction to set the start of the forecast window
+2000/1/1 real
+
+---
+
+(source_file)
+
+==================
+6__y_also_sets_the_month_to_1__affecting_d_dates_
+==================
+
+Y 2000
+~ next month  forecast
+; a real transaction to set the start of the forecast window
+2000/1/1 real
+
+---
+
+(source_file)
+
+==================
+7__y_also_sets_the_day_to_1__affecting_relative_dates_
+==================
+
+2016/12/31
+    expenses:housing  $600
+    assets:cash
+~ monthly from 2016/1  salary
+    income  $-1000
+    assets:cash
+
+---
+
+(source_file)
+
+==================
+test_16
+==================
+
+commodity 1,000.00 USD
+2020-01-01
+  (a)      1,000.00 USD
+~ every 28th day
+  (a)       1000.00 USD
+
+---
+
+(source_file)
+
+==================
+10__amount_display_style_is_applied_to_forecasted_transactions_
+==================
+
+2021-09-01  Normal Balance Assertion Works
+    Checking   = -60
+    Costs
+~ 2021-10-01  explicit forecasted assertion
+    Checking      = -100
+    Costs             40
+~ 2021-10-02  auto-deduced forecasted assertion
+    Checking      = -120
+    Costs
+
+---
+
+(source_file)
+
+==================
+11__forecast_transactions_work_with_balance_assignments
+==================
+
+2021-08-01
+  (a)      0
+~ every weekday
+  income:client1                    -10 USD
+  assets:receivables:contractor1
+
+---
+
+(source_file)
+
+==================
+12__generated_forecast_for_weekday_transactions
+==================
+
+2021-08-01
+  (a)      0
+~ every weekendday
+  income:client1                    -10 USD
+  assets:receivables:contractor1
+
+---
+
+(source_file)
+
+==================
+13__generated_forecast_for_weekend_transactions
+==================
+
+2021-01-01
+  (a)      1000
+~ daily
+  (a)       1
+
+---
+
+(source_file)
+
+==================
+test_25
+==================
+
+~ daily
+  (a)       1
+
+---
+
+(source_file)
+
+==================
+test_37
+==================
+
+~ quarterly from next quarter
+  (a)  1
+
+---
+
+(source_file)
+
+==================
+22__printed_json_with_forecast_transactions_reference_periodic_transactions_source_position
+==================
+
+~ 2023-01-01   Forecasted
+    A      -1
+    B       1
+
+---
+
+(source_file)
+
+==================
+test_55
+==================
+
+~ every 31st day of month
+    (a)  1
+
+---
+
+(source_file)
+
+==================
+test_0
+==================
+
+2009-01-01 проверка
+  τράπεζα  10 руб
+  नकद
+
+---
+
+(source_file)
+
+==================
+test_0
+==================
+
+2009-01-01 проверка
+  τράπεζα  10 руб
+  नकद
+
+---
+
+(source_file)
+
+==================
+test_0
+==================
+
+2009-01-01 аура (cyrillic letters)
+  bank  10
+  cash
+2010-01-01 aypa (roman letters)
+  bank  20
+  cash
+
+---
+
+(source_file)
+
+==================
+test_0
+==================
+
+2009-01-01 broken entry
+  дебит    1
+  кредит  -2
+
+---
+
+(source_file)
+
+==================
+test_0
+==================
+
+2009-01-01 проверка
+ счёт:первый  1
+ счёт:второй
+
+---
+
+(source_file)
+
+==================
+test_0
+==================
+
+2009-01-01 проверка
+  τράπεζα  10 руб
+  नकद
+
+---
+
+(source_file)
+
+==================
+1_
+==================
+
+2000-01-01 transaction 1
+  㐀                                          㐃㐃1 @ 2 㐂㐂㐂㐂㐂㐂㐂㐂㐂㐂㐂
+  㐀:㐁                                       ;㐃㐃-1
+2000-01-02 transaction 2
+  㐀:㐁:㐂                                    USD 1
+  㐀:㐁:㐂:㐃                                EUR -1
+2000-01-03 transaction 3
+  㐀:㐁:㐂:㐃:㐄                                  1
+  㐀                                            -1
+
+---
+
+(source_file)
+
+==================
+1__simple_statement_works
+==================
+
+2016/1/1
+  income  1
+  b
+
+---
+
+(source_file)
+
+==================
+2__period_reporting_works_for_a_specific_year
+==================
+
+2015/10/10 Client A | Invoice #1
+    assets:receivables      $10,000.00
+    revenue:clients:A      -$10,000.00
+2015/11/02 Deposit | Invoice #1
+    assets:checking         $10,000.00
+    assets:receivables     -$10,000.00
+2016/02/01 Client B | Invoice #2
+    assets:receivables          $10.00
+    revenue:clients:B          -$10.00
+2016/02/15 ACME | Hosting Costs
+    expense:hosting             $50.00
+    assets:checking            -$50.00
+2016/03/01 Deposit | Invoice #2
+    assets:checking             $10.00
+    assets:receivables         -$10.00
+
+---
+
+(source_file)
+
+==================
+3__period_reporting_works_for_two_years
+==================
+
+2015/10/10 Client A | Invoice #1
+    assets:receivables      $10,000.00
+    revenue:clients:A      -$10,000.00
+2015/11/02 Deposit | Invoice #1
+    assets:checking         $10,000.00
+    assets:receivables     -$10,000.00
+2016/02/01 Client B | Invoice #2
+    assets:receivables          $10.00
+    revenue:clients:B          -$10.00
+2016/02/15 ACME | Hosting Costs
+    expense:hosting             $50.00
+    assets:checking            -$50.00
+2016/03/01 Deposit | Invoice #2
+    assets:checking             $10.00
+    assets:receivables         -$10.00
+
+---
+
+(source_file)
+
+==================
+4__period_reporting_works_for_one_month
+==================
+
+2015/10/10 Client A | Invoice #1
+    assets:receivables      $10,000.00
+    revenue:clients:A      -$10,000.00
+2015/11/02 Deposit | Invoice #1
+    assets:checking         $10,000.00
+    assets:receivables     -$10,000.00
+2016/02/01 Client B | Invoice #2
+    assets:receivables          $10.00
+    revenue:clients:B          -$10.00
+2016/02/15 ACME | Hosting Costs
+    expense:hosting             $50.00
+    assets:checking            -$50.00
+2016/03/01 Deposit | Invoice #2
+    assets:checking             $10.00
+    assets:receivables         -$10.00
+
+---
+
+(source_file)
+
+==================
+5__period_reporting_works_for_one_month_in_another_year
+==================
+
+2015/10/10 Client A | Invoice #1
+    assets:receivables      $10,000.00
+    revenue:clients:A      -$10,000.00
+2015/11/02 Deposit | Invoice #1
+    assets:checking         $10,000.00
+    assets:receivables     -$10,000.00
+2016/02/01 Client B | Invoice #2
+    assets:receivables          $10.00
+    revenue:clients:B          -$10.00
+2016/02/15 ACME | Hosting Costs
+    expense:hosting             $50.00
+    assets:checking            -$50.00
+2016/03/01 Deposit | Invoice #2
+    assets:checking             $10.00
+    assets:receivables         -$10.00
+
+---
+
+(source_file)
+
+==================
+9__with___declared__declared_leaf_accounts_are_included__and_in_the_right_place_
+==================
+
+account revenues
+account revenues:aa
+account revenues:ab
+account revenues:ac:aca
+account expenses
+
+---
+
+(source_file)
+
+==================
+test_3
+==================
+
+account assets        ; type:Asset
+account assets:cash   ; type:Cash
+account liabilities
+2020-01-01
+  assets           1
+  assets:cash      1
+  liabilities     -1
+  revenues        -1
+  expenses         1
+  equity
+
+---
+
+(source_file)
+
+==================
+test_9
+==================
+
+account assets        ; 
+account assets:cash   ; type:Cash
+2021-01-01
+  (assets)       1
+  (assets:cash)  1
+
+---
+
+(source_file)
+
+==================
+test_10
+==================
+
+2022/01/01
+    (assets)  1
+2022/01/02
+    (other)   1
+account other  ; type:A
+
+---
+
+(source_file)
+
+==================
+5__bal_detects_both
+==================
+
+account a         ; type:L
+account a:aa      ; type:X
+account a:aa:aaa  ; type:L
+2021-01-01
+    (a)                                            1
+    (a:aa)                                         1
+    (a:aa:aaa)                                     1
+
+---
+
+(source_file)
+
+==================
+test_4
+==================
+
+1/1
+    assets:gold  1,000 XAU @ 1,000.00 USD
+    equity
+
+---
+
+(source_file)
+
+==================
+2__without_quotes__fail__xxx_parse_error_should_be_clearer_here
+==================
+
+2010-04-05 x
+   a   10 DE0002635307
+   b
+
+---
+
+(source_file)
+
+==================
+3__with_quotes__ok__quotes_appear_in_print_output
+==================
+
+2010-04-05 x
+   a   10 "DE 0002 635307"
+   b
+
+---
+
+(source_file)
+
+==================
+5__autobalance_with_prices
+==================
+
+2016/1/1
+    saving-card  $-105
+    snacks  95 EUR @@ $100
+    Equity:Unbalanced
+
+---
+
+(source_file)
+
+==================
+test_17
+==================
+
+; use a commodity directive to ensure B is displayed with two decimal
+; places, or the price directive plus -V would make it four
+commodity 1.00 B
+P 2015/1/1 A 1.0001 B
+2015/1/1
+    (a)  1.00 A
+    (b)  1.00 B
+
+---
+
+(source_file)
+
+==================
+7__a_multi_line_commodity_directive_also_works_
+==================
+
+commodity B
+  format 1.00 B
+P 2015/1/1 A 1.0001 B
+2015/1/1
+    (a)  1.00 A
+    (b)  1.00 B
+
+---
+
+(source_file)
+
+==================
+test_29
+==================
+
+2018-01-01
+ (a)   USD1 000
+
+---
+
+(source_file)
+
+==================
+test_31
+==================
+
+commodity 1 000  USD
+2018-01-01
+  (a)   USD1 000
+
+---
+
+(source_file)
+
+==================
+10__after_a_space_grouped_amount__a_posting_comment_should_parse_
+==================
+
+2018-01-01
+  (a)   USD 1 000  ;comment
+
+---
+
+(source_file)
+
+==================
+11__after_a_space_grouped_amount__trailing_whitespace_should_parse_
+==================
+
+2018-01-01
+  (a)   USD 1 000
+
+---
+
+(source_file)
+
+==================
+12__after_commodity_on_the_right__don_t_parse_tab
+==================
+
+2020-07-21
+	a    	-1600 EUR
+	a		1600 EUR	
+; import Stock value at 2020-07-22
+2020-07-21 
+	a 	-1 EUR  
+	a 	 1 EUR
+
+---
+
+(source_file)
+
+==================
+13__a_commodity_s_display_style_should_come_from_the_first_parsed_amount
+==================
+
+2020-01-01
+    (a)            1.00 $
+2020-01-02
+    (b)            $2,00
+
+---
+
+(source_file)
+
+==================
+test_48
+==================
+
+commodity A 1.
+2021-01-01
+  (a)   0.001A
+  (a)   1.122A = 1.123A
+
+---
+
+(source_file)
+
+==================
+15__unquoted_commodity_symbol_on_the_left__gives_this_long_error_message_
+==================
+
+2021-01-01
+  (a)   A1B 2
+
+---
+
+(source_file)
+
+==================
+16__unquoted_commodity_symbol_on_the_right__gives_this_long_error_message_
+==================
+
+2021-01-01
+  (a)   1 A2
+
+---
+
+(source_file)
+
+==================
+17__unquoted_commodity_symbol_on_the_left_ending_with_numbers__could_parse_successfully_
+==================
+
+; A 12
+2021-01-01
+  (a)   A1 2
+
+---
+
+(source_file)
+
+==================
+18__unquoted_commodity_symbol_on_the_right_beginning_with_numbers__could_parse_successfully_
+==================
+
+; intended 1 "2A", parses as 12 A
+2021-01-01
+  (a)   1 2A
+
+---
+
+(source_file)
+
+==================
+test_56
+==================
+
+; intended "A1E" 2, parses as A 1E2
+2021-01-01
+  (a)   A1E2
+
+---
+
+(source_file)
+
+==================
+test_58
+==================
+
+; intended 1 "e2e", parses as 1e2 e
+2021-01-01
+  (a)   1e2e
+
+---
+
+(source_file)
+
+==================
+test_60
+==================
+
+; intended "111" 2, parses as 1112.
+2021-01-01
+  (a)   111 2
+
+---
+
+(source_file)
+
+==================
+22__cur__and_amt__match_currency_before_cost_value_conversion__1625__balance_
+==================
+
+P 2021-01-01 A  10 B
+2021-01-01
+  (a)    1 A
+
+---
+
+(source_file)
+
+==================
+1__test_some_balance_assertions
+==================
+
+2013/1/1
+  a    $1  =$1
+  b        =-$1
+2013/1/2
+  a    $1  =$2
+  b   $-1  =$-2
+2013/1/3
+  a    $1  = $3
+  b   $-1  = $-3
+  (b)  $1  = $-2
+
+---
+
+(source_file)
+
+==================
+2__same_entries_as_1_but_different_parse_order__assertion_should_still_pass_based_on_date
+==================
+
+2013/1/1
+  a    $1  =$1
+  b        =-$1
+2013/1/3
+  a    $1  = $3
+  b   $-1  = $-3
+  (b)  $1  = $-2
+2013/1/2
+  a    $1  =$2
+  b   $-1  =$-2
+
+---
+
+(source_file)
+
+==================
+test_5
+==================
+
+2013/1/1
+  a    $1  =$1
+  b        =-$1
+2013/1/2
+  a    $1  =$2
+  b   $-1  =$-2
+2013/1/3
+  a    $1  = $3
+  (b)  $1  = $-2
+  b   $-1  = $-3
+
+---
+
+(source_file)
+
+==================
+4__should_also_work_without_commodity_symbols
+==================
+
+2013/1/1
+  (a)    1  =1
+
+---
+
+(source_file)
+
+==================
+5__should_work_for_fractional_amount_with_trailing_zeros
+==================
+
+2013/1/1
+  a    $1.20  =$1.20
+  b           =-$1.20
+2013/1/2
+  a    $0.10  =$1.3
+  b           =-$1.3
+2013/1/3
+  a    $0.7   =$2
+  b           =-$2
+
+---
+
+(source_file)
+
+==================
+6__assertions_currently_check_only_a_single_commodity_s_balance__like_ledger
+==================
+
+1/2
+  (a)  A1
+  (a)  B1 = A1
+  (a)  0  = A1
+  (a)  C0 = D0
+
+---
+
+(source_file)
+
+==================
+7__balances_should_accumulate___195_
+==================
+
+1/1
+    (a)   1F = 1F
+    (a)   2G = 2G
+1/2
+    (a)   3F = 4F
+
+---
+
+(source_file)
+
+==================
+8__using_balance_assignment_to_set_balances_
+==================
+
+2013/1/1
+  a    $1.20
+  b
+2013/1/2
+  a           =$1.3
+  b
+2013/1/2
+  a           $10 =$11.3
+  b         =$-11.3
+
+---
+
+(source_file)
+
+==================
+9__multiple_assertions_for_an_account_in_the_same_transaction_
+==================
+
+2013/1/1
+  a    $1  =$1
+  b        =-$1
+2013/1/2
+  a    $1  =$2
+  b   $-1  =$-2
+2013/1/3
+  a    $2  = $4
+  b   $-1  = $-3
+  b   $-1  = $-4
+
+---
+
+(source_file)
+
+==================
+10__multiple_assertions_and_assignments_for_an_account_in_the_same_transaction_
+==================
+
+2013/1/1
+  a    $1  =$1
+  b        =-$1
+2013/1/3
+  a    $6  = $7
+  b   $-1  = $-2
+  b   $-1  = $-3
+  b   $-7    = $-10
+  b   $-1
+  b   $-1  = $-12
+  b
+2013/1/4
+  a    $0 = $7
+  b   $0   = $-7
+2013/1/5
+  (c)    100 A
+2013/1/5
+  c      = 50 B
+  c      = 50 A
+
+---
+
+(source_file)
+
+==================
+11__assignments_and_virtual_postings
+==================
+
+2013/1/1
+  b
+  [a]    1$
+  (b)     = $14
+  [b]
+  a      4$
+2013/1/2
+  [a]      = $5
+  b        = $9
+
+---
+
+(source_file)
+
+==================
+12__having_both_assignments_and_posting_dates_is_not_supported_
+==================
+
+2013/1/1
+  a    $1  =$1
+  b         =$-1  ; date:2012/1/1
+
+---
+
+(source_file)
+
+==================
+13__posting_date
+==================
+
+2011/5/5
+  [a]        = -10
+2013/1/1
+  a    1 = -12
+  b
+  c   = 5
+2014/1/1
+  a      ; date:2012/1/1
+  d     3 = 3
+2015/1/1
+  [a]      ; date:2011/1/1
+  [d]    10
+
+---
+
+(source_file)
+
+==================
+14__mix_different_commodities
+==================
+
+2016/1/1
+    a      $1
+    b      -1 zorkmids
+2016/1/2
+    a     $-1 = $0
+    b
+
+---
+
+(source_file)
+
+==================
+15__mix_different_commodities_and_assignments
+==================
+
+2016/1/1
+    a      $1
+    b      -1 zorkmids
+2016/1/4
+    [a]    = $1
+2016/1/5
+    [a]    = -1 zorkmids
+2016/1/2
+    a
+    b      = 0 zorkmids
+
+---
+
+(source_file)
+
+==================
+16__total_assertions______parse_correctly
+==================
+
+2016/1/1
+    a      $1
+    b
+2016/1/2
+    a         == $1
+
+---
+
+(source_file)
+
+==================
+17__total_assertions_consider_entire_multicommodity_amount
+==================
+
+2016/1/1
+    a      $1
+    b
+2016/1/2
+    a       1 zorkmids
+    b
+2016/1/3
+    a       0 == $1
+
+---
+
+(source_file)
+
+==================
+18__mix_different_commodities_and_total_assignments
+==================
+
+2016/1/1
+    a      $1
+    a      -1 zorkmids
+    b
+2016/1/2
+    a         == $1
+    b      -1 zorkmids
+2016/1/3
+    b       0 = $-1
+    b       0 = 0 zorkmids
+
+---
+
+(source_file)
+
+==================
+19__cost_is_ignored_when_checking_balance_assertions_
+==================
+
+2023-01-01
+    (a)         1A @ 1B = 1A
+
+---
+
+(source_file)
+
+==================
+20__the_asserted_balance_may_have_a_cost__also_ignored
+==================
+
+2023-01-01
+    (a)         1A @ 1B = 1A @ 2B
+
+---
+
+(source_file)
+
+==================
+21__a_cost_does_not_disrupt_highlighting_in_the_balance_assertion_error_message_
+==================
+
+2023-01-01
+    (a)         1A @ 1B = 5A
+
+---
+
+(source_file)
+
+==================
+22__balance_assignments_may_have_a_cost__and_it_s_used_for_the_posting_amount_
+==================
+
+2019/01/01
+    (a)                 = 1A @ 2B
+
+---
+
+(source_file)
+
+==================
+23__the_exact_amounts_are_compared__display_precision_does_not_affect_assertions_
+==================
+
+commodity $1000.00
+2019/01/01
+    (a)             $0.006
+2019/01/02
+    (a)             $1.00  = $1.006
+
+---
+
+(source_file)
+
+==================
+24__this_fails
+==================
+
+commodity $1000.00
+2019/01/01
+    (a)             $0.006
+2019/01/02
+    (a)             $1.00  = $1.01
+
+---
+
+(source_file)
+
+==================
+25__this_fails
+==================
+
+commodity $1000.00
+2019/01/01
+    (a)             $0.006
+2019/01/02
+    (a)             $1.00  = $1.0061
+
+---
+
+(source_file)
+
+==================
+26__inclusive_assertions_include_balances_from_subaccounts_
+==================
+
+2019/1/1
+  (a)    X1
+  (a)    Y3
+  (a:b)  Y7
+  (a)    0 =*  X1
+  (a)    0 =*  Y10
+  (a:b)  0 =*  Y7
+  (a:b)  0 ==*  Y7
+
+---
+
+(source_file)
+
+==================
+27__inclusive_balance_assignments_also_work___1207__
+==================
+
+2020-01-25
+    (a:aa)   1
+2020-01-25
+    (a:bb)   1
+2020-01-25
+    (a)      1
+2020-01-31
+    (a)        ==* 1
+
+---
+
+(source_file)
+
+==================
+test_47
+==================
+
+2022-01-01
+	assets:eur  €10
+	equity
+2022-01-02
+	assets:eur      = €1 @ $1
+	assets:usd
+
+---
+
+(source_file)
+
+==================
+test_50
+==================
+
+2024-01-01
+    a            10 A
+    e
+2024-01-02
+    b     1 B @@ 10 A
+    a                 = 0 A
+2024-01-03
+    b            -1 B = 0 B
+    e
+
+---
+
+(source_file)
+
+==================
+30___s_overrides__i
+==================
+
+2024-01-01
+  (a)      1 = 2
+
+---
+
+(source_file)
+
+==================
+31__hledger_check_assertions_overrides__i
+==================
+
+2024-01-01
+  (a)      1 = 2
+
+---
+
+(source_file)
+
+==================
+auto_posting_rules
+==================
+
+= ^income
+  (liabilities:tax)  *.33  ; income tax
+2016/1/1 paycheck
+    income:remuneration     $-100
+    income:donations         $-15
+    assets:bank
+2016/1/1 withdraw
+    assets:cash             $20
+    assets:bank
+
+---
+
+(source_file)
+
+==================
+test_6
+==================
+
+= trigger
+  (target)   10
+2018/1/1
+  (trigger)   1
+  (target)    1    = 11  ; this assertion would not fail, auto posting will be taken into account
+
+---
+
+(source_file)
+
+==================
+test_8
+==================
+
+= ^expenses:groceries
+    [budget:groceries]                           *-1
+    [assets:bank:checking]                        *1
+2018/10/7 * MARKET
+    expenses:groceries:food
+    assets:bank:checking                         $-20
+
+---
+
+(source_file)
+
+==================
+test_10
+==================
+
+= assets:billable:client1
+  assets:receivable:client1       *100
+  revenues:client1
+2018/1/1
+    (assets:billable:client1)         0.50h @ $90
+
+---
+
+(source_file)
+
+==================
+test_12
+==================
+
+= assets:billable:client1
+  assets:receivable:client1       *$100
+  revenues:client1
+2018/1/1
+    (assets:billable:client1)         0.50h
+
+---
+
+(source_file)
+
+==================
+test_14
+==================
+
+= assets:billable:client1
+  assets:receivable:client1       *1.00 "Client1 Hours" @ $100.00
+  revenues:client1
+2018/1/1
+    (assets:billable:client1)         0.50h @ $90
+
+---
+
+(source_file)
+
+==================
+test_16
+==================
+
+= ^expenses:foo
+    budget:available   *-1
+    assets:checking     *1
+2018/10/17 * INITIAL
+    budget:available   $100
+    equity:opening
+2018/10/17 * SOME EXPENSE
+    expenses:foo                                 $50
+    assets:checking
+2018/10/17 * ASSERT
+    budget:other
+    budget:available                              =$0
+
+---
+
+(source_file)
+
+==================
+test_19
+==================
+
+= ^Expenses:Joint
+    Expenses:Joint                                               *-1
+    Liabilities:Joint:Bob                                       *0.5
+    Liabilities:Joint:Bill                                      *0.5
+2018/01/01
+    Expenses:Joint:Widgets                                   $100.00 @ £0.50
+    Assets:Joint:Bank                                        -£50.00
+
+---
+
+(source_file)
+
+==================
+test_21
+==================
+
+= ^Expenses:Joint
+    Expenses:Joint                                               *-1
+    Liabilities:Joint:Bob                                       *0.5
+    Liabilities:Joint:Bill                                      *0.5
+2018/01/01
+    Expenses:Joint:Widgets                                   $100.00 @@ £50
+    Assets:Joint:Bank                                        -£50.00
+
+---
+
+(source_file)
+
+==================
+test_29
+==================
+
+= ^Expenses:Joint
+    Expenses:Joint                                               *-1
+    Liabilities:Joint:Bob                                       *0.5
+    Liabilities:Joint:Bill                                      *0.5
+2018/01/01
+    Expenses:Joint:Widgets                                   $100.00
+    Assets:Joint:Bank                                        -£50.00
+
+---
+
+(source_file)
+
+==================
+12_
+==================
+
+= ^income
+  (liabilities:tax)  *.33  ; income tax
+~ monthly from 2016-01   paycheck
+    income:remuneration     $-100
+    income:donations         $-15
+    assets:bank
+2016/1/3 withdraw
+    assets:cash             $20
+    assets:bank
+
+---
+
+(source_file)
+
+==================
+test_33
+==================
+
+= ^expenses:groceries
+    [budget:groceries]                           *-1
+    [assets:bank:checking]                        *1
+2020/10/7 * MARKET
+    expenses:groceries:food
+    assets:bank:checking                         $-20
+
+---
+
+(source_file)
+
+==================
+test_35
+==================
+
+= tag:tax20
+  taxes  *0.2
+2018/12/18
+  a    EUR -10.00  ; :tax20:
+  b    EUR 12.00
+
+---
+
+(source_file)
+
+==================
+17__commodity_display_styles_are_applied_to_auto_posting_amounts_
+==================
+
+2020-01-20
+  (a)    1 A
+; add an auto posting with decimal places
+=
+  (b)   *1.5 B
+; show B amounts with no decimal places
+commodity 0. B
+
+---
+
+(source_file)
+
+==================
+18__auto_generated_postings_with_currency_matching_only_matches_amounts_with_that_currency_in_an_auto_posting___1582_
+==================
+
+= assets cur:USD
+  (b:USD)  *1
+= assets cur:EUR
+  (b:USD)  5 USD
+2017-12-14
+  revenue:job  -10 EUR
+  revenue:job  -10 USD
+  assets
+
+---
+
+(source_file)
+
+==================
+19__auto_generated_postings_match_only_the_amounts_which_match_amount_query_
+==================
+
+= assets amt:>50
+  (b)  *1
+2017-12-14
+  revenue:job   -10 USD
+  revenue:job  -100 EUR
+  assets
+
+---
+
+(source_file)
+
+==================
+20__auto_generated_postings_apply_on_auto_balanced_periodic_postings_
+==================
+
+2021-01-01   Fixed
+    Checking            -10
+    Costs
+~ 2021-01-02   Periodic
+    Checking            -10
+    Costs
+= acct:Costs
+    (Auto)     *1
+
+---
+
+(source_file)
+
+==================
+21__redundant_costs_are_still_detected_properly_with___auto____2110_
+==================
+
+2023-01-01
+    assets:shares        1 TEST @ 50.00€
+    equity:conversion   -1 TEST
+    equity:conversion   50.00€
+    equity:opening     -50.00€
+= foo
+    a   1
+
+---
+
+(source_file)
+
+==================
+1__accept_a_blank_description
+==================
+
+2010/1/1 
+  a  1
+  b
+
+---
+
+(source_file)
+
+==================
+2__same__but_no_separator_space_after_the_date
+==================
+
+2010/1/1
+  a  1
+  b
+
+---
+
+(source_file)
+
+==================
+test_4
+==================
+
+; file comments, ignored
+
+---
+
+(source_file)
+
+==================
+2__same_line_transaction_comments_start_only_with____the_description_can_contain___or___
+==================
+
+2017/1/1 this # and * are not ; the comment
+
+---
+
+(source_file)
+
+==================
+3__same_line_posting_comments_start_only_with___
+==================
+
+2017/1/1
+  a  0  # posting comments can't start with # or *
+
+---
+
+(source_file)
+
+==================
+account_names_can_contain___or__not_at_start____
+==================
+
+2024-01-01
+  #a   1  ; posting to #a account
+  b*  -1  ; posting to b* account
+  *c   0  ; posting to c account, with * status mark
+  ;d   0  ; a comment line attached to the c posting above, part of the transcction
+; e    0  ; top level comment line, not part of the transaction
+
+---
+
+(source_file)
+
+==================
+5__register_does_not_show_comments_
+==================
+
+2010/1/1 x
+    a  1 ; comment
+    b
+
+---
+
+(source_file)
+
+==================
+costs
+==================
+
+2011/01/01
+    expenses:foreign currency       €100 @ $1.35
+    assets
+
+---
+
+(source_file)
+
+==================
+2___b___cost_converts_to_the_cost_price_s_commodity
+==================
+
+2011/01/01
+    expenses:foreign currency       €100 @ $1.35
+    assets                              $-135.00
+
+---
+
+(source_file)
+
+==================
+4__with___cost____infer_equity_is_ignored
+==================
+
+2011/01/01
+    expenses:foreign currency    €100 @@ $135
+    assets
+
+---
+
+(source_file)
+
+==================
+test_9
+==================
+
+2011/01/01
+    expenses:foreign currency       €100
+    misc                              $2.1
+    assets                         $-135.00
+    misc                              €1
+    misc                             €-1
+    misc                             $-2.1
+
+---
+
+(source_file)
+
+==================
+7__another__from_ledger_tests__just_one_posting_to_price_so_uses____
+==================
+
+2002/09/30 * 1a1a6305d06ce4b284dba0d267c23f69d70c20be
+    c56a21d23a6535184e7152ee138c28974f14280c  866.231000 GGGGG
+    a35e82730cf91569c302b313780e5895f75a62b9   $-17,783.72
+
+---
+
+(source_file)
+
+==================
+8__when_the_balance_has_more_than_two_commodities__don_t_bother
+==================
+
+2011/01/01
+    expenses:foreign currency         €100
+    assets                           $-135
+    expenses:other                    £200
+
+---
+
+(source_file)
+
+==================
+9__another
+==================
+
+2011/01/01
+    expenses:foreign currency        €99
+    assets                         $-130
+    expenses:foreign currency         €1
+    assets                           $-5
+
+---
+
+(source_file)
+
+==================
+10__transaction_in_two_commodities_should_balance_out_properly
+==================
+
+2011/01/01 x
+  a  10£ @@ 16$
+  b
+
+---
+
+(source_file)
+
+==================
+test_18
+==================
+
+2011/01/01 x
+  a  -10£
+  b  16$
+
+---
+
+(source_file)
+
+==================
+15__should_not_infer_balancing_costs_when___strict_is_specified
+==================
+
+2011/01/01 x
+  a  -10£
+  b  -16$
+
+---
+
+(source_file)
+
+==================
+17__differently_priced_lots_of_a_commodity_should_be_merged_in_balance_report
+==================
+
+2011/1/1
+  (a)   £1 @ $2
+2011/1/1
+  (a)   £1 @ $3
+
+---
+
+(source_file)
+
+==================
+18__this_should_balance
+==================
+
+2011/1/1
+    a  1h @ $10
+    b  1h @ $20
+    c  $-30
+
+---
+
+(source_file)
+
+==================
+19__these_balance_because_of_the_unit_costs__and_should_parse_successfully
+==================
+
+1/1
+    a   1X @ 2Y
+    a  -2X @ 1Y
+
+---
+
+(source_file)
+
+==================
+21__likewise_with_total_costs__note_how_the_primary_amount_s_sign_is_used_
+==================
+
+1/1
+    a   1X @@ 1Y
+    a  -2X @@ 1Y
+
+---
+
+(source_file)
+
+==================
+test_28
+==================
+
+2022-01-01 Positive Unit cost
+    a        A 1
+    b        B -1 @ A 1
+2022-01-01 Positive Total cost
+    a        A 1
+    b        B -1 @@ A 1
+2022-01-02 Negative unit cost
+    a        A 1
+    b        B 1 @ A -1
+2022-01-02 Negative total cost
+    a        A 1
+    b        B 1 @@ A -1
+2022-01-03 Double Negative unit cost
+    a        A -1
+    b        B -1 @ A -1
+2022-01-03 Double Negative total cost
+    a        A -1
+    b        B -1 @@ A -1
+
+---
+
+(source_file)
+
+==================
+26__here__a_s_primary_amount_is_0__and_its_cost_is_1y__b_is_the_assigned_auto_balancing_amount_of__1y__per_issue_69_
+==================
+
+1/1
+    a   1X @@ 1Y
+    a   1X @@ 1Y
+    a  -2X @@ 1Y
+    b
+
+---
+
+(source_file)
+
+==================
+29__the_equity_account_used_by___infer_equity_can_be_customised
+==================
+
+account  equity:trades   ; type:V
+2011/01/01
+    expenses:foreign currency       €100 @ $1.35
+    assets
+
+---
+
+(source_file)
+
+==================
+30__inferred_equity_postings_are_generated_early_enough_to_match_filters
+==================
+
+2011/01/01
+    expenses:foreign currency       €100 @ $1.35
+    assets
+
+---
+
+(source_file)
+
+==================
+31__infer_cost_with_first_matching_posting_when_equity_postings_are_present
+==================
+
+2011/01/01
+    expenses:foreign currency       €100
+    equity:conversion              €-100
+    equity:conversion               $135
+    assets                         $-135
+
+---
+
+(source_file)
+
+==================
+34__inferred_equity_postings_with_non_standard_conversion_account
+==================
+
+account  whoopwhoop   ; type:V
+2011/01/01
+    expenses:foreign currency            €100
+    whoopwhoop                          €-100
+    whoopwhoop                           $135
+    assets                              $-135
+
+---
+
+(source_file)
+
+==================
+35__can_manually_make_another_posting_match
+==================
+
+2011/01/01
+    assets                              $-135
+    equity:conversion                   €-100
+    equity:conversion                    $135
+    expenses:foreign currency    €100 @@ $135
+
+---
+
+(source_file)
+
+==================
+36__can_manually_match_lots_of_different_posting_groups_so_long_as_there_is_no_conflict
+==================
+
+2011/01/01
+    expenses:food                 €110 @@ £80
+    expenses:foreign currency    €100 @@ $135
+    equity:conversion                   €-100
+    equity:conversion                    $135
+    equity:trades                       €-110
+    equity:trades                         £80
+    assets                              $-135
+    assets                               £-80
+
+---
+
+(source_file)
+
+==================
+38__transaction_posts_and_equity_conversion_postings_are_fine
+==================
+
+2011/01/01
+    expenses:foreign currency    €100 @ $1.35
+    equity:conversion                   €-100
+    equity:conversion                    $135
+    assets                              $-135
+
+---
+
+(source_file)
+
+==================
+test_86
+==================
+
+2023-01-01
+    Expenses:Gift                            HKD 118.00
+    Expenses:Personal                        HKD 118.00
+    Equity:Trading:Currency:INR-HKD:HKD     HKD -236.00
+    Equity:Trading:Currency:INR-HKD:INR       ₹2,150.77
+    Liabilities:Credit-Card                  ₹-2,150.77
+
+---
+
+(source_file)
+
+==================
+40__we_can_combine__other__amounts_into_one_posting__if_they_still_match_up_
+==================
+
+2011-01-01
+    expenses:foreign currency    €100 @ $1.35
+    expenses:foreign currency    £100 @ $1.36
+    expenses:foreign currency  ¥1000 @@ €8.00
+    equity:conversion                   €-100
+    equity:conversion                    $135
+    equity:conversion                   £-100
+    equity:conversion                    $136
+    equity:conversion                  ¥-1000
+    equity:conversion                   €8.00
+    assets                              $-271
+    assets                             €-8.00
+
+---
+
+(source_file)
+
+==================
+test_91
+==================
+
+2023/05/17 * Transfer
+    Assets:BOG:Personal                          -84.01 USD @ 2.495 GEL
+    Equity:Conversion                             84.01 USD
+    Equity:Conversion                           -209.60 GEL
+    Assets:BOG:Personal                          209.60 GEL
+
+---
+
+(source_file)
+
+==================
+42__make_sure___cost_interacts_properly_with_interval_reports_with_an_early_end_date___2385_
+==================
+
+2025-03-02
+    expenses   $1
+    assets
+2025-04-02
+    expenses   $2
+    assets
+
+---
+
+(source_file)
+
+==================
+1__valid_month_and_day__but_flipped
+==================
+
+2010/31/12 x
+   a  1
+   b
+
+---
+
+(source_file)
+
+==================
+2__too_large_day
+==================
+
+2010/12/32 x
+   a  1
+   b
+
+---
+
+(source_file)
+
+==================
+3__29th_feb_on_leap_year_should_be_ok
+==================
+
+2000/2/29 x
+   a  1
+   b
+
+---
+
+(source_file)
+
+==================
+4__29th_feb_on_non_leap_year_should_fail
+==================
+
+2001/2/29 x
+   a  1
+   b
+
+---
+
+(source_file)
+
+==================
+5__dates_must_be_followed_by_whitespace_or_newline
+==================
+
+2015/9/6*
+   a  0
+
+---
+
+(source_file)
+
+==================
+1___apply_account__and__alias__affect__account__directives_
+==================
+
+apply account c
+alias c:a=b
+account a
+
+---
+
+(source_file)
+
+==================
+test_5
+==================
+
+; a liability
+account asset  ; type:L
+; an asset
+account b:bb   ; type:A
+; a liability
+account b      ; type:L
+2018/1/1
+  (asset:a)  1
+  (b)        2
+  (b:bb)     3
+
+---
+
+(source_file)
+
+==================
+4__it_ignores_subdirectives_
+==================
+
+account Expenses:Food
+    note This account is all about the chicken!
+    alias food
+    payee ^(KFC|Popeyes)$
+    check commodity == "$"
+    assert commodity == "$"
+    eval print("Hello!")
+    default
+
+---
+
+(source_file)
+
+==================
+5__it_does_not_allow_parentheses_in_names_
+==================
+
+account (a)
+
+---
+
+(source_file)
+
+==================
+6__it_does_not_allow_brackets_in_names_
+==================
+
+account [a]
+
+---
+
+(source_file)
+
+==================
+1__requires_an_argument
+==================
+
+commodity
+
+---
+
+(source_file)
+
+==================
+2__should_require_an_amount__not_just_a_symbol__but_doesn_t__todo_
+==================
+
+commodity A
+
+---
+
+(source_file)
+
+==================
+3__when_there_is_an_amount__a_decimal_mark_is_required
+==================
+
+commodity A 1
+
+---
+
+(source_file)
+
+==================
+4_
+==================
+
+commodity A 1.
+
+---
+
+(source_file)
+
+==================
+5_
+==================
+
+commodity A 1,00
+
+---
+
+(source_file)
+
+==================
+6__accepts_a_format_subdirective
+==================
+
+commodity A
+  format 1.0 A
+
+---
+
+(source_file)
+
+==================
+7__which_also_requires_an_amount_argument
+==================
+
+commodity A
+  format
+
+---
+
+(source_file)
+
+==================
+8__which_must_have_the_same_commodity_symbol
+==================
+
+commodity A
+  format 1
+
+---
+
+(source_file)
+
+==================
+test_11
+==================
+
+commodity A 1.
+  format 1. A
+
+---
+
+(source_file)
+
+==================
+10__it_ignores_unrecognised_subdirectives
+==================
+
+commodity USD
+   note American Dollars
+   format USD 1,000.00
+   nomarket
+   alias DOLLARS
+   default
+
+---
+
+(source_file)
+
+==================
+2__include_file_with_different_decimal_mark
+==================
+
+commodity 1000.00 RUB
+include commas.journal
+2021-05-19 MTS Phone
+    Assets:Yandex         -100.5 RUB
+    Expenses:Phone         100.5 RUB
+
+---
+
+(source_file)
+
+==================
+1__no_default_commodity
+==================
+
+2010/1/1
+  a  1000
+  b
+
+---
+
+(source_file)
+
+==================
+2__pound__two_decimal_places__no_digit_group_separator
+==================
+
+D £1000.00
+2010/1/1
+  a  1000
+  b
+
+---
+
+(source_file)
+
+==================
+3__dollar__comma_decimal_point__three_decimal_places__no_digit_group_separator
+==================
+
+D $1,000
+2010/1/1
+  a  1000
+  b
+
+---
+
+(source_file)
+
+==================
+4__dollar__three_digit_group_separator__one_decimal_place
+==================
+
+D $1,000.0
+2010/1/1
+  (a)  1000000
+
+---
+
+(source_file)
+
+==================
+test_11
+==================
+
+D 1,000.0 A
+2020/1/1
+  (a)  1000.123
+
+---
+
+(source_file)
+
+==================
+test_13
+==================
+
+D $1000.
+= a
+  (b)  *2
+2018/1/1
+  (a)  €1
+
+---
+
+(source_file)
+
+==================
+1__payee_ignores_subdirectives
+==================
+
+payee KFC
+    alias KENTUCKY FRIED CHICKEN
+    uuid 1234
+
+---
+
+(source_file)
+
+==================
+test_2
+==================
+
+apply account a
+2016/1/1
+    (b)  1
+end apply account
+apply account aa
+2016/1/1
+    (b)  1
+end apply account
+2016/1/2
+    (c)  1
+
+---
+
+(source_file)
+
+==================
+test_3
+==================
+
+Y 1111
+1/1
+year 2222
+2/2
+apply year 3333
+3/3
+
+---
+
+(source_file)
+
+==================
+test_4
+==================
+
+!Y 1111
+1/1
+@year 2222
+2/2
+
+---
+
+(source_file)
+
+==================
+test_1
+==================
+
+P 1999/12/01 stock  1 A
+P 2000/01/01 stock  2 A
+P 2000/02/01 stock  3 A
+P 1999/12/01 B      1 A
+P 2000/01/01 B      5 A
+P 2000/02/01 B      6 A
+1999/12/01
+  (assets:fake)     1 stock
+  (assets:fake)     1 A
+  (assets:fake)     1 B
+1999/12/01
+  (assets:old)      2 stock @ 2 A
+2000/01/01
+  (assets:new)      1 stock @ 3 A
+  (assets:b)        1 stock @ 3 B
+
+---
+
+(source_file)
+
+==================
+2__including_other_formats_
+==================
+
+2016/1/1
+   (x)  1
+include a.timeclock
+include b.timedot
+
+---
+
+(source_file)
+
+==================
+3__include_glob_patterns
+==================
+
+include *b.journal
+
+---
+
+(source_file)
+
+==================
+4__include_invalid_glob_patterns
+==================
+
+include [.journal
+
+---
+
+(source_file)
+
+==================
+5__include_nonexistent_file
+==================
+
+include doesnotexist.journal
+
+---
+
+(source_file)
+
+==================
+6__trailing_whitespace_after_the_filename_is_ignored
+==================
+
+include a.timeclock
+
+---
+
+(source_file)
+
+==================
+7__a_same_line_or_multi_line_following_comment_is_ignored
+==================
+
+include a.timeclock  ; comment
+ ; comment
+ ; comment
+
+---
+
+(source_file)
+
+==================
+8__include_relative_to_home
+==================
+
+include ~/included.journal
+
+---
+
+(source_file)
+
+==================
+11__include_using_old__include_directive
+==================
+
+!include f.journal
+
+---
+
+(source_file)
+
+==================
+1__simple_case
+==================
+
+2017/1/1
+	a   1,000.00 EUR
+	b  -1,000.00 EUR
+
+---
+
+(source_file)
+
+==================
+2__no_digits_before_decimal_sep
+==================
+
+2017/1/1
+	a   .01 EUR
+	b
+
+---
+
+(source_file)
+
+==================
+3__no_digits_after_decimal_sep
+==================
+
+2017/1/1
+	a   1. EUR
+	b
+
+---
+
+(source_file)
+
+==================
+4__no_digits_at_all
+==================
+
+2017/1/1
+	a   . EUR
+	b
+
+---
+
+(source_file)
+
+==================
+5__spaces_between_digit_groups__any_of_the_8_unicode_space_characters_we_support_
+==================
+
+2000-01-01
+  (a)  1 000. A  ; space                    
+  (b)  1 000. B  ; no-break space           
+  (c)  1 000. C  ; en space                 
+  (d)  1 000. D  ; em space                 
+  (e)  1 000. E  ; punctuation space        
+  (f)  1 000. F  ; thin space               
+  (g)  1 000. G  ; narrow no-break space    
+  (h)  1 000. H  ; medium mathematical space
+
+---
+
+(source_file)
+
+==================
+6__space_between_digits_groups_in_commodity_directive
+==================
+
+commodity 1 000.00 EUR
+2017/1/1
+	a   1,000.00 EUR
+	b  -1,000.00 EUR
+
+---
+
+(source_file)
+
+==================
+7__default_commodity
+==================
+
+D 1,000.00 EUR
+2017/1/1
+	a   1,000
+	b  -1,000 EUR
+
+---
+
+(source_file)
+
+==================
+8__omitted_decimals
+==================
+
+2017/1/1
+	a   1,000 EUR
+	b  -1,000.00 EUR
+
+---
+
+(source_file)
+
+==================
+9__omitted_decimals_with_commodity_hint
+==================
+
+commodity 1,000.00 EUR
+2017/1/1
+	a   1,000 EUR
+	b  -1,000.00 EUR
+
+---
+
+(source_file)
+
+==================
+10__omitted_decimals_with_commodity_hint_and_symbol_on_left
+==================
+
+commodity €1,000.00
+2017/1/1
+	a   €1,000
+	b  €-1,000.00
+
+---
+
+(source_file)
+
+==================
+11__commodity_directive_requires_a_decimal_separator
+==================
+
+commodity 1000 EUR
+
+---
+
+(source_file)
+
+==================
+12__commodity_directive_with_zero_precision
+==================
+
+commodity 100. EUR
+2017/1/1
+	a   1,000 EUR
+	b  -1,000.00 EUR
+
+---
+
+(source_file)
+
+==================
+13__big_prices
+==================
+
+2017/1/1
+	a   -1 BTC @ 24,840 UAH
+	b   24,840.00 UAH
+
+---
+
+(source_file)
+
+==================
+14__big_prices_with_commodity_hint
+==================
+
+commodity ₴1,000.00
+2017/1/1
+	a   -1 BTC @ ₴24,840
+	b   ₴24,840.00
+
+---
+
+(source_file)
+
+==================
+15__adjacent_punctuation_chars
+==================
+
+2017/1/1
+	a   1,,0,,0.0 EUR
+	b  -1..0..0,0 EUR
+
+---
+
+(source_file)
+
+==================
+16__adjacent_punctuation_chars_of_different_types
+==================
+
+2017/1/1
+	a   1,0,.0 EUR
+	b  -1.0.,0 EUR
+
+---
+
+(source_file)
+
+==================
+17__separator_chars_vary
+==================
+
+2017/1/1
+	a   1.0,0.0,0 EUR
+	b  -1,0.0,0.0 EUR
+
+---
+
+(source_file)
+
+==================
+18__number_begins_with_a_decimal_char
+==================
+
+2017/1/1
+	a   .1 EUR
+	b  -.1 EUR
+
+---
+
+(source_file)
+
+==================
+19__number_begins_with_a_separator_char
+==================
+
+2017/1/1
+	a   ,100.0 EUR
+	b  -,100.0 EUR
+
+---
+
+(source_file)
+
+==================
+20__long_numbers_in_multi_balance_reports
+==================
+
+2021-01-01
+    (a)      -0.12345678901234567890123456 EUR
+
+---
+
+(source_file)
+
+==================
+21__when_spaces_are_used_inconsistently__what_happens___the_usual__first_one_seen_sets_commodity_style_
+==================
+
+2000-01-01
+  (a)  1 000. A  ; no-break space           
+  (a)  1 000. A  ; space                    
+  (a)  1 000. A  ; en space
+
+---
+
+(source_file)
+
+==================
+22__and_a_commodity_directive_can_enforce_consistency_as_usual_
+==================
+
+commodity 1 000. A  ; narrow no-break space
+2000-01-01
+  (a)  1 000. A  ; space                    
+  (a)  1 000. A  ; no-break space           
+  (a)  1 000. A  ; en space
+
+---
+
+(source_file)
+
+==================
+1__parentheses_in_the_middle_of_an_account_name_are_ignored_
+==================
+
+2009-01-01 x
+  a  2
+  b (b) b  -1
+  c
+
+---
+
+(source_file)
+
+==================
+2__nested_parentheses_are_removed_and_the_outer_brackets_are_used_as_the_type_
+==================
+
+2023-01-01
+  [([(a)])]  1
+  [(b:bb)]   1
+  [b:[bbb]]
+
+---
+
+(source_file)
+
+==================
+test_3
+==================
+
+2018
+
+---
+
+(source_file)
+
+==================
+test_5
+==================
+
+2009/1/1
+  a   1
+
+---
+
+(source_file)
+
+==================
+test_11
+==================
+
+2018/1/1
+  (a) 1
+
+---
+
+(source_file)
+
+==================
+5__two__or_more__postings_with_implicit_amount_cannot_be_balanced_
+==================
+
+2018/1/1
+  a  1
+  b
+  c
+
+---
+
+(source_file)
+
+==================
+test_16
+==================
+
+2018/1/1
+  [a]  1
+  [b]
+  [c]
+
+---
+
+(source_file)
+
+==================
+7__balancing_error_messages_show_the_recorded_precision__not_the_display_precision_
+==================
+
+2010/1/1
+   a  1C @ $1.0049
+   a  $-1.000
+
+---
+
+(source_file)
+
+==================
+8__multiple_postings_all_with_the_same_sign_gets_a_distinct_error_message_
+==================
+
+2020-01-01
+  a  1A
+  b  1A
+
+---
+
+(source_file)
+
+==================
+9__zeros_don_t_trigger_the_same_sign_error_
+==================
+
+2020-01-01
+  a  A 0
+  b  B 0
+
+---
+
+(source_file)
+
+==================
+10__an_inferred_multicommodity_amount_doesn_t_trigger_the_same_sign_error_
+==================
+
+2020-01-01
+    a  A 1
+    b  B 1
+    c
+
+---
+
+(source_file)
+
+==================
+test_22
+==================
+
+2020-01-01
+  a  1A
+  b  1B
+
+---
+
+(source_file)
+
+==================
+12__typical__hledger_equity___close__transaction_does_not_trigger_sign_error_
+==================
+
+2019-01-01 opening balances
+    assets:a1         $3
+    assets:a2         £10
+    equity:opening/closing balances
+2019-12-31 closing balances
+    assets:a1         $-3 = $0.00
+    assets:a2         £-10 = £0.00
+    equity:opening/closing balances
+
+---
+
+(source_file)
+
+==================
+13__adding_a_multiplier_in_a_normal_posting_gives_a_parse_error_
+==================
+
+2020-01-01
+  (a)  *1
+
+---
+
+(source_file)
+
+==================
+test_1
+==================
+
+; -*- ledger -*-
+N $
+= /^Expenses:Books/
+    (Liabilities:Taxes)                                -0.10
+~ Monthly
+    Assets:Bank:Checking                             $500.00
+    Income:Salary
+~ Yearly
+    Expenses:Donations                               $100.00
+    Assets:Bank:Checking
+2004/05/01 * Checking balance
+    Assets:Bank:Checking                           $1,000.00
+    Equity:Opening Balances
+2004/05/03=2004/05/01 * Investment balance
+    Assets:Brokerage                                 50 AAPL @ $30.00
+    Equity:Opening Balances
+2004/05/14 * Páy dày
+    Assets:Bank:Checking                             500.00€
+    Income:Salary
+2004/05/14 * Another dày in which there is Páying
+    Asséts:Bánk:Chécking:Asséts:Bánk:Chécking        $500.00
+    Income:Salary
+2004/05/14 * Another dày in which there is Páying
+    Русский язык:Активы:Русский язык:Русский язык         $1000.00
+    Income:Salary
+tag foo
+2004/05/27 Book Store
+    Expenses:Books                                    $20.00
+    Expenses:Cards                                    $40.00
+    Expenses:Docs                                     $30.00
+    Liabilities:MasterCard
+end tag
+2004/05/27 (100) Credit card company
+    ; This is an xact note!
+    ; Sample: Value
+    Liabilities:MasterCard                            $20.00
+    ; This is a posting note!
+    ; Sample: Another Value
+    ; :MyTag:
+    Assets:Bank:Checking
+    ; :AnotherTag:
+
+---
+
+(source_file)
+
+==================
+test_4
+==================
+
+2000/1/2
+   a  0   ; date: 3/4,  date: 4-5, date:6.7
+
+---
+
+(source_file)
+
+==================
+test_6
+==================
+
+comment
+Journal comment to prevent this being parsed as a timedot file
+end comment
+2000/1/1
+   a  0   ; date: 3.31
+2000/1/2
+   b  0
+       ; date: 3.32
+
+---
+
+(source_file)
+
+==================
+test_9
+==================
+
+2000/1/2
+   a  0   ; [=3-4]
+
+---
+
+(source_file)
+
+==================
+test_11
+==================
+
+comment
+Journal comment to prevent this being parsed as a timedot file
+end comment
+2000/1/2
+   a  0   ; [3/4 ] space, causes this to be ignored
+2000/1/2
+   b  0   ; [1/1=1/2/3/4] bad second date, should error
+
+---
+
+(source_file)
+
+==================
+test_13
+==================
+
+2023-01-01
+    Expenses    1
+    Assets     -1      ; date: 2023-01-02
+    Assets        = -1
+
+---
+
+(source_file)
+
+==================
+test_4
+==================
+
+2010/1/1 x
+   A  55.3653 C @ 30.92189512 D
+   A  -1712 D
+
+---
+
+(source_file)
+
+==================
+test_7
+==================
+
+2010/1/1
+   a  $0.00
+   a  1C @ $1.0049
+   a
+
+---
+
+(source_file)
+
+==================
+test_9
+==================
+
+2010/1/1
+   a  1C @ $1.0049
+   a  $-1.000
+
+---
+
+(source_file)
+
+==================
+4__with___s_display_precision_at_2_or_less__this_txn_should_balance
+==================
+
+2010/1/1
+   a  1C @ $1.0049
+   a  $-1.00
+
+---
+
+(source_file)
+
+==================
+5__avamk_s_2011_1_19_example
+==================
+
+2001/01/01 * ACME fund
+           assets:investment:ACME     203.890 ACME @ $16.02
+           equity:opening balances
+
+---
+
+(source_file)
+
+==================
+test_22
+==================
+
+D $1000.0
+2001/01/01 * ACME fund
+           assets:investment:ACME     203.890 ACME @ $16.02
+           equity:opening balances
+
+---
+
+(source_file)
+
+==================
+test_28
+==================
+
+2015/1/1
+    c    C 10.00
+    c    C 11.00
+    d  D -320.00
+
+---
+
+(source_file)
+
+==================
+test_30
+==================
+
+2015/1/1
+    e    E 10.0000
+    e    E 11
+    f  F -320.000
+
+---
+
+(source_file)
+
+==================
+9__posting_amounts_inferred_from_balance_assignments_also_affect_commodity_styles____2091_
+==================
+
+2023-01-01
+  (a)        1 A
+2023-01-02
+  (a)              = 2.2 A
+
+---
+
+(source_file)
+
+==================
+10__print_like_reports_add_a_trailing_decimal_mark__when_amounts_have_digit_group_marks_but_no_decimal_digits_
+==================
+
+commodity 1.000, JPY
+2023-01-01
+  (a)                 1 JPY
+2023-01-02
+  (b)                 1,2 JPY
+2023-01-03
+  (c)             1.000 JPY
+
+---
+
+(source_file)
+
+==================
+1__just_check
+==================
+
+D $1,000.00
+2018/1/1
+   (a)  2.3
+
+---
+
+(source_file)
+
+==================
+2__some_basic_cases_with_commodity
+==================
+
+commodity $1,000.00000000
+2018/1/1
+   a  $1.05e2
+   b  $31415926e-7
+   c  $1E+3
+   d
+
+---
+
+(source_file)
+
+==================
+3__some_basic_cases_with_commodity
+==================
+
+commodity $1,000.00000000
+2018/1/1
+   a  $1.05e2
+   b  $31415926e-7
+   c  $1E+3
+   d
+
+---
+
+(source_file)
+
+==================
+4__some_basic_cases
+==================
+
+2018/1/1
+   a  1.05e2
+   b  31415926e-7
+   c  1E+3
+   d
+
+---
+
+(source_file)
+
+==================
+5__we_still_should_recognize_commodities_with_e
+==================
+
+2018/1/1
+   (a)  1.00005e
+   (a)  2.00003E
+
+---
+
+(source_file)
+
+==================
+6_
+==================
+
+2018/1/1
+   (a)  1,000.5e-1
+
+---
+
+(source_file)
+
+==================
+2__other_characters_will_be_considered_part_of_the_description
+==================
+
+2017/01/01 %
+
+---
+
+(source_file)
+
+==================
+1__market_prices_are_ignored_by__b_
+==================
+
+P 2011/01/01 € $1.35
+2011/01/01
+    expenses:foreign       €100
+    assets
+
+---
+
+(source_file)
+
+==================
+test_7
+==================
+
+P 2011/01/01 € $1.35
+P 2011/01/01 GBP $1.35
+2011/01/01
+    (expenses:foreign)       €100 @ $1.20
+
+---
+
+(source_file)
+
+==================
+test_9
+==================
+
+3000/01/01
+  (a)    $100
+P 2000/1/1 $ €1.35
+3000/03/03
+  (b)    $100
+P 2000/1/1 $ €1.30
+
+---
+
+(source_file)
+
+==================
+test_11
+==================
+
+P 2000/1/1 $ €1.20
+P 3000/1/1 $ €1.30
+3000/01/01
+  (a)    $100
+
+---
+
+(source_file)
+
+==================
+test_14
+==================
+
+P 3000/1/1 $ €1.10
+3000/01/01
+  (a)    $100
+
+---
+
+(source_file)
+
+==================
+6__market_prices_interact_with_d_directives_and_with_amount_style_canonicalisation___131
+==================
+
+D 1000.00 H                ; declare a default commodity named H
+P 2015/08/15 EEEE  41.66   ; default commodity H is used for these market prices
+P 2015/08/15 FFFF  74.62
+P 2015/08/15 GGGG  32.39
+2015/08/15
+    a  2.4120 EEEE @@ 100  ; default commodity H is used for these transaction prices
+    a  0.3350 FFFF @@ 25
+    a  0.7718 GGGG @@ 25
+    b                      ; implicit balancing amount is in the cost commodity, H
+
+---
+
+(source_file)
+
+==================
+7__register__v_affects_posting_amounts_and_total_
+==================
+
+P 2000/1/1 $ €1.20
+2000/1/1
+  (a)    $100
+
+---
+
+(source_file)
+
+==================
+test_18
+==================
+
+P 2000/1/1 $ €1.20
+2000/1/1
+  (a)    $100 = $100
+
+---
+
+(source_file)
+
+==================
+__value_tests
+==================
+
+P 2000/01/01 A  1 B
+P 2000/01/15 A  5 B
+P 2000/02/01 A  2 B
+P 2000/03/01 A  3 B
+P 2000/04/01 A  4 B
+2000/01/01
+  (a)      1 A @ 6 B
+2000/02/01
+  (a)      1 A @ 7 B
+2000/03/01
+  (a)      1 A @ 8 B
+
+---
+
+(source_file)
+
+==================
+test_49
+==================
+
+P 2000/01/01 A  1 B
+P 2000/01/15 A  5 B
+P 2000/02/01 A  2 B
+P 2000/03/01 A  3 B
+P 2000/04/01 A  4 B
+2000/01/01
+  (a)      1 A @ 6 B
+2000/01/20
+  (a)      1 A @ 7 B
+2000/02/01
+  (a)      1 A @ 8 B
+2000/03/01
+  (a)      1 A @ 9 B
+
+---
+
+(source_file)
+
+==================
+test_50
+==================
+
+P 2000/01/01 A  1 B
+P 2000/01/15 A  5 B
+P 2000/02/01 A  2 B
+P 2000/03/01 A  3 B
+P 2000/04/01 A  4 B
+P 2000/04/01 B  1 C
+2000/01/01
+  (a)      1 A @ 6 C
+2000/02/01
+  (a)      1 A @ 7 B
+2000/03/01
+  (a)      1 A @ 8 B
+
+---
+
+(source_file)
+
+==================
+44__multicolumn_balance_report_with__h__valuing_each_period_s_carried_over_balances_at_cost_
+==================
+
+P 2000/01/01 A  1 B
+P 2000/01/15 A  5 B
+P 2000/02/01 A  2 B
+P 2000/03/01 A  3 B
+P 2000/04/01 A  4 B
+2000/01/01
+  (a)      1 A @ 6 B
+
+---
+
+(source_file)
+
+==================
+test_85
+==================
+
+P 2000/01/01 A  1 B
+P 2000/01/15 A  5 B
+P 2000/02/01 A  2 B
+P 2000/03/01 A  3 B
+P 2000/04/01 A  4 B
+~ monthly
+  (a)  2 A @ 1 B
+2000/01/01
+  (a)      1 A @ 6 B
+2000/02/01
+  (a)      1 A @ 7 B
+2000/03/01
+  (a)      1 A @ 8 B
+
+---
+
+(source_file)
+
+==================
+51____value_then_with___historical__the_starting_total_is_valued_individually_for_each_posting_at_its_posting_time_
+==================
+
+P 2020-01-01 A 1 B
+P 2020-02-01 A 2 B
+P 2020-03-01 A 3 B
+P 2020-04-01 A 4 B
+2020-01-01
+   (a)  1 A
+2020-02-01
+   (a)  1 A
+2020-03-01
+   (a)  1 A
+2020-04-01
+   (a)  1 A
+
+---
+
+(source_file)
+
+==================
+test_92
+==================
+
+P 2020-01-01 A 1 B
+P 2020-02-01 A 2 B
+P 2020-03-01 A 3 B
+P 2020-04-01 A 4 B
+2020-01-01
+   (a)  1 A
+2020-02-01
+   (a)  1 A
+2020-03-01
+   (a)  1 A
+2020-04-01
+   (a)  1 A
+
+---
+
+(source_file)
+
+==================
+53__print___value_should_affect_all_postings__including_when_there_s_an_implicit_transaction_price
+==================
+
+P 2020-01-01 A 1 C
+P 2020-01-01 B 1 C
+2020-01-01
+   a   1 A
+   b  -1 B
+
+---
+
+(source_file)
+
+==================
+valuation_tests__part_2_
+==================
+
+; some market prices
+P 2019-01-01 B   10 A
+P 2019-01-01 C    2 B
+P 2019-01-01 A  100 D
+P 2019-01-01 E    3 D
+; a transaction with both amounts in B
+2019-06-01
+    a  1 B
+    b
+; tests follow. This comment directive makes this file readable
+; by hledger, as well as shelltest; useful when troubleshooting.
+comment
+
+---
+
+(source_file)
+
+==================
+9__normal_print_output_
+==================
+
+2000/01/01
+    a         -1A @ 1B
+    b          1B
+
+---
+
+(source_file)
+
+==================
+test_23
+==================
+
+P 2000/1/1 A 1B
+2000/01/01
+    a         -1A @ 1B
+    b          1B
+
+---
+
+(source_file)
+
+==================
+test_28
+==================
+
+P 2000/01/01 A  2 B
+P 2002/01/01 A  3 B
+2000/01/01
+  (a)      1 A
+
+---
+
+(source_file)
+
+==================
+20_
+==================
+
+P 2001/01/01 A  1 B
+P 2002/01/01 A  2 B
+2000-01-01
+  (a)  1 A
+
+---
+
+(source_file)
+
+==================
+22__market_price_is_not_inferred_from_transactions_by_default_
+==================
+
+2020-01-01
+  (a)   1 A @ 2 B
+
+---
+
+(source_file)
+
+==================
+24__a_p_declared_market_price_on_the_same_date_as_a_transaction_price_has_precedence_
+==================
+
+P 2020-01-01 A  1 B
+2020-01-01
+  (a)   1 A @ 2 B
+
+---
+
+(source_file)
+
+==================
+25__a_transaction_inferred_price_newer_than_a_p_declared_price_has_precedence_
+==================
+
+P 2020-01-01 A  1 B
+2020-01-02
+  (a)   1 A @ 2 B
+
+---
+
+(source_file)
+
+==================
+26__a_later_dated_p_directive_sets_the_valuation_commodity_even_if_parsed_out_of_order_
+==================
+
+P 2020-02-01 A  1 C
+P 2020-01-01 A  1 B
+2020-02-01
+  (a)   1 A @ 2 B
+
+---
+
+(source_file)
+
+==================
+27__a_later_dated_transaction_price_sets_the_valuation_commodity_even_if_parsed_out_of_order_
+==================
+
+2020-01-01
+  (a)   1 A @ 1 C  ; date: 2020-01-02
+  (a)   1 A @ 1 D  ; date: 2020-01-02
+  (a)   1 A @ 1 B
+
+---
+
+(source_file)
+
+==================
+test_46
+==================
+
+2020-11-10 
+    (a)  B 1.00
+P 2020-11-01 B A 3.00
+P 2020-11-02 A B 0.40
+
+---
+
+(source_file)
+
+==================
+29___1402_it_should_pick_the_direct_b__a_price_here__not_the_indirect_b__c__a_price_
+==================
+
+2020-11-10
+    (a)  B 1.00
+P 2020-11-01 B C 2
+P 2020-11-02 C A 3
+P 2020-11-03 B A 5
+
+---
+
+(source_file)
+
+==================
+30___1439_lots_of_price_edges_like_the_below_should_not_cause_any_slowdown_
+==================
+
+2020-01-01
+  (a)  1A
+P 2020-01-01 Z 1A
+P 2020-01-01 A 10Y
+P 2020-01-01 B 20Y
+P 2020-01-01 C 30Y
+P 2020-01-01 D 40Y
+P 2020-01-01 E 50Y
+P 2020-01-01 F 60Y
+P 2020-01-01 G 70Y
+P 2020-01-01 H 80Y
+P 2020-01-01 I 90Y
+P 2020-01-01 J 100Y
+P 2020-01-01 K 120Y
+P 2020-01-01 L 130Y
+P 2020-01-01 M 140Y
+
+---
+
+(source_file)
+
+==================
+31___1443_it_should_always_pick_the_shortest_price_path__a_p_z_here_
+==================
+
+2020-01-01
+  (a)  1A
+P 2020-01-01 A 1B
+P 2020-01-01 B 1C
+P 2020-01-01 C 1D
+P 2020-01-01 D 1Z
+P 2020-01-01 A 1P
+P 2020-01-01 P 100Z
+
+---
+
+(source_file)
+
+==================
+32___1851_it_should_use_posting_date_2_if_requested_
+==================
+
+2019-12-31 FOO
+    Assets:A        $1.00
+    Income:B
+2020-01-01=2019-12-30 BAR
+    Assets:A        $1.00
+    Income:B
+
+---
+
+(source_file)
+
+==================
+100___10_5___100_5___105525
+==================
+
+P 2000-01-01 A   10.5 B
+P 2000-01-01 B  100.5 C
+2000-01-01
+    (a)    100 A
+
+---
+
+(source_file)
+
+==================
+balance___valuechange_report
+==================
+
+P 1999/01/01 A  10 B
+P 2000/01/01 A  1 B
+P 2000/01/15 A  5 B
+P 2000/02/01 A  2 B
+P 2000/03/01 A  3 B
+P 2000/04/01 A  4 B
+1999/01/01
+  (assets)      2 A @ 4 B
+2000/01/01
+  (assets)      1 A @ 6 B
+2000/02/01
+  (assets)      1 A @ 7 B
+2000/03/01
+  (assets)      1 A @ 8 B
+
+---
+
+(source_file)
+
+==================
+1__virtual_posting_shouldn_t_affect_balance
+==================
+
+2009/1/1 x
+  (virtual)  100
+  a  1
+  b
+
+---
+
+(source_file)
+
+==================
+2__balanced_virtual_postings_should_be_required_to_balance__themselves_
+==================
+
+2010/1/1 x
+  [balanced virtual]  10
+  a  1
+  b
+
+---
+
+(source_file)
+
+==================
+3__balanced_virtual_postings_should_be_required_to_balance__themselves_
+==================
+
+2010/1/1 x
+  [balanced virtual]  10
+  [balanced virtual]  -10
+  a  1
+  b
+
+---
+
+(source_file)
+
+==================
+4__a_virtual_posting_with_implicit_amount_should_be_handled_correctly
+==================
+
+2010/1/1 x
+  [a]    10
+  [b]
+
+---
+
+(source_file)
+
+==================
+5__real_and_balanced_virtual_postings_are_balanced_separately__and_multiple_amountless_virtuals_are_ok
+==================
+
+2010/1/1 x
+  a  1
+  b
+  [e]  10
+  [f]
+
+---
+
+(source_file)
+
+==================
+6__amountless_unbalanced_postings_are_always_inferred_as_zero_
+==================
+
+2023-01-01
+  (a)
+  (b)
+  (c)
+
+---
+
+(source_file)
+
+==================
+json_output
+==================
+
+2019-1-1
+  (a)  1.0 AAA
+
+---
+
+(source_file)
+
+==================
+1___apply_account__set_a_default_parent_account
+==================
+
+apply account per
+2022-01-01
+    expenses:food      1   ; parsed as per:expenses:food
+    assets:cash            ; parsed as per:assets:cash
+end apply account
+
+---
+
+(source_file)
+
+==================
+2___d_amt__set_a_default_commodity_and_its_format
+==================
+
+D $0.0
+
+---
+
+(source_file)
+
+==================
+3__star_comment_line
+==================
+
+*
+
+---
+
+(source_file)
+
+==================
+4______an_automated_transaction
+==================
+
+= expenses:food
+    (budget:food)  *-1
+
+---
+
+(source_file)
+
+==================
+5___y___year__set_the_year_for_year_less_dates
+==================
+
+Y 1111
+1/1
+year 2222
+2/2
+apply year 3333
+3/3
+
+---
+
+(source_file)
+
+==================
+6__ignored_directives
+==================
+
+apply fixed CAD $0.90
+apply tag tag1:val1
+assert 1
+bucket Assets:Checking
+A Assets:Checking
+C $1 = USD 1
+C 1 "" = $1
+capture Expenses:Deductible:Medical Medical
+check 1
+define var_name=$100
+end apply fixed
+end apply tag
+end apply year
+end tag
+expr 1
+N USD
+tag Receipt
+  check value =~ /pattern/
+  assert value != "foobar"
+value some_func
+python
+    def option_pyfirst(context):
+        print("In --pyfirst (from %s)" % context)
+    def option_pysecond(context, val):
+        print("In --pysecond=%s (from %s)" % (val, context))
+eval foo
+--command-line-flag
+
+---
+
+(source_file)
+
+==================
+7__amount_valuation__ignored
+==================
+
+;; Lastly, you can specify the valuation function/value for any specific
+;; amount using the (( )) commodity annotation.
+2012-03-02 KFC
+    Expenses:Food               $1 ((2 EUR))
+    Assets:Cash
+
+---
+
+(source_file)
+
+==================
+test_25
+==================
+
+2022-01-01 sell 5 AAPL acquired at $50 for $375, for a $125 gain
+    Assets:Brokerage:Cash       $375.00
+    Assets:Brokerage              -5 AAPL {$50.00} [2012-04-10] (a lot note) (($400)) (@@) $375.00  ; use lots of tricky syntax
+    Income:Capital Gains       $-125.00
+
+---
+
+(source_file)
+
+==================
+1______and_____comment_lines
+==================
+
+%
+|
+
+---
+
+(source_file)
+
+==================
+2___end__or__end_apply__as_shorthand_for_closing_the_most_recent__apply_foo__
+==================
+
+apply account a
+end apply
+apply account a
+end
+
+---
+
+(source_file)
+
+==================
+3___test___a_synonym_for__comment_
+==================
+
+test
+
+---
+
+(source_file)
+
+==================
+4___i__i__o__o__b__h__embedded_timeclock_entries
+==================
+
+i 2013/04/05 12:00:00 Personal:Lunch
+o 2013/04/05 13:30:00
+
+---
+
+(source_file)
+
+==================
+5__amount_expressions
+==================
+
+2022-01-01
+  (a)    (1 + 1)
+
+---
+
+(source_file)
+
+==================
+test_2
+==================
+
+2018/1/1 foo  ; foo:
+  a
+2018/1/1 bar | baz
+  a
+
+---
+
+(source_file)
+
+==================
+test_2
+==================
+
+payee qux
+2018/1/1 foo
+  a
+2018/1/2 bar | baz
+  a
+2018/1/3 foo
+  a
+
+---
+
+(source_file)
+
+==================
+1__check_pivot_with_print
+==================
+
+2016/02/16 Test Transaction
+    Account1                                   2 EUR
+    Account2                                  -2 EUR
+    ; TAG: value
+
+---
+
+(source_file)
+
+==================
+2__check_pivot_with_bal
+==================
+
+2016/02/16 Member Fee Payment John Doe
+    assets:bank account                                   2 EUR
+    income:member fees                                  -2 EUR
+      ; member: John Doe
+
+---
+
+(source_file)
+
+==================
+3__check_with_another_example
+==================
+
+2016/02/16 Donation Freifunk
+    assets:bank account                                   2 EUR
+    income:donations                                  -2 EUR
+      ; budget: Freifunk
+
+---
+
+(source_file)
+
+==================
+4__query_on_account_will_find_either_effective_name_or_original_one
+==================
+
+2016/02/16 Test Transaction
+    Account1                                   2 EUR
+    ; TAG: fun
+    Account2                                  -1 EUR
+    ; TAG: value
+    Account2                                  -1 EUR
+    ; TAG: hidden
+
+---
+
+(source_file)
+
+==================
+5__we_should_be_able_to_query_on_original_account_names
+==================
+
+2017/1/1 prepay
+    assets           $1500  ; expenses:a
+    assets            $100  ; expenses:b
+    assets              $5  ; expenses:c
+    liabilities     $-1605
+
+---
+
+(source_file)
+
+==================
+6__pivot_for_implicit_tag_desc__technical_sample_
+==================
+
+2016/02/16 Freifunk
+    assets:bank account                                   2 EUR  ; date:03/01
+    income:donations                                  -2 EUR
+
+---
+
+(source_file)
+
+==================
+7__pivot_for_implicit_tag_code__technical_sample_
+==================
+
+2016/02/16 (Freifunk) Donation Freifunk
+    assets:bank account                                   2 EUR  ; date:03/01
+    income:donations                                  -2 EUR
+
+---
+
+(source_file)
+
+==================
+8__use_of_pivot_with_code_based_budgeting
+==================
+
+2016/02/16 (Freifunk) Donation Freifunk
+    assets:bank account                                   2 EUR
+    income:donations                                  -2 EUR
+
+---
+
+(source_file)
+
+==================
+9__get_expenses_balance_by_payee
+==================
+
+2016/02/16 (1138) Auchan | buy a food for tomorrow morning
+    assets:bank account
+    expense:snacks                      2 EUR
+    expense:grocery                    20 EUR
+2016/02/16 StarBars
+    assets:bank account
+    expense:coffee                     5 EUR
+
+---
+
+(source_file)
+
+==================
+10__get_daily_expenses_by_payee
+==================
+
+2016/02/16 (1138) Auchan
+    assets:bank account
+    expense:snacks                      2 EUR
+    expense:grocery                    20 EUR
+2016/02/16 StarBars
+    assets:bank account
+    expense:coffee                     5 EUR
+2016/02/17 (1139) Auchan
+    assets:bank account
+    expense:grocery                    30 EUR
+
+---
+
+(source_file)
+
+==================
+11__pivot_on_multiple_tags
+==================
+
+2023-01-01 compound purchase
+        expenses  10 ; project: job1, kind: equipment
+        expenses  20 ; project: job2, kind: equipment
+        expenses  25 ; project: job2, kind: fee
+        assets
+
+---
+
+(source_file)
+
+==================
+12__pivot_on_the_commodity_symbol_with__comm__
+==================
+
+2025-01-01
+    expenses   1 A
+    expenses   2 B
+    assets
+
+---
+
+(source_file)
+
+==================
+14__when_commodities_are_being_converted__the_original_commodity_is_shown_
+==================
+
+2025-01-01
+    expenses   1 A @ $10
+    expenses   2 B @ $100
+    assets
+
+---
+
+(source_file)
+
+==================
+test_4
+==================
+
+P 2023-01-01 B A10
+P 2023-01-01 B A100
+P 2023-01-01 A B100
+2023-01-02
+    (a)     A2 @ B1
+2023-01-02
+    (a)     B1 @ A200
+2023-01-03
+    a       B1
+    b      A-3
+2023-01-04
+    (a)     B1 @@ A4
+2023-01-05
+    (a)    B-1 @@ A5
+2023-01-06
+    a       B1
+    b
+2023-01-07
+    (a)     B1 @ A7
+P 2023-01-07 B A70
+
+---
+
+(source_file)
+
+==================
+8__zero_prices__which_can_t_be_reversed__are_not_reversed_
+==================
+
+P 2021-10-16 B 0.0 A
+
+---
+
+(source_file)
+
+==================
+9__zero_postings__which_can_t_determine_a_price__are_ignored_
+==================
+
+2021-10-16
+    (b)    0 A @@ 1 B
+
+---
+
+(source_file)
+
+==================
+10__inferring_prices_should_play_well_with_balance_assertions_mixing_prices_and_no_prices____1736_
+==================
+
+;; Total asset value should be 400 USD + 1000 USD = 1400 USD
+2021-10-15 Broker initial balance (equity ABC)
+    Assets:Broker           = 4 ABC @@ 400 USD
+    Equity:Opening Balances
+2021-10-15 Broker initial balance (USD)
+    Assets:Broker           = 1000 USD
+    Equity:Opening Balances
+
+---
+
+(source_file)
+
+==================
+11__commodity_styles_are_applied_to_all_price_amounts__but_their_precision_is_left_unchanged_
+==================
+
+commodity 1.000,00 A
+P 2019-01-01 X A1000,123
+P 2019-01-02 X A1000,1
+2019-02-01
+  (a)   X1 @ A1000,2345
+2019-02-02
+  (a)   X1 @ A1000,2
+2019-03-01
+  (a)   20 EUR @ $1.07
+
+---
+
+(source_file)
+
+==================
+12__reverse_market_prices_are_shown_with_all_decimal_digits__up_to_a_maximum_of_8_
+==================
+
+P 2023-01-01 B 3A
+2023-01-01
+  a  1A
+  b
+
+---
+
+(source_file)
+
+==================
+1__unrecognised_top_level_account_names_are_rejected_
+==================
+
+2000-01-01
+  other        0 ABC
+
+---
+
+(source_file)
+
+==================
+2__otherwise__accounts_are_modified_encoded_to_suit_beancount__and_open_directives_are_added_
+==================
+
+2000-01-01
+  assets          0 ABC
+  equity:$-€:$    0 USD
+
+---
+
+(source_file)
+
+==================
+3__commodity_symbols_are_converted_to_iso_4217_codes__or_encoded__to_suit_beancount_
+==================
+
+2000-01-01
+  assets    $0
+  assets    0
+  assets    0!
+  assets    0 "size 2 pencils"
+
+---
+
+(source_file)
+
+==================
+4__virtual_postings_are_dropped_
+==================
+
+2000-01-01
+  Assets  0 USD
+  (a)   1
+  [b]   2
+  [c]
+
+---
+
+(source_file)
+
+==================
+test_9
+==================
+
+2000-01-01
+    Assets                      $1
+    equity:conversion:€-$:$    -$1
+    equity:conversion:€-$:€     €1
+    Assets                     €-1
+
+---
+
+(source_file)
+
+==================
+test_11
+==================
+
+2000-01-01
+    Assets                      $1 @@ €1
+    equity:conversion:€-$:$    -$1
+    equity:conversion:€-$:€     €1
+    Assets                     €-1
+
+---
+
+(source_file)
+
+==================
+test_13
+==================
+
+2000-01-01
+    Assets                      $1 @@ €1
+    equity:conversion:€-$:$    -$1
+    equity:conversion:€-$:€     €1
+    Assets                     €-1
+    ;
+    Assets                      A1 @@ B1
+    equity:conversion:€-$:$    -A1
+    equity:conversion:€-$:€     B1
+    Assets                     B-1
+
+---
+
+(source_file)
+
+==================
+test_19
+==================
+
+account assets       ; type:A
+account assets:cash  ; type:C
+2000-01-01 transaction tags
+  ; a:v
+  ; a-a: v colon: thing , other
+  ; "troublesome: quotes"
+  ; https://a.com/b?q=v,w
+  ; 😀:
+  ; _hiddenish:
+2000-01-02 posting tags     ; a: ttag
+  assets:cash            0  ; a: ptag
+
+---
+
+(source_file)
+
+==================
+test_0
+==================
+
+2009/1/1
+  a   $10 000.00
+  b  -$10 000.00
+
+---
+
+(source_file)
+
+==================
+1__print_shows_both_primary_and_secondary_dates__the_second_s_year_defaults_to_the_first_s_
+==================
+
+2000/1/1=3/3
+  (a)  1
+2000/1/2=2/2
+  (b)  1
+
+---
+
+(source_file)
+
+==================
+2__with___date2__the_secondary_date_is_used_for_sorting_
+==================
+
+2000/1/1=3/3
+  (a)  1
+2000/1/2=2/2
+  (b)  1
+
+---
+
+(source_file)
+
+==================
+1__implicit_transaction_balance_w_o___explict
+==================
+
+2017/1/1
+    expenses  $5
+    assets
+
+---
+
+(source_file)
+
+==================
+2__implicit_transaction_balance_w____explict
+==================
+
+2017/1/1
+    expenses  $5
+    assets
+
+---
+
+(source_file)
+
+==================
+3__implicit_commodity_price_w_o___explict
+==================
+
+2017/1/1
+    expenses  4 EUR
+    assets  $-5
+
+---
+
+(source_file)
+
+==================
+4__implicit_commodity_price_w____explict
+==================
+
+2017/1/1
+    expenses  4 EUR
+    assets  $-5
+
+---
+
+(source_file)
+
+==================
+5__implicit_account_balance_w_o___explict
+==================
+
+2017/1/1
+    assets  = $100
+    equity
+
+---
+
+(source_file)
+
+==================
+6__implicit_account_balance_w____explict
+==================
+
+2017/1/1
+    assets  = $100
+    equity
+
+---
+
+(source_file)
+
+==================
+7__default_commodity_always_applied_because_print_do_not_issue_appropriate_directive
+==================
+
+D 1000.00 EUR
+2017/1/1
+    expenses  100
+    assets
+
+---
+
+(source_file)
+
+==================
+8__option___explicit_implies_effect_of___empty
+==================
+
+2017/1/1
+    assets  $0
+    equity
+
+---
+
+(source_file)
+
+==================
+9__auto_postings_are_always_given_explicit_amounts_
+==================
+
+= a
+    c  *-0.453
+    d
+2021-09-01
+    a    1000 EUR
+    b
+
+---
+
+(source_file)
+
+==================
+test_0
+==================
+
+2009/1/1 x
+ aaaaabbbbbcccccdddddeeeeefffffggggghhhhh   1
+ b
+
+---
+
+(source_file)
+
+==================
+test_33
+==================
+
+; A and B styles
+commodity A1000.00
+commodity B1000.00
+; a amounts have 1 significant digit
+; b amounts have 1 significant digit and 2 zeros
+; c amounts have 3 significant digits
+2023-01-01
+    (a)    0.1   A @ 0.1   B = 0.1   A @ 0.1   B
+    (b)    0.100 A @ 0.100 B = 0.100 A @ 0.100 B
+    (c)    0.123 A @ 0.123 B = 0.123 A @ 0.123 B
+
+---
+
+(source_file)
+
+==================
+test_42
+==================
+
+commodity A 1000.
+2023-01-01
+    f       A 1.5
+    g       A 1.5
+    c      B -3
+
+---
+
+(source_file)
+
+==================
+test_44
+==================
+
+decimal-mark .
+2023-01-01
+    (a)    1,000
+
+---
+
+(source_file)
+
+==================
+test_46
+==================
+
+2023-01-01
+    a   A 0.00
+    b   B 0.00
+    c
+2023-01-02
+    d
+
+---
+
+(source_file)
+
+==================
+test_64
+==================
+
+2023-01-01
+  a    1 A @ 0.1234 B
+  b
+
+---
+
+(source_file)
+
+==================
+test_86
+==================
+
+2023-01-01
+  a    1 A @ 0.1234 B
+  b
+
+---
+
+(source_file)
+
+==================
+test_88
+==================
+
+2023-01-01
+  a    1 A @ 0.1234 B
+  b
+
+---
+
+(source_file)
+
+==================
+test_93
+==================
+
+P 2023-01-01 B 2A
+2023-01-01
+  a  1A
+  b
+
+---
+
+(source_file)
+
+==================
+12__what_if_the_inferred_reverse_market_price_has_infinite_decimal_digits__
+==================
+
+P 2023-01-01 B 3.00A
+2023-01-01
+  a  1A
+  b
+
+---
+
+(source_file)
+
+==================
+test_104
+==================
+
+P 2023-01-01 A 0.0123456789012345678901234567890123456789012345678901234567890123456789012345678901234567890123456789B
+2023-01-01
+  (a)  1A
+
+---
+
+(source_file)
+
+==================
+1__print_preserves_the_commodity_symbol_of_zero_amounts_
+==================
+
+2023-01-01
+  (a)    0 A @ 0 B == 0 A @ 0 B
+
+---
+
+(source_file)
+
+==================
+test_4
+==================
+
+2023-01-01
+  a   0 A
+  b   0 B
+  z
+
+---
+
+(source_file)
+
+==================
+3____depth_does_not_affect_print_
+==================
+
+2023-01-01
+  A:AA   0 A
+
+---
+
+(source_file)
+
+==================
+4__print___invert_flips_signs_in_postings__main_and_assertion_assignment_amounts_
+==================
+
+2025-01-01
+  a   1 A @ 2 B = 1 A @ 2 B
+  b             = -2 B
+  c   0 C       = 0
+
+---
+
+(source_file)
+
+==================
+test_1
+==================
+
+2010/1/1 x
+  a   1
+  b  -1
+
+---
+
+(source_file)
+
+==================
+test_0
+==================
+
+2009/1/1 x
+    a  1
+    b
+2009/1/1 y
+    a  1
+    b
+
+---
+
+(source_file)
+
+==================
+expr___boolean__queries
+==================
+
+2022-01-01 Transaction 1       ; transactiontag:A
+    assets:bank:main       -1  ; A comment
+    expenses:food
+2022-01-01 Transaction 2       ; transactiontag:A
+    assets:bank:main       -1
+    assets:bank:secondary  -1  ; atag:a
+    expenses:food
+2022-01-01 Transaction 3       ; transactiontag:B
+    assets:bank:main       -1  ; A comment
+    expenses:drink
+2022-01-01 Transaction 4       ; transactiontag:B
+    assets:bank:main       -1  ; A comment
+    expenses:food           2
+    expenses:drink
+
+---
+
+(source_file)
+
+==================
+test_4
+==================
+
+2010/01/01  ; txntag1: txn val 1
+  ; txntag2: txn val 2
+  a             1
+  ; posting1tag1: posting 1 val 1
+  ; posting1tag2: 
+  b            -1   ; posting-2-tag-1: posting 2 val 1
+  ; posting-2-tag-2:
+; non-metadata:
+
+---
+
+(source_file)
+
+==================
+2__reports_can_filter_by_tag_existence
+==================
+
+2010/01/01  ; foo:bar
+  a             1
+  b            -1
+2010/01/02  ; foo:baz
+  c             1
+  d            -1
+2010/01/03
+    e             1
+    f            -1
+
+---
+
+(source_file)
+
+==================
+3__or_tag_value
+==================
+
+2010/01/01  ; foo:bar
+  a             1
+  b            -1
+2010/01/02
+  ; foo:baz
+  c             1
+  d            -1
+2010/01/03
+    e             1
+    f            -1
+
+---
+
+(source_file)
+
+==================
+4__postings_inherit_their_transaction_s_tags
+==================
+
+2010/01/01
+  a             1  ; foo:bar
+  b            -1
+2010/01/02  ; foo:baz
+  c             1
+  d            -1
+2010/01/03  ; foo:bar
+  e             1
+  f            -1
+
+---
+
+(source_file)
+
+==================
+5__look_for_transactions_without_tags
+==================
+
+2010/01/01 desc
+  a             1
+  b            -1
+2010/01/02
+  ; foo:some tag
+  c             2
+  d            -2
+2010/01/03
+    e             3
+    f            -3
+2010/01/04 (code)
+    g             4
+    h            -4
+
+---
+
+(source_file)
+
+==================
+test_10
+==================
+
+account a   ; type:A
+account l   ; type:Liability
+account r   ; type:R
+account o   ; othertag:
+account u
+2022-01-01
+  (r)        1
+2022-01-02
+  (a)        1
+  (l)        1
+
+---
+
+(source_file)
+
+==================
+19__accounts_inherit_the_tags_of_their_parents_
+==================
+
+account a    ; type:A
+account a:aa
+
+---
+
+(source_file)
+
+==================
+20_
+==================
+
+account a    ; type:A
+account a:aa
+2022-01-01
+  (a:aa)    1
+
+---
+
+(source_file)
+
+==================
+test_2
+==================
+
+account a   ; type:A
+account l   ; type:Liability
+account r   ; type:R
+account o   ; othertag:
+account u
+2022-01-01
+  (r)        1
+2022-01-02
+  (a)        1
+  (l)        1
+
+---
+
+(source_file)
+
+==================
+8__postingless_declared_accounts_in_balance_reports_are_also_filtered_
+==================
+
+account a  ; type:A
+account l  ; type:L
+
+---
+
+(source_file)
+
+==================
+9__type__is_aware_of_account_type_inheritance_
+==================
+
+account a    ; type:A
+account a:aa
+
+---
+
+(source_file)
+
+==================
+10__type__is_aware_of_inferred_account_types_
+==================
+
+account assets
+account assets:cash
+account liabilities
+
+---
+
+(source_file)
+
+==================
+11__type__can_identify_cash_accounts_in_the_default_case
+==================
+
+account assets
+account assets:cash
+account liabilities
+
+---
+
+(source_file)
+
+==================
+12__type__can_identify_conversion_accounts_in_the_default_case
+==================
+
+account equity
+account equity:conversion
+account equity:trading
+account equity:trade
+
+---
+
+(source_file)
+
+==================
+13__type__can_be_used_in_and_can_match_auto_postings
+==================
+
+account assets  ; type:a
+= type:a
+  (assets:b)   1
+2022-02-02 Test
+  (assets)   2
+
+---
+
+(source_file)
+
+==================
+14__type__can_be_used_in_and_can_match_auto_postings_with_no_known_parents
+==================
+
+= type:a
+  (expenses:b)   1
+2022-02-02 Test
+  (assets)       2
+
+---
+
+(source_file)
+
+==================
+15__type_a_matches_cash_accounts_and_type_e_matches_conversion_accounts
+==================
+
+2022-02-02 Test
+  (assets:cash)        1
+  (equity:conversion)  2
+  (equity:conversion)  -2
+
+---
+
+(source_file)
+
+==================
+1____date2_causes_the_secondary_date_to_be_displayed
+==================
+
+2009/1/1=2010/1/1 x
+  a  1
+  b
+
+---
+
+(source_file)
+
+==================
+2____date2_causes__b__e__p_to_match_the_secondary_date
+==================
+
+2014/1/1=1/2
+  (a)  1
+2014/1/3
+  (b)  1
+
+---
+
+(source_file)
+
+==================
+3____date2_causes_date__to_match_the_secondary_date__or_the_primary_date__if_there_is_no_secondary_
+==================
+
+2014/1/1=1/2
+  (a)  1
+2014/1/2
+  (b)  1
+2014/1/2=1/3
+  (C)  1
+
+---
+
+(source_file)
+
+==================
+4__date2__matches_the_secondary_date__but_does_not_necessarily_display_it_
+==================
+
+2014/1/1=1/2
+  (a)  1
+2014/1/3
+  (b)  1
+
+---
+
+(source_file)
+
+==================
+5__date2__plus___date2_both_matches_and_displays_the_secondary_date
+==================
+
+2014/1/1=1/2
+  (a)  1
+2014/1/3
+  (b)  1
+
+---
+
+(source_file)
+
+==================
+6__date2__matching_is_not_affected_by___date2
+==================
+
+2014/1/1=1/2
+  (a)  1
+2014/1/3
+  (b)  1
+
+---
+
+(source_file)
+
+==================
+7__with___date2__the_secondary_date_is_used_for_sorting
+==================
+
+2014/1/1=2/2
+  (a)  1
+2014/1/3=2/1
+  (b)  1
+
+---
+
+(source_file)
+
+==================
+1__register___depth_n_matches_postings_as_usual_but_clips_account_names_to_n
+==================
+
+2010/1/1 x
+  a:aa:aaa      1
+  b
+
+---
+
+(source_file)
+
+==================
+2__separate_postings_remain_separate
+==================
+
+2010/1/1 x
+  a:aa      1
+  b:bb:bbb
+2010/1/1 y
+  a:aa      1
+  b:bb:bbb
+2010/1/2 z
+  a:aa      1
+  b:bb:bbb
+
+---
+
+(source_file)
+
+==================
+3__with_a_reporting_interval__all_postings_are_aggregated_under_each__clipped__account
+==================
+
+2010/1/1 x
+  a:aa      1
+  b:bb:bbb
+2010/1/1 y
+  a:aa      1
+  b:bb:bbb
+2010/1/2 z
+  a:aa      1
+  b:bb:bbb
+
+---
+
+(source_file)
+
+==================
+4__with___cleared
+==================
+
+2012/1/1 *
+  (a:aa)      1
+
+---
+
+(source_file)
+
+==================
+5__depth_0_aggregates_everything_into_a_single_line
+==================
+
+2010/1/1 x
+  a:aa      1
+  b:bb      2
+  c:cc
+2010/1/1 y
+  a:aa      1
+  b:bb      2
+  c:cc
+2010/1/2 z
+  a:aa      1
+  b:bb      2
+  c:cc
+
+---
+
+(source_file)
+
+==================
+1__monthly_reporting_interval__no_end_dates__shows_just_the_intervals_with_data_
+==================
+
+2011/2/1
+  (a)    1
+  (a:b)  1
+
+---
+
+(source_file)
+
+==================
+2__or_with_a_query_pattern__just_the_intervals_with_matched_data_
+==================
+
+2011/1/1
+  (a)  1
+2011/2/1
+  (b)  1
+
+---
+
+(source_file)
+
+==================
+5____date2_should_work_with_intervals
+==================
+
+2014/1/1
+  (a)  1
+2014/2/1=2014/1/31
+  (b)  1
+
+---
+
+(source_file)
+
+==================
+test_24
+==================
+
+2019-01-01
+    (a)   2
+2019-02-01
+    (a)   1
+
+---
+
+(source_file)
+
+==================
+13__every_nth_day_of_month_from_date_
+==================
+
+2024-01-02
+  (monthly1/02)  1
+2024-01-10
+  (monthly1/10)  1
+2024-02-20
+  (monthly2/20)  1
+2024-02-24
+  (monthly2/24)  1
+
+---
+
+(source_file)
+
+==================
+14__every_nth_day_of_month_from_date__periodic_transactions___2218__fixed_in_1_40_
+==================
+
+~ every 31st day from 2024-07 to 2024-09
+  (a)  1
+
+---
+
+(source_file)
+
+==================
+15__every_m_d_from_date__fixed_in_1_40_
+==================
+
+2023-01-10
+  (yearly2023/1/10)  1
+2024-01-10
+  (yearly2024/1/10)  1
+2025-01-10
+  (yearly2025/1/10)  1
+2026-01-10
+  (yearly2026/1/10)  1
+
+---
+
+(source_file)
+
+==================
+16__every_m_d_from_date__periodic_transactions__fixed_in_1_40_
+==================
+
+~ every 14th February from 2024 to 2026
+  (yearly)  1
+
+---
+
+(source_file)
+
+==================
+test_42
+==================
+
+2024-01-01
+  (mondays2024/01/01)  1
+2024-01-08
+  (mondays2024/01/08)  1
+2024-01-15
+  (mondays2024/01/15)  1
+2024-02-05
+  (mondays2024/02/05)  1
+2024-02-12
+  (mondays2024/02/12)  1
+2024-02-19
+  (mondays2024/02/19)  1
+
+---
+
+(source_file)
+
+==================
+19__every_nth_weekday_from_date__periodic_transactions_
+==================
+
+~ every 2nd monday from 2024/1/5 to 2024/3
+  (mondays)  1
+
+---
+
+(source_file)
+
+==================
+1____sort_with_non_date_sorts_by_the_correct_account
+==================
+
+2024-01-01 Demo
+    a   1
+    b  
+2024-01-02 Other
+    c   1
+    a
+
+---
+
+(source_file)
+
+==================
+2____sort_with_two_expressions_sorts_correctly
+==================
+
+2024-01-01 Demo
+    a   1
+    b  
+2024-01-02 Other
+    c   1
+    a
+
+---
+
+(source_file)
+
+==================
+3____sort_with_negation_reverses
+==================
+
+2024-01-01 Demo
+    a   1
+    b  
+2024-01-02 Other
+    c   1
+    a
+
+---
+
+(source_file)
+
+==================
+4____sort_with_negation_and_multiple_accounts
+==================
+
+2024-01-01 Demo
+    a   1
+    b  
+2024-01-02 Other
+    c   1
+    a
+
+---
+
+(source_file)
+
+==================
+5____sort_with_date__reversed
+==================
+
+2024-01-01 Demo
+    a   1
+    b  
+2024-01-02 Other
+    c   1
+    a
+
+---
+
+(source_file)
+
+==================
+6____sort_with_description
+==================
+
+2024-01-01 Other
+    a   1
+    b  
+2024-01-02 Demo
+    c   1
+    a
+
+---
+
+(source_file)
+
+==================
+7____sort_with_absamount
+==================
+
+2024-01-01 Demo
+    a   15
+    b   10
+    c  -25
+2024-01-02 Other
+    d   12
+    e  -48
+    f   36
+
+---
+
+(source_file)
+
+==================
+test_0
+==================
+
+2014/3/30
+  (a)  1
+2014/4/1
+  (a)  1
+2014/3/31
+  (a)  1
+
+---
+
+(source_file)
+
+==================
+3__for_register__related_postings_will_only_display_each_posting_once
+==================
+
+P 2021-01-01 A  10 B
+2021-01-01
+  (a)    1 A
+  (a)    2 A
+  (b)    3 A
+
+---
+
+(source_file)
+
+==================
+test_3
+==================
+
+2016/1/1 paycheck
+    income:remuneration     $-100
+    income:donations         $-15
+    assets:bank
+2016/1/1 withdraw
+    assets:cash             $20
+    assets:bank
+
+---
+
+(source_file)
+
+==================
+test_5
+==================
+
+2016/1/1 withdraw
+    assets:cash     $20
+    assets:bank
+2016/1/1 gift
+    assets:cash     $-15
+    expenses:gifts  ; [1/2]
+
+---
+
+(source_file)
+
+==================
+3__add_postings_in_another_commodity
+==================
+
+2017/04/24 * 09:00-09:25
+    (assets:unbilled:client1)           0.42h
+2017/04/25 * 10:00-11:15
+    (assets:unbilled:client1)           1.25h
+2017/04/25 * 14:00-15:32
+    (assets:unbilled:client2)           1.54h
+; billing rules
+= ^assets:unbilled:client1
+  (assets:to bill:client1)   *100.00 CAD
+= ^assets:unbilled:client2
+  (assets:to bill:client2)   *150.00 CAD
+
+---
+
+(source_file)
+
+==================
+4__add_postings_with_prices
+==================
+
+2017/04/24 * 09:00-09:25
+    (assets:unbilled:client1)         0.42h
+2017/04/25 * 10:00-11:15
+    (assets:unbilled:client1)         1.25h
+2017/04/25 * 14:00-15:32
+    (assets:unbilled:client2)         1.54h
+; billing rules
+= ^assets:unbilled:client1
+  assets:to bill:client1   *1.00 hours @ $100.00
+  income:consulting:client1
+= ^assets:unbilled:client2
+  assets:to bill:client2   *1.00 hours @ $150.00
+  income:consulting:client2
+
+---
+
+(source_file)
+
+==================
+test_9
+==================
+
+2016/1/1 withdraw
+    assets:cash     $20
+    assets:bank
+2016/1/2 withdraw
+    assets:cash
+    assets:bank     $-30
+
+---
+
+(source_file)
+
+==================
+6__rewrite_rule_within_journal
+==================
+
+= ^assets:bank$ date:2017/1 amt:<0
+    assets:bank  *0.008
+    expenses:fee  *-0.008  ; cash withdraw fee
+= ^expenses:housing
+    (budget:housing)  *-1
+= ^expenses:grocery ^expenses:food
+    (budget:food)  *-1
+2016/12/31
+    expenses:housing  $600
+    assets:cash
+2017/1/1
+    expenses:food  $20
+    expenses:leisure  $15
+    expenses:grocery  $30
+    assets:cash
+2017/1/2
+    assets:cash  $200.00
+    assets:bank
+2017/2/1
+    assets:cash  $100.00
+    assets:bank
+; order with normal entries doesn't matter
+; but relative order matters to refer-rewritten transactions
+= ^expenses not:housing not:grocery not:food
+    (budget:misc)  *-1
+
+---
+
+(source_file)
+
+==================
+7__rewrite_using_diff_output
+==================
+
+2016/01/01 withdraw
+    assets:cash              $20
+    assets:bank
+2016/01/02 withdraw
+    assets:cash
+    assets:bank             $-30
+
+---
+
+(source_file)
+
+==================
+1__investment_that_does_not_grow_has_no_return
+==================
+
+2017-01-01 investment
+   assets:cash  -$100
+   investment
+2017-06-01 investment
+   assets:cash  -$100
+   investment
+
+---
+
+(source_file)
+
+==================
+2__growth_by_12__from_single_investment_transaction_should_show_12__irr_and_12__twr
+==================
+
+2017-01-01 investment
+   assets:cash  -$100
+   investment
+2017-12-31 investment valuation
+   investment  = $112
+   pnl
+
+---
+
+(source_file)
+
+==================
+3__same_as__2___but_grow_by_1__per_month
+==================
+
+2017-01-01 investment
+   assets:cash  -$100
+   investment
+2017-01-31 investment valuation
+   investment  = $101
+   pnl
+2017-02-28 investment valuation
+   investment  = $102
+   pnl
+2017-03-31 investment valuation
+   investment  = $103
+   pnl
+2017-04-30 investment valuation
+   investment  = $104
+   pnl
+2017-05-31 investment valuation
+   investment  = $105
+   pnl
+2017-06-30 investment valuation
+   investment  = $106
+   pnl
+2017-07-31 investment valuation
+   investment  = $107
+   pnl
+2017-08-31 investment valuation
+   investment  = $108
+   pnl
+2017-09-30 investment valuation
+   investment  = $109
+   pnl
+2017-10-31 investment valuation
+   investment  = $110
+   pnl
+2017-11-30 investment valuation
+   investment  = $111
+   pnl
+2017-12-31 investment valuation
+   investment  = $112
+   pnl
+
+---
+
+(source_file)
+
+==================
+4__when__100_invested_over_12_month____100_invested_over_6_month_yield__220__that_s_10__twr__but_12_73__irr
+==================
+
+2017-01-01 investment
+   assets:cash  -$100
+   investment
+2017-06-01 investment
+   assets:cash  -$100
+   investment
+2017-12-31 investment valuation
+   investment  = $220
+   pnl
+
+---
+
+(source_file)
+
+==================
+5__when__100_invested_over_12_month____100_invested_over_6_month_yield__20__that_s__90__twr__but__95_73__irr
+==================
+
+2017-01-01 investment
+   assets:cash  -$100
+   investment
+2017-06-01 investment
+   assets:cash  -$100
+   investment
+2017-12-31 investment valuation
+   investment  = $20
+   pnl
+
+---
+
+(source_file)
+
+==================
+6__check_that_deposits_withdrawals_and_profit_loss_are_reflected_in_the_right_periods
+==================
+
+2017-01-01 investment
+   assets:cash  -$100
+   investment
+2017-06-30 investment valuation
+   investment  = $110
+   pnl
+2017-07-01 investment
+   assets:cash  -$100
+   investment
+2017-10-01 withdrawal
+   assets:cash  $50
+   investment
+2017-12-31 investment valuation
+   investment  = $155
+   pnl
+
+---
+
+(source_file)
+
+==================
+7__check_that_reporting_for_the_part_of_the_total_history_of_investment_works
+==================
+
+2017-01-01 investment
+   assets:cash  -$100
+   investment
+2017-06-30 investment valuation
+   investment  = $110
+   pnl
+2017-07-01 investment
+   assets:cash  -$100
+   investment
+2017-10-01 withdrawal
+   assets:cash  $50
+   investment
+2017-12-31 investment valuation
+   investment  = $155
+   pnl
+
+---
+
+(source_file)
+
+==================
+8__dont_fail_where_there_is_no_rate_of_return
+==================
+
+2019/11/01 Example
+  Assets:Checking  1
+  Income:Salary  -1
+
+---
+
+(source_file)
+
+==================
+9__fail_with_a_nice_error_message_when_commodity_can_t_be_valued
+==================
+
+2019/11/01 Example
+  Assets:Checking  -100 A
+  Investment       10 B
+2019/11/02 Example
+  Assets:Checking  -100 C
+  Investment       100 C
+2019/11/02 Example
+  Investment        -9 B @@ 100 A
+  Assets:Checking    101 A
+  Unrealized PnL
+
+---
+
+(source_file)
+
+==================
+10__forcing_valuation_via___value
+==================
+
+2019/11/01 Example
+  Assets:Checking  -100 A
+  Investment       10 B
+2019/11/02 Example
+  Investment        -10 B @@ 100 A
+  Assets:Checking   101 A
+  Unrealized PnL
+
+---
+
+(source_file)
+
+==================
+test_14
+==================
+
+P 2020-12-01 $ 76.20
+P 2021-01-01 $ 73.88
+2020-12-02 invest
+ assets:investment  10000
+ assets
+2021-01-02 get profit
+ assets:investment  =11000
+ income:investment
+
+---
+
+(source_file)
+
+==================
+test_16
+==================
+
+commodity $1000.00
+P 2020-12-01 $ 76.20
+P 2021-01-01 $ 73.88
+2020-12-02 invest
+ assets:investment  10000
+ assets
+2021-01-02 get profit
+ assets:investment  =11000
+ income:investment
+
+---
+
+(source_file)
+
+==================
+13__several_pnl_transactions_on_a_single_date_are_aggregated_together
+==================
+
+2010-01-01   A1
+    savingA                      100.00 €
+    checking   
+2011-12-31   A2
+    savingA                        0.00 €
+    dividendA                     -8.00 €
+    checking
+2012-03-29   A3
+    savingA                     -100.00 €
+    checking
+
+---
+
+(source_file)
+
+==================
+14__should_support_begin_date_before_first_transaction_where_first_transaction_has_pnl
+==================
+
+P 2022-07-31 A € 1
+2022-08-01 Purchase
+    checking   € -101
+    stocks  100 A @ € 1
+    expenses   € 1
+P 2022-08-02 A € 2
+
+---
+
+(source_file)
+
+==================
+15__correctly_work_with___value_and_complex_valuation_chains
+==================
+
+P 2023-01-01 B 20A
+P 2023-01-01 C 1B
+2023-01-01
+ investment  1C @@ 20A
+ investment  4B @@ 80A
+ assets
+P 2023-12-31 C 2B
+
+---
+
+(source_file)
+
+==================
+16__correcly_process_dates_with_just_pricing_changes
+==================
+
+D 1,000.00 EUR 
+2018-07-01 investment
+        assets:bank
+        investments:iShares Core MSCI World     1 "IE00B4L5Y983"
+P 2018-12-28 "IE00B4L5Y983" 43.11000000 "EUR"
+P 2019-06-28 "IE00B4L5Y983" 50.93000000 "EUR"
+2019-07-01 investment
+        assets:bank    
+        investments:iShares Core MSCI World     10 "IE00B4L5Y983"
+P 2019-12-30 "IE00B4L5Y983" 56.59000000 "EUR"
+
+---
+
+(source_file)
+
+==================
+17__avoids_fencepost_problem_when_allocating_pnl_to_periods
+==================
+
+commodity 1,000.00 CHF 
+P 2024-11-07 A 1 CHF 
+P 2024-11-08 B 1 CHF 
+2024-11-07 buying A
+  assets  -20 CHF
+  investments:A  20 A @@ 20 CHF
+2024-11-26 buying B
+  assets  -20000 CHF 
+  investments:B  19986 B @@ 20000 CHF 
+P 2024-12-31 B 1.0018 CHF
+
+---
+
+(source_file)
+
+==================
+1__run_requires____before_first_command
+==================
+
+2017-01-01 groceries
+   assets:cash  -$100
+   expenses:food
+
+---
+
+(source_file)
+
+==================
+3__run_one_command_from_command_line
+==================
+
+2017-01-01 groceries
+   assets:cash  -$100
+   expenses:food
+
+---
+
+(source_file)
+
+==================
+4__run_two_commands_from_command_line
+==================
+
+2017-01-01 groceries
+   assets:cash  -$100
+   expenses:food
+
+---
+
+(source_file)
+
+==================
+5__run_two_commands_from_command_line_with_different_input_options
+==================
+
+2017-01-01 investment
+   assets:cash  -$100
+   expenses:food
+~ 2017-02-01  next month groceries
+   assets:cash  -$120
+   expenses:food
+
+---
+
+(source_file)
+
+==================
+6__run_commands_from_file
+==================
+
+2017-01-01 groceries
+   assets:cash  -$100
+   expenses:food
+
+---
+
+(source_file)
+
+==================
+7__run_commands_from_command_line__and_use_nested__run__to_run_commands_from_file
+==================
+
+2017-01-01 groceries
+   assets:cash  -$100
+   expenses:food
+
+---
+
+(source_file)
+
+==================
+8__run_commands_from_stdin
+==================
+
+echo 'Accounts:'
+accounts
+echo
+echo 'Assets:'
+balance assets
+
+---
+
+(source_file)
+
+==================
+9__run_commands_accept_numeric_options
+==================
+
+echo 'Assets, depth 1:'
+balance assets -1
+echo
+echo 'Assets, depth 2:'
+balance assets -2
+
+---
+
+(source_file)
+
+==================
+10__run_commands_accept__argfiles
+==================
+
+echo 'Assets, depth 1:'
+balance @run.args
+echo
+echo 'Assets, depth 2:'
+balance assets -2
+
+---
+
+(source_file)
+
+==================
+11__run_caches_input_files__and_re_parses_files_when_inputoptions_change
+==================
+
+2017-01-01 groceries
+   assets:cash  -$100
+   expenses:food
+
+---
+
+(source_file)
+
+==================
+12__run_commands_with_forecast_properly_honor_reporting_interval
+==================
+
+2025-01-01  Buy beans
+    expenses:food   $2
+    assets         -$2
+~ every 14 days from 2025-01-01  Buy soylent green
+    expenses:food:not people   $1
+    assets                    -$1
+
+---
+
+(source_file)
+
+==================
+2__included_files_should_be_listed_in_parse_order
+==================
+
+include a.j
+include b.j
+
+---
+
+(source_file)
+
+==================
+6__show_account_tags_even_when_there_are_no_transactions___1857_
+==================
+
+account a   ; t1:
+
+---
+
+(source_file)
+
+==================
+1__a_timeclock_session_is_parsed_as_a_similarly_named_transaction_with_one_virtual_posting_
+==================
+
+i 2009/1/1 08:00:00
+o 2009/1/1 09:00:00
+i 2009/1/2 08:00:00 account name
+o 2009/1/2 09:00:00
+i 2009/1/3 08:00:00 some:account name  and a description
+o 2009/1/3 09:00:00
+
+---
+
+(source_file)
+
+==================
+3__for_a_missing_clock_out__now_is_implied
+==================
+
+i 2020/1/1 08:00
+
+---
+
+(source_file)
+
+==================
+4__for_a_log_not_starting_with_clock_in__print_error
+==================
+
+o 2020/1/1 08:00
+
+---
+
+(source_file)
+
+==================
+5__for_two_consecutive_anonymous_clock_ins__print_error
+==================
+
+i 2020/1/1 08:00
+i 2020/1/1 09:00
+
+---
+
+(source_file)
+
+==================
+test_8
+==================
+
+i 2020-01-30 08:38:35 acct
+o 2020-01-30 09:03:35
+
+---
+
+(source_file)
+
+==================
+test_10
+==================
+
+i 2023-05-01 08:00:00 acct 1  description ; a comment with tag:
+o 2023-05-01 09:00:00
+i 2023-05-02 08:00:00 acct 2  ; another comment
+o 2023-05-02 09:00:00
+
+---
+
+(source_file)
+
+==================
+9__support_multiple_sessions_simultaneously_clocked_in_
+==================
+
+i 2025-03-10 08:00:00 multi:1  description 1
+i 2025-03-10 09:00:00 multi:2  description 2 ; note that these entries are both active
+o 2025-03-10 12:00:00 multi:1
+o 2025-03-10 15:00:00 multi:2
+
+---
+
+(source_file)
+
+==================
+test_14
+==================
+
+i 2025-03-10 08:00:00 multi:1  description 1
+i 2025-03-10 09:00:00 multi:2  description 2
+i 2025-03-10 10:00:00 multi:3  description 3
+o 2025-03-10 11:00:00
+o 2025-03-10 12:00:00 multi:1
+o 2025-03-10 15:00:00
+
+---
+
+(source_file)
+
+==================
+11__multiple_active_sessions_can_span_multiple_days_
+==================
+
+i 2025-03-11 19:00:00 multi:1
+i 2025-03-11 20:00:00 multi:2
+o 2025-03-12 08:00:00
+o 2025-03-12 09:00:00
+
+---
+
+(source_file)
+
+==================
+12__the___timeclock_old_flag_reverts_to_the_old_behavior_
+==================
+
+i 2009/1/1 08:00:00
+o 2009/1/1 09:00:00 stuff on checkout record  is ignored
+i 2009/1/2 08:00:00 account name
+o 2009/1/2 09:00:00
+i 2009/1/3 08:00:00 some:account name  and a description
+o 2009/1/3 09:00:00
+
+---
+
+(source_file)
+
+==================
+4__each_of_these_formats_is_parsed_as_exactly_0_25_
+==================
+
+2023-01-01
+a  .
+b  0.25
+c  .25
+d  0,25
+e  ,25
+f  15m
+g  0.25h
+
+---
+
+(source_file)
+
+==================
+5__lines_can_be_commented_by_a_leading___or____indented_or_not_
+==================
+
+2024-01-01
+;a
+ ;b
+#c
+ #d
+e
+
+---
+
+(source_file)
+
+==================
+sample
+==================
+
+; A sample journal file.
+;
+; Sets up this account tree:
+; assets
+;   bank
+;     checking
+;     saving
+;   cash
+; expenses
+;   food
+;   supplies
+; income
+;   gifts
+;   salary
+; liabilities
+;   debts
+
+; declare accounts:
+; account assets:bank:checking
+; account income:salary
+; account income:gifts
+; account assets:bank:saving
+; account assets:cash
+; account expenses:food
+; account expenses:supplies
+; account liabilities:debts
+
+; declare commodities:
+; commodity $
+
+2008/01/01 income
+    assets:bank:checking  $1
+    income:salary
+
+2008/06/01 gift
+    assets:bank:checking  $1
+    income:gifts
+
+2008/06/02 save
+    assets:bank:saving  $1
+    assets:bank:checking
+
+2008/06/03 * eat & shop
+    expenses:food      $1
+    expenses:supplies  $1
+    assets:cash
+
+2008/12/31 * pay off
+    liabilities:debts  $1
+    assets:bank:checking
+
+
+;final comment
+
+---
+
+(source_file)
+
+==================
+sample2
+==================
+
+2025-01-01 starting balances
+    assets:cash               100 USD            =  100 USD
+    assets:bank:checking     1000 USD            = 1000 USD
+    assets:broker:usd        1000 USD            = 1000 USD
+    assets:broker:aaa           1 AAA @ 1.20 USD =    1 AAA @ 1.20 USD
+    liabilities:credit card  -400 USD            = -400 USD
+    equity:start
+
+2025-01-01 pay rent
+    assets:bank:checking
+    expenses:rent             800 USD
+
+2025-01-02 salary
+    revenues:salary
+    assets:bank:checking     1000 USD
+
+2025-01-03 pay half of credit card balance
+    assets:bank:checking
+    liabilities:credit card   200 USD = -200 USD
+
+2025-01-04 shopping
+    assets:bank:checking
+    expenses:food             200 USD
+    expenses:supplies          50 USD
+
+---
+
+(source_file)
