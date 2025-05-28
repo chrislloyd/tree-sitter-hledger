@@ -15,7 +15,7 @@ module.exports = grammar({
         optional(seq($._whitespace, $.code)),
         optional(seq($._whitespace, $.description)),
         $._newline,
-        repeat1($.posting),
+        repeat($.posting),
       ),
 
     periodic_transaction: ($) =>
@@ -27,14 +27,14 @@ module.exports = grammar({
         optional(seq($._whitespace, $.code)),
         optional(seq($._whitespace, $.description)),
         $._newline,
-        repeat1($.posting),
+        repeat($.posting),
       ),
 
     status: ($) => token(choice("*", "!")),
 
     code: ($) => token(seq("(", /[^)]*/, ")")),
 
-    date: ($) => /\d{4}[-\/]\d{1,2}[-\/]\d{1,2}/,
+    date: ($) => /\d{4}[-\/\.]\d{1,2}[-\/\.]\d{1,2}/,
 
     period_expression: ($) => choice(
       "daily",
@@ -60,7 +60,15 @@ module.exports = grammar({
       ),
 
     directive: ($) =>
-      choice($.account_directive, $.commodity_directive, $.price_directive),
+      choice(
+        $.account_directive, 
+        $.commodity_directive, 
+        $.price_directive,
+        $.decimal_mark_directive,
+        $.payee_directive,
+        $.tag_directive,
+        $.include_directive,
+      ),
 
     account_directive: ($) =>
       seq("account", $._whitespace, $.account, $._newline),
@@ -80,7 +88,19 @@ module.exports = grammar({
         $._newline,
       ),
 
-    comment_line: ($) => seq(";", /[^\r\n]*/, $._newline),
+    decimal_mark_directive: ($) =>
+      seq("decimal-mark", $._whitespace, choice(".", ","), $._newline),
+
+    payee_directive: ($) =>
+      seq("payee", $._whitespace, /[^\r\n]+/, $._newline),
+
+    tag_directive: ($) =>
+      seq("tag", $._whitespace, /[a-zA-Z][a-zA-Z0-9_-]*/, $._newline),
+
+    include_directive: ($) =>
+      seq("include", $._whitespace, /[^\r\n]+/, $._newline),
+
+    comment_line: ($) => seq(choice(";", "#"), /[^\r\n]*/, $._newline),
 
     cost_spec: ($) => choice(
       seq("@", optional($._whitespace), $.amount),    // @ $150 (unit price)
@@ -92,7 +112,7 @@ module.exports = grammar({
       seq("==", optional($._whitespace), $.amount),   // == $100  
     ),
 
-    comment: ($) => seq(";", /[^\r\n]*/),
+    comment: ($) => seq(choice(";", "#"), /[^\r\n]*/),
 
     account: ($) => choice(
       /[a-zA-Z][a-zA-Z0-9:_-]*/,           // regular account
@@ -114,7 +134,10 @@ module.exports = grammar({
 
     commodity: ($) => $._commodity,
 
-    _commodity: ($) => /[A-Z]{3,}|\$|€|£|¥|₹|₿/,
+    _commodity: ($) => choice(
+      /[A-Z]{3,}|\$|€|£|¥|₹|₿/,              // Standard commodities
+      seq('"', /[^"]+/, '"'),                  // Quoted commodities like "Chocolate Frogs"
+    ),
 
     _number: ($) => /-?[0-9]+([,.][0-9]+)*/,
 
