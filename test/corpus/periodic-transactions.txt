@@ -1,0 +1,85 @@
+================================================================================
+Monthly periodic transaction
+================================================================================
+
+~ monthly rent
+    expenses:rent    $1200
+
+--------------------------------------------------------------------------------
+
+(source_file
+  (periodic_transaction
+    (period_expression)
+    (description)
+    (posting
+      (account)
+      (amount))))
+
+================================================================================
+Weekly periodic transaction
+================================================================================
+
+~ weekly groceries
+    expenses:food    $100
+
+--------------------------------------------------------------------------------
+
+(source_file
+  (periodic_transaction
+    (period_expression)
+    (description)
+    (posting
+      (account)
+      (amount))))
+
+================================================================================
+Every N periods
+================================================================================
+
+~ every 2 weeks salary
+    income:salary    $2500
+
+--------------------------------------------------------------------------------
+
+(source_file
+  (periodic_transaction
+    (period_expression)
+    (description)
+    (posting
+      (account)
+      (amount))))
+
+================================================================================
+Periodic transaction with status
+================================================================================
+
+~ monthly * bills
+    expenses:utilities    $200
+
+--------------------------------------------------------------------------------
+
+(source_file
+  (periodic_transaction
+    (period_expression)
+    (status)
+    (description)
+    (posting
+      (account)
+      (amount))))
+
+================================================================================
+Simple period expression
+================================================================================
+
+~ daily backup
+    expenses:backup    $5
+
+--------------------------------------------------------------------------------
+
+(source_file
+  (periodic_transaction
+    (period_expression)
+    (description)
+    (posting
+      (account)
+      (amount))))

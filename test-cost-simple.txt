@@ -1,0 +1,4 @@
+2023-01-01 cost test
+    assets:stocks        $1500 @ $150
+    assets:stocks        $750 @@ $750
+    assets:checking

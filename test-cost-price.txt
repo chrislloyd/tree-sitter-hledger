@@ -1,0 +1,5 @@
+2023-01-01 stock purchases
+    assets:stocks        10 AAPL @ $150
+    assets:stocks        5 GOOGL @@ $750  
+    assets:crypto        0.1 BTC @ $45000
+    assets:checking

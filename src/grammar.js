@@ -6,11 +6,23 @@ module.exports = grammar({
 
   rules: {
     source_file: ($) =>
-      repeat(choice($.transaction, $.directive, $.comment_line, $._newline)),
+      repeat(choice($.transaction, $.periodic_transaction, $.directive, $.comment_line, $._newline)),
 
     transaction: ($) =>
       seq(
         $.date,
+        optional(seq($._whitespace, $.status)),
+        optional(seq($._whitespace, $.code)),
+        optional(seq($._whitespace, $.description)),
+        $._newline,
+        repeat1($.posting),
+      ),
+
+    periodic_transaction: ($) =>
+      seq(
+        "~",
+        optional($._whitespace),
+        $.period_expression,
         optional(seq($._whitespace, $.status)),
         optional(seq($._whitespace, $.code)),
         optional(seq($._whitespace, $.description)),
@@ -24,6 +36,16 @@ module.exports = grammar({
 
     date: ($) => /\d{4}[-\/]\d{1,2}[-\/]\d{1,2}/,
 
+    period_expression: ($) => choice(
+      "daily",
+      "weekly", 
+      "monthly",
+      "quarterly",
+      "yearly",
+      /every \d+ (days?|weeks?|months?|quarters?|years?)/,
+      /\d{4}[-\/]\d{1,2}[-\/]\d{1,2}/,  // specific dates
+    ),
+
     description: ($) => token(prec(-1, /[^\r\n;]*/)),
 
     posting: ($) =>
@@ -31,6 +53,7 @@ module.exports = grammar({
         $._whitespace,
         $.account,
         optional($.amount),
+        optional($.cost_spec),
         optional($.balance_assertion),
         optional($.comment),
         $._newline,
@@ -58,6 +81,11 @@ module.exports = grammar({
       ),
 
     comment_line: ($) => seq(";", /[^\r\n]*/, $._newline),
+
+    cost_spec: ($) => choice(
+      seq("@", optional($._whitespace), $.amount),    // @ $150 (unit price)
+      seq("@@", optional($._whitespace), $.amount),   // @@ $1500 (total price)
+    ),
 
     balance_assertion: ($) => choice(
       seq("=", optional($._whitespace), $.amount),    // = $100
