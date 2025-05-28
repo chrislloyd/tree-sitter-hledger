@@ -2,17 +2,17 @@
 # yarn lockfile v1
 
 
-nan@^2.14.0:
-  version "2.14.0"
-  resolved "https://registry.yarnpkg.com/nan/-/nan-2.14.0.tgz#7818f722027b2459a86f0295d434d1fc2336c52c"
-  integrity sha512-INOFj37C7k3AfaNTtX8RhsTw7qRy7eLET14cROi9+5HAVbbHuIWUHEauBv5qT4Av2tWasiTY1Jw6puUNqRJXQg==
+nan@^2.22.2:
+  version "2.22.2"
+  resolved "https://registry.yarnpkg.com/nan/-/nan-2.22.2.tgz#6b504fd029fb8f38c0990e52ad5c26772fdacfbb"
+  integrity sha512-DANghxFkS1plDdRsX0X9pm0Z6SJNN6gBdtXfanwoZ8hooC5gosGFSBGRYHUVPz1asKA/kMRqDRdHrluZ61SpBQ==
 
-prettier@^1.18.2:
-  version "1.18.2"
-  resolved "https://registry.yarnpkg.com/prettier/-/prettier-1.18.2.tgz#6823e7c5900017b4bd3acf46fe9ac4b4d7bda9ea"
-  integrity sha512-OeHeMc0JhFE9idD4ZdtNibzY0+TPHSpSSb9h8FqtP+YnoZZ1sl8Vc9b1sasjfymH3SonAF4QcA2+mzHPhMvIiw==
+prettier@^3.5.3:
+  version "3.5.3"
+  resolved "https://registry.yarnpkg.com/prettier/-/prettier-3.5.3.tgz#4fc2ce0d657e7a02e602549f053b239cb7dfe1b5"
+  integrity sha512-QQtaxnoDJeAkDvDKWCLiwIXkTgRhwYDEQCghU9Z6q03iyek/rxRh/2lC3HB7P8sWT2xC/y5JDctPLBIGzHKbhw==
 
-tree-sitter-cli@^0.15.8:
-  version "0.15.8"
-  resolved "https://registry.yarnpkg.com/tree-sitter-cli/-/tree-sitter-cli-0.15.8.tgz#f4d54e89892ea1d788e882146ba8bf950698ca3b"
-  integrity sha512-f61o6LuCOo1lcPGg+fWqWQeAfHnXBcrnlW3L04Ocztq3rkc2jztZz/QUCWIjQ92JHBVD1auEPh74bqqDhuK97w==
+tree-sitter-cli@^0.25.5:
+  version "0.25.5"
+  resolved "https://registry.npmjs.org/tree-sitter-cli/-/tree-sitter-cli-0.25.5.tgz"
+  integrity sha512-aLAyf+T3Y5psFZPgd7bUovhhJtplD1hk1mIwMsSZGwoEa6iGgqeGYmV9zgjatT5bMPUfcKX9x1xZfYim7aItjQ==

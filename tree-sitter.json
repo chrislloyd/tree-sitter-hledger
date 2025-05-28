@@ -1,0 +1,14 @@
+{
+  "grammars": [
+    {
+      "name": "tree-sitter-hledger",
+      "path": ".",
+      "scope": "source.hledger"
+    }
+  ],
+  "metadata": {
+    "language": "hledger",
+    "version": "1.0.0"
+  },
+  "abi-version": 15
+}
