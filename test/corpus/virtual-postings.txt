@@ -12,8 +12,7 @@ Virtual posting
     (date)
     (description)
     (posting
-      (virtual_account
-        (account))
+      (account)
       (amount))))
 
 ================================================================================
@@ -30,8 +29,7 @@ Balanced virtual posting
     (date)
     (description)
     (posting
-      (balanced_virtual_account
-        (account))
+      (account)
       (amount))))
 
 ================================================================================
@@ -57,12 +55,10 @@ Mixed posting types
       (account)
       (amount))
     (posting
-      (virtual_account
-        (account))
+      (account)
       (amount))
     (posting
-      (balanced_virtual_account
-        (account))
+      (account)
       (amount))))
 
 ================================================================================
@@ -83,5 +79,4 @@ Virtual posting without amount
       (account)
       (amount))
     (posting
-      (virtual_account
-        (account)))))
+      (account))))

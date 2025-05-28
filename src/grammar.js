@@ -29,15 +29,11 @@ module.exports = grammar({
     posting: ($) =>
       seq(
         $._whitespace,
-        choice($.account, $.virtual_account, $.balanced_virtual_account),
+        $.account,
         optional($.amount),
         optional($.comment),
         $._newline,
       ),
-
-    virtual_account: ($) => seq("(", $.account, ")"),
-
-    balanced_virtual_account: ($) => seq("[", $.account, "]"),
 
     directive: ($) =>
       choice($.account_directive, $.commodity_directive, $.price_directive),
@@ -64,7 +60,11 @@ module.exports = grammar({
 
     comment: ($) => seq(";", /[^\r\n]*/),
 
-    account: ($) => /[a-zA-Z][a-zA-Z0-9:_-]*/,
+    account: ($) => choice(
+      /[a-zA-Z][a-zA-Z0-9:_-]*/,           // regular account
+      seq("(", /[a-zA-Z][a-zA-Z0-9:_-]*/, ")"),  // virtual account
+      seq("[", /[a-zA-Z][a-zA-Z0-9:_-]*/, "]"),  // balanced virtual account
+    ),
 
     amount: ($) =>
       choice(
@@ -82,7 +82,7 @@ module.exports = grammar({
 
     _commodity: ($) => /[A-Z]{3,}|\$|€|£|¥|₹|₿/,
 
-    _number: ($) => /[0-9]+([,.][0-9]+)*/,
+    _number: ($) => /-?[0-9]+([,.][0-9]+)*/,
 
     _whitespace: ($) => /[ \t]+/,
     _newline: ($) => /\r?\n/,
