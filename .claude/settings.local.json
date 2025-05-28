@@ -1,0 +1,13 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(npm test)",
+      "Bash(npm run build:*)",
+      "Bash(tree-sitter parse:*)",
+      "Bash(tree-sitter generate:*)",
+      "Bash(npx tree-sitter:*)",
+      "Bash(rm:*)"
+    ],
+    "deny": []
+  }
+}

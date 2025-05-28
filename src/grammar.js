@@ -5,53 +5,86 @@ module.exports = grammar({
   name: "hledger",
 
   rules: {
-    source_file: ($) => repeat(choice($.transaction, "\n", $.comment)),
+    source_file: ($) =>
+      repeat(choice($.transaction, $.directive, $.comment_line, $._newline)),
 
-    transaction: ($) => seq($.entry, repeat1(seq(/\s{1,}/, $.posting, "\n"))),
-
-    entry: ($) =>
+    transaction: ($) =>
       seq(
         $.date,
-        optional(seq(/\s*/, $.status)),
-        optional($.payee),
-        optional(seq(/\s*/, $.comment)),
+        optional(seq($._whitespace, $.status)),
+        optional(seq($._whitespace, $.code)),
+        optional(seq($._whitespace, $.description)),
+        $._newline,
+        repeat1($.posting),
       ),
 
-    date: ($) => {
-      function createDate(separator) {
-        return seq(optional(seq($.year, separator)), $.month, separator, $.day);
-      }
-      return choice(createDate("-"), createDate("/"), createDate("."));
-    },
-    year: ($) => /\d{4}/,
-    month: ($) => /\d{2}/,
-    day: ($) => /\d{2}/,
+    status: ($) => token(choice("*", "!")),
 
-    payee: ($) => /[^\n;]+/,
+    code: ($) => token(seq("(", /[^)]*/, ")")),
+
+    date: ($) => /\d{4}[-\/]\d{1,2}[-\/]\d{1,2}/,
+
+    description: ($) => token(prec(-1, /[^\r\n;]*/)),
 
     posting: ($) =>
       seq(
-        optional(seq($.status, " ")),
-        $.account,
-        optional(seq(/\s{2,}/, $.amount)),
+        $._whitespace,
+        choice($.account, $.virtual_account, $.balanced_virtual_account),
+        optional($.amount),
+        optional($.comment),
+        $._newline,
       ),
 
-    status: ($) => choice("*", "!"),
+    virtual_account: ($) => seq("(", $.account, ")"),
 
-    account: ($) => seq($._accountPart, repeat(seq(":", $._accountPart))),
-    _accountPart: ($) => /\w+/,
+    balanced_virtual_account: ($) => seq("[", $.account, "]"),
 
-    amount: ($) => seq($.commodity, $.quantity),
+    directive: ($) =>
+      choice($.account_directive, $.commodity_directive, $.price_directive),
 
-    // choice(
-    //   $.quantity,
-    //   seq($.commodity, $.quantity), // left commodity
-    //   seq($.quantity, $.commodity) // right commodity
-    // ),
+    account_directive: ($) =>
+      seq("account", $._whitespace, $.account, $._newline),
 
-    commodity: ($) => /[\w\$]+/,
-    quantity: ($) => /\d+/,
+    commodity_directive: ($) =>
+      seq("commodity", $._whitespace, $.commodity, $._newline),
 
-    comment: ($) => seq(";", /[^\n]*/),
+    price_directive: ($) =>
+      seq(
+        "P",
+        $._whitespace,
+        $.date,
+        $._whitespace,
+        $.commodity,
+        $._whitespace,
+        $.amount,
+        $._newline,
+      ),
+
+    comment_line: ($) => seq(";", /[^\r\n]*/, $._newline),
+
+    comment: ($) => seq(";", /[^\r\n]*/),
+
+    account: ($) => /[a-zA-Z][a-zA-Z0-9:_-]*/,
+
+    amount: ($) =>
+      choice(
+        // Negative commodity before number: -$100, -€50
+        seq("-", $._commodity, $._number),
+        // Commodity before number: $100, €50, £25
+        seq($._commodity, $._number),
+        // Number before commodity: 100 USD, -50.25 EUR
+        seq($._number, optional($._whitespace), $._commodity),
+        // Number only (assumes default commodity)
+        $._number,
+      ),
+
+    commodity: ($) => $._commodity,
+
+    _commodity: ($) => /[A-Z]{3,}|\$|€|£|¥|₹|₿/,
+
+    _number: ($) => /[0-9]+([,.][0-9]+)*/,
+
+    _whitespace: ($) => /[ \t]+/,
+    _newline: ($) => /\r?\n/,
   },
 });

@@ -1,0 +1,87 @@
+================================================================================
+Virtual posting
+================================================================================
+
+2023-01-01 test
+    (budget:food)    $10
+
+--------------------------------------------------------------------------------
+
+(source_file
+  (transaction
+    (date)
+    (description)
+    (posting
+      (virtual_account
+        (account))
+      (amount))))
+
+================================================================================
+Balanced virtual posting
+================================================================================
+
+2023-01-01 test
+    [equity:allocation]    $100
+
+--------------------------------------------------------------------------------
+
+(source_file
+  (transaction
+    (date)
+    (description)
+    (posting
+      (balanced_virtual_account
+        (account))
+      (amount))))
+
+================================================================================
+Mixed posting types
+================================================================================
+
+2023-01-01 test
+    expenses:food        $10
+    assets:checking     -$10
+    (budget:food)        $10
+    [equity:opening]    -$10
+
+--------------------------------------------------------------------------------
+
+(source_file
+  (transaction
+    (date)
+    (description)
+    (posting
+      (account)
+      (amount))
+    (posting
+      (account)
+      (amount))
+    (posting
+      (virtual_account
+        (account))
+      (amount))
+    (posting
+      (balanced_virtual_account
+        (account))
+      (amount))))
+
+================================================================================
+Virtual posting without amount
+================================================================================
+
+2023-01-01 test
+    expenses:food    $10
+    (budget:food)
+
+--------------------------------------------------------------------------------
+
+(source_file
+  (transaction
+    (date)
+    (description)
+    (posting
+      (account)
+      (amount))
+    (posting
+      (virtual_account
+        (account)))))
