@@ -1,12 +1,12 @@
 /// <reference types="tree-sitter-cli/dsl" />
 // @ts-check
 
+const WHITESPACE = /[ \t]+/;
+
 module.exports = grammar({
   name: "hledger",
 
-  // Only skip spaces and tabs; we want newlines and semicolons to be
-  // significant
-  extras: () => [/[ \t]/],
+  extras: () => [WHITESPACE],
 
   rules: {
     source_file: ($) =>
@@ -32,13 +32,30 @@ module.exports = grammar({
         "monthly",
         "quarterly",
         "yearly",
-        /every \d+ (days?|weeks?|months?|quarters?|years?)/,
-        $.date, // specific dates
+        // "every N days/weeks/months/quarters/years"
+        token(
+          seq(
+            "every", // keyword
+            / +/, // required space(s)
+            /\d+/, // number
+            / +/, // required space(s)
+            /(days?|weeks?|months?|quarters?|years?)/, // time unit with optional plural
+          ),
+        ),
+        // specific dates
+        $.date,
       ),
 
     status: () => choice("*", "!"),
-    
-    code: () => token(seq("(", /[^)]*/, ")")),
+
+    code: () =>
+      token(
+        seq(
+          "(", // opening paren
+          /[^)]*/, // any content except closing paren
+          ")", // closing paren
+        ),
+      ),
 
     // Use low precedence (-1) so that specific tokens like status (*) and code (...)
     // are matched first when there's ambiguity, rather than being consumed by description
@@ -46,28 +63,36 @@ module.exports = grammar({
 
     posting: ($) =>
       seq(
-        $._whitespace,  // postings must be indented
+        $._whitespace, // postings must be indented
         choice(
           $.account, // regular account
           seq("(", $.account, ")"), // virtual account
           seq("[", $.account, "]"), // balanced virtual account
         ),
         optional(
-          choice(
-            seq(
-              $._whitespace,
-              $.amount,
-              optional(seq(optional($._whitespace), $.cost_spec)),
-              optional(seq(optional($._whitespace), $.balance_assertion)),
+          seq(
+            $._whitespace,
+            choice(
+              seq(
+                $.amount,
+                optional(seq(optional($._whitespace), $.cost_spec)),
+                optional(seq(optional($._whitespace), $.balance_assertion)),
+              ),
+              $.balance_assertion,
             ),
-            seq($._whitespace, $.balance_assertion),
           ),
         ),
         optional($.comment),
         $._newline,
       ),
 
-    account: () => /[\p{L}\p{N}_][\p{L}\p{N}:_\/-]*/u,
+    account: () =>
+      token(
+        seq(
+          /[\p{L}\p{N}_]/u, // first char: letter, number, or underscore
+          /[\p{L}\p{N}:_\/-]*/u, // rest: also allows colon, slash, hyphen
+        ),
+      ),
 
     amount: ($) =>
       choice(
@@ -89,11 +114,10 @@ module.exports = grammar({
           "@", // unit price
           "@@", // total price
         ),
-        optional($._whitespace),
         $.amount,
       ),
 
-    balance_assertion: ($) => seq(choice("=", "=="), optional($._whitespace), $.amount),
+    balance_assertion: ($) => seq(choice("=", "=="), $.amount),
 
     directive: ($) =>
       seq(
@@ -104,7 +128,7 @@ module.exports = grammar({
           seq("decimal-mark", field("mark", choice(".", ","))),
           seq("payee", field("payee", $._rest_of_line)),
           seq("tag", $.account),
-          seq("include", $._whitespace, $.filepath),
+          seq("include", $.filepath),
           seq("alias", $._rest_of_line),
         ),
         optional($.comment),
@@ -114,44 +138,59 @@ module.exports = grammar({
     comment_line: ($) => seq($._comment, $._newline),
     comment: ($) => seq(optional($._whitespace), $._comment),
 
-    filepath: () => token(/[^\r\n;#\s]+(\s+[^\r\n;#\s]+)*/),
-    
+    filepath: () =>
+      token(
+        seq(
+          /[^\r\n;#\s]+/, // first path segment (required)
+          /(\s+[^\r\n;#\s]+)*/, // additional segments with spaces
+        ),
+      ),
+
     _rest_of_line: () => /[^\r\n]+/,
     _comment_chars: () => choice(";", "#"),
     _comment: ($) => seq($._comment_chars, /[^\r\n]*/),
 
     _commodity: () =>
       choice(
-        /[\p{Lu}\p{Lt}][\p{L}\p{N}]*/u, // Unicode letter/number commodities starting with uppercase
-        /\$|€|£|¥|₹|₿|元|руб/, // Currency symbols including Unicode ones
-        seq('"', /[^"]+/, '"'), // Quoted commodities like "Chocolate Frogs"
+        // Unicode letter commodities (USD, EUR, etc.)
+        token(
+          seq(
+            /[\p{Lu}\p{Lt}]/u, // first: uppercase letter
+            /[\p{L}\p{N}]*/u, // rest: any letters/numbers
+          ),
+        ),
+        // Currency symbols including Unicode ones
+        /\$|€|£|¥|₹|₿|元|руб/,
+        // Quoted commodities like "Chocolate Frogs"
+        token(seq('"', /[^"]+/, '"')),
       ),
 
-    _number: () =>
-      token(
+    _number: () => {
+      // Reusable number components
+      const digits = /[0-9]+/;
+      const thousands_comma = seq(digits, repeat(seq(",", digits))); // 1,234,567
+      const thousands_dot = seq(digits, repeat(seq(".", digits))); // 1.234.567
+      const decimal_dot = seq(".", digits); // .50
+      const decimal_comma = seq(",", digits); // ,50
+      const scientific = seq(/[eE]/, optional(/[+-]/), digits);
+
+      return token(
         seq(
-          optional("-"),
+          optional("-"), // optional negative sign
           choice(
-            // Integer part with optional thousands separators and fractional part
-            seq(
-              /[0-9]+([,][0-9]{3})*/, // Integer with thousands separators (commas)
-              optional(seq(".", /[0-9]+/)), // Optional decimal part
-            ),
-            seq(
-              /[0-9]+([.][0-9]{3})*/, // Integer with thousands separators (dots)
-              optional(seq(",", /[0-9]+/)), // Optional decimal part with comma
-            ),
-            seq(
-              /[0-9]+/, // Simple integer
-              optional(seq(/[,.]/, /[0-9]+/)), // Optional decimal part with comma or dot
-            ),
-            // Pure decimal starting with decimal point
-            seq(/[,.]/, /[0-9]+/),
+            // Format 1: 1,234.56 (comma thousands, dot decimal)
+            seq(thousands_comma, optional(decimal_dot)),
+            // Format 2: 1.234,56 (dot thousands, comma decimal)
+            seq(thousands_dot, optional(decimal_comma)),
+            // Format 3: Simple number with optional decimal
+            seq(digits, optional(seq(/[,.]/, digits))),
+            // Format 4: Leading decimal (.5 or ,5)
+            seq(/[,.]/, digits),
           ),
-          // Optional scientific notation
-          optional(seq(/[eE]/, optional(/[+-]/), /[0-9]+/)),
+          optional(scientific), // optional scientific notation
         ),
-      ),
+      );
+    },
 
     // Shared date pattern used by both date and interval rules
     date: ($) =>
@@ -170,7 +209,7 @@ module.exports = grammar({
     _month: () => /\d{1,2}/,
     _day: () => /\d{1,2}/,
 
-    _whitespace: () => /[ \t]+/,
+    _whitespace: () => WHITESPACE,
     _newline: () => /\r?\n/,
   },
 });
