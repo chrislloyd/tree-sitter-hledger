@@ -5,8 +5,8 @@
   "main": "src/index.js",
   "license": "MIT",
   "scripts": {
-    "build": "tree-sitter generate src/grammar.js",
-    "test": "tree-sitter test"
+    "build": "npx tree-sitter generate src/grammar.js",
+    "test": "npx tree-sitter test"
   },
   "dependencies": {
     "nan": "^2.22.2"
