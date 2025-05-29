@@ -167,12 +167,13 @@ module.exports = grammar({
 
     _number: () => {
       // Reusable number components
-      const digits = /[0-9]+/;
-      const thousands_comma = seq(digits, repeat(seq(",", digits))); // 1,234,567
-      const thousands_dot = seq(digits, repeat(seq(".", digits))); // 1.234.567
-      const decimal_dot = seq(".", digits); // .50
-      const decimal_comma = seq(",", digits); // ,50
-      const scientific = seq(/[eE]/, optional(/[+-]/), digits);
+      const digit = /\d+/;
+      const thousand = /\d{3}/;
+      const thousands_comma = seq(digit, repeat(seq(",", thousand))); // 1,234,567
+      const thousands_dot = seq(digit, repeat(seq(".", thousand))); // 1.234.567
+      const decimal_dot = seq(".", digit); // .50
+      const decimal_comma = seq(",", digit); // ,50
+      const scientific = seq(/[eE]/, optional(/[+-]/), digit);
 
       return token(
         seq(
@@ -183,9 +184,9 @@ module.exports = grammar({
             // Format 2: 1.234,56 (dot thousands, comma decimal)
             seq(thousands_dot, optional(decimal_comma)),
             // Format 3: Simple number with optional decimal
-            seq(digits, optional(seq(/[,.]/, digits))),
+            seq(digit, optional(seq(/[,.]/, digit))),
             // Format 4: Leading decimal (.5 or ,5)
-            seq(/[,.]/, digits),
+            seq(/[,.]/, digit),
           ),
           optional(scientific), // optional scientific notation
         ),
