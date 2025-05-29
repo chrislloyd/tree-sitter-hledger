@@ -26,16 +26,14 @@ module.exports = grammar({
       ),
 
     interval: ($) =>
-      token(
-        choice(
-          "daily",
-          "weekly",
-          "monthly",
-          "quarterly",
-          "yearly",
-          /every \d+ (days?|weeks?|months?|quarters?|years?)/,
-          $.date, // specific dates
-        ),
+      choice(
+        "daily",
+        "weekly",
+        "monthly",
+        "quarterly",
+        "yearly",
+        /every \d+ (days?|weeks?|months?|quarters?|years?)/,
+        $.date, // specific dates
       ),
 
     code: () => token(seq("(", /[^)]*/, ")")),
@@ -96,12 +94,7 @@ module.exports = grammar({
       seq(
         choice(
           seq("account", $.account),
-          seq(
-            "commodity",
-            optional(
-              seq(choice($.commodity, seq($.commodity, $.amount), $.amount)),
-            ),
-          ),
+          seq("commodity", $.commodity),
           seq("P", $.date, $.commodity, $.amount),
           seq("decimal-mark", field("mark", choice(".", ","))),
           seq("payee", field("payee", $._rest_of_line)),

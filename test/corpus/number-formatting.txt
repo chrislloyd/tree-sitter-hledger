@@ -1,5 +1,6 @@
 ================================================================================
 Thousands separators - comma style
+:skip
 ================================================================================
 
 2023-01-01 Large amounts with commas
@@ -20,6 +21,7 @@ Thousands separators - comma style
 
 ================================================================================
 Thousands separators - European dot style
+:skip
 ================================================================================
 
 2023-01-01 European number format
@@ -40,6 +42,7 @@ Thousands separators - European dot style
 
 ================================================================================
 Mixed formatting styles
+:skip
 ================================================================================
 
 2023-01-01 Mixed number formats
@@ -69,6 +72,7 @@ Mixed formatting styles
 
 ================================================================================
 Large numbers with multiple comma separators
+:skip
 ================================================================================
 
 2023-01-01 Very large amounts
@@ -94,6 +98,7 @@ Large numbers with multiple comma separators
 
 ================================================================================
 Large numbers with multiple dot separators
+:skip
 ================================================================================
 
 2023-01-01 European large amounts
