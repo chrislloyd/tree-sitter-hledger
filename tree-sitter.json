@@ -6,7 +6,8 @@
       "scope": "source.hledger",
       "grammar-path": "src/grammar.js",
       "test-corpus-path": "test/corpus",
-      "file-types": ["journal", "j", "hledger", "ledger"]
+      "file-types": ["journal", "j", "hledger", "ledger"],
+      "highlights": "queries/highlights.scm"
     }
   ],
   "metadata": {
