@@ -1,9 +1,10 @@
 ================================================================================
-Date with dashes
+Thousands separators - comma style
 ================================================================================
 
-2023-01-01 test
-    account    $10
+2023-01-01 Large amounts with commas
+    assets:savings    1,234,567.89 USD
+    income:lottery
 
 --------------------------------------------------------------------------------
 
@@ -13,14 +14,17 @@ Date with dashes
     (description)
     (posting
       (account)
-      (amount))))
+      (amount))
+    (posting
+      (account))))
 
 ================================================================================
-Date with slashes
+Thousands separators - European dot style
 ================================================================================
 
-2023/12/25 test
-    account    $10
+2023-01-01 European number format
+    assets:savings    1.234.567,89 EUR
+    income:prize
 
 --------------------------------------------------------------------------------
 
@@ -30,14 +34,18 @@ Date with slashes
     (description)
     (posting
       (account)
-      (amount))))
+      (amount))
+    (posting
+      (account))))
 
 ================================================================================
-Single digit month and day
+Pure decimal starting with decimal point - dot
 ================================================================================
 
-2023-1-5 test
-    account    $10
+2023-01-01 Decimal amounts
+    assets:change    .50 USD
+    expenses:tip    -.25 USD
+    income:found
 
 --------------------------------------------------------------------------------
 
@@ -47,14 +55,21 @@ Single digit month and day
     (description)
     (posting
       (account)
-      (amount))))
+      (amount))
+    (posting
+      (account)
+      (amount))
+    (posting
+      (account))))
 
 ================================================================================
-Date with periods
+Pure decimal starting with decimal point - comma
 ================================================================================
 
-2023.12.25 test
-    account    $10
+2023-01-01 European decimals
+    assets:change    ,75 EUR
+    expenses:coffee    -1,50 EUR
+    income:found
 
 --------------------------------------------------------------------------------
 
@@ -64,14 +79,22 @@ Date with periods
     (description)
     (posting
       (account)
-      (amount))))
+      (amount))
+    (posting
+      (account)
+      (amount))
+    (posting
+      (account))))
 
 ================================================================================
-Partial date with slashes
+Mixed formatting styles
 ================================================================================
 
-12/25 test
-    account    $10
+2023-01-01 Mixed number formats
+    assets:account1    1,000.50 USD
+    assets:account2    2.000,75 EUR
+    expenses:test1    -500.25 GBP
+    expenses:test2    -750,50 CHF
 
 --------------------------------------------------------------------------------
 
@@ -81,14 +104,25 @@ Partial date with slashes
     (description)
     (posting
       (account)
+      (amount))
+    (posting
+      (account)
+      (amount))
+    (posting
+      (account)
+      (amount))
+    (posting
+      (account)
       (amount))))
 
 ================================================================================
-Partial date with dashes
+Large numbers with multiple comma separators
 ================================================================================
 
-1-5 test
-    account    $10
+2023-01-01 Very large amounts
+    assets:investment    10,000,000.00 USD
+    assets:property    1,500,000.50 USD
+    liability:mortgage    -11,500,000.50 USD
 
 --------------------------------------------------------------------------------
 
@@ -98,14 +132,22 @@ Partial date with dashes
     (description)
     (posting
       (account)
+      (amount))
+    (posting
+      (account)
+      (amount))
+    (posting
+      (account)
       (amount))))
 
 ================================================================================
-Partial date with periods
+Large numbers with multiple dot separators
 ================================================================================
 
-12.31 test
-    account    $10
+2023-01-01 European large amounts
+    assets:investment    10.000.000,00 EUR
+    assets:property    1.500.000,50 EUR
+    liability:mortgage    -11.500.000,50 EUR
 
 --------------------------------------------------------------------------------
 
@@ -115,14 +157,22 @@ Partial date with periods
     (description)
     (posting
       (account)
+      (amount))
+    (posting
+      (account)
+      (amount))
+    (posting
+      (account)
       (amount))))
 
 ================================================================================
-Ancient date with 4+ digit year
+Scientific notation with thousands separators
 ================================================================================
 
-1066-10-14 Battle of Hastings
-    expenses:battle    100 GOLD
+2023-01-01 Mixed complex formatting
+    assets:complex    1,234.56e3 USD
+    assets:european    2.345,67E-2 EUR
+    expenses:test    -1,000e5 USD
 
 --------------------------------------------------------------------------------
 
@@ -132,38 +182,10 @@ Ancient date with 4+ digit year
     (description)
     (posting
       (account)
-      (amount))))
-
-================================================================================
-Far future date with extended year
-================================================================================
-
-9999-12-31 End of era
-    expenses:celebration    500 CREDITS
-
---------------------------------------------------------------------------------
-
-(source_file
-  (transaction
-    (date)
-    (description)
+      (amount))
     (posting
       (account)
-      (amount))))
-
-================================================================================
-Very old date with slashes
-================================================================================
-
-0001/12/25 Ancient event
-    assets:gold    1000 DENARII
-
---------------------------------------------------------------------------------
-
-(source_file
-  (transaction
-    (date)
-    (description)
+      (amount))
     (posting
       (account)
       (amount))))

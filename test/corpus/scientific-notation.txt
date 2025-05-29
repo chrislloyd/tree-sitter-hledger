@@ -1,9 +1,10 @@
 ================================================================================
-Date with dashes
+Scientific notation - basic positive exponent
 ================================================================================
 
-2023-01-01 test
-    account    $10
+2023-01-01 Scientific notation test
+    assets:stocks    1.5e10 USD
+    income:investment
 
 --------------------------------------------------------------------------------
 
@@ -13,14 +14,17 @@ Date with dashes
     (description)
     (posting
       (account)
-      (amount))))
+      (amount))
+    (posting
+      (account))))
 
 ================================================================================
-Date with slashes
+Scientific notation - negative exponent
 ================================================================================
 
-2023/12/25 test
-    account    $10
+2023-01-01 Small amounts
+    assets:micro    2.5e-6 BTC
+    expenses:fees    -1.0e-3 BTC
 
 --------------------------------------------------------------------------------
 
@@ -30,14 +34,18 @@ Date with slashes
     (description)
     (posting
       (account)
+      (amount))
+    (posting
+      (account)
       (amount))))
 
 ================================================================================
-Single digit month and day
+Scientific notation - capital E
 ================================================================================
 
-2023-1-5 test
-    account    $10
+2023-01-01 Capital E notation
+    assets:large    3.14E+8 USD
+    income:windfall
 
 --------------------------------------------------------------------------------
 
@@ -47,14 +55,17 @@ Single digit month and day
     (description)
     (posting
       (account)
-      (amount))))
+      (amount))
+    (posting
+      (account))))
 
 ================================================================================
-Date with periods
+Scientific notation - integer with exponent
 ================================================================================
 
-2023.12.25 test
-    account    $10
+2023-01-01 Integer scientific
+    assets:investment    123e5 USD
+    income:compound
 
 --------------------------------------------------------------------------------
 
@@ -64,14 +75,17 @@ Date with periods
     (description)
     (posting
       (account)
-      (amount))))
+      (amount))
+    (posting
+      (account))))
 
 ================================================================================
-Partial date with slashes
+Scientific notation - negative number
 ================================================================================
 
-12/25 test
-    account    $10
+2023-01-01 Negative scientific
+    expenses:loss    -4.5e3 USD
+    assets:trading    4.5e3 USD
 
 --------------------------------------------------------------------------------
 
@@ -81,14 +95,18 @@ Partial date with slashes
     (description)
     (posting
       (account)
+      (amount))
+    (posting
+      (account)
       (amount))))
 
 ================================================================================
-Partial date with dashes
+Scientific notation - commodity before number
 ================================================================================
 
-1-5 test
-    account    $10
+2023-01-01 Commodity prefix scientific
+    assets:account    $1.2e4
+    income:bonus
 
 --------------------------------------------------------------------------------
 
@@ -98,14 +116,17 @@ Partial date with dashes
     (description)
     (posting
       (account)
-      (amount))))
+      (amount))
+    (posting
+      (account))))
 
 ================================================================================
-Partial date with periods
+Scientific notation - very small decimal
 ================================================================================
 
-12.31 test
-    account    $10
+2023-01-01 Tiny amounts
+    assets:crypto    .5e-8 BTC
+    expenses:dust    -.1e-9 BTC
 
 --------------------------------------------------------------------------------
 
@@ -115,55 +136,7 @@ Partial date with periods
     (description)
     (posting
       (account)
-      (amount))))
-
-================================================================================
-Ancient date with 4+ digit year
-================================================================================
-
-1066-10-14 Battle of Hastings
-    expenses:battle    100 GOLD
-
---------------------------------------------------------------------------------
-
-(source_file
-  (transaction
-    (date)
-    (description)
-    (posting
-      (account)
-      (amount))))
-
-================================================================================
-Far future date with extended year
-================================================================================
-
-9999-12-31 End of era
-    expenses:celebration    500 CREDITS
-
---------------------------------------------------------------------------------
-
-(source_file
-  (transaction
-    (date)
-    (description)
-    (posting
-      (account)
-      (amount))))
-
-================================================================================
-Very old date with slashes
-================================================================================
-
-0001/12/25 Ancient event
-    assets:gold    1000 DENARII
-
---------------------------------------------------------------------------------
-
-(source_file
-  (transaction
-    (date)
-    (description)
+      (amount))
     (posting
       (account)
       (amount))))

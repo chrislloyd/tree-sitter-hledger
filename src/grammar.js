@@ -14,29 +14,18 @@ module.exports = grammar({
 
     transaction: ($) =>
       seq(
-        choice($.date, seq("~", $.interval)),
-        optional($.status),
+        choice(
+          $.date, // fixed
+          seq("~", $.interval), // periodic
+        ),
+        optional(field("status", choice("*", "!"))),
         optional($.code),
         optional($.description),
         $._newline,
         repeat($.posting),
       ),
 
-    date: () =>
-      token(
-        choice(
-          // Full date with consistent separators
-          /\d{4}\/\d{1,2}\/\d{1,2}/, // YYYY/MM/DD
-          /\d{4}-\d{1,2}-\d{1,2}/, // YYYY-MM-DD
-          /\d{4}\.\d{1,2}\.\d{1,2}/, // YYYY.MM.DD
-          // Partial date with consistent separators (when default year is set)
-          /\d{1,2}\/\d{1,2}/, // MM/DD
-          /\d{1,2}-\d{1,2}/, // MM-DD
-          /\d{1,2}\.\d{1,2}/, // MM.DD
-        ),
-      ),
-
-    interval: () =>
+    interval: ($) =>
       token(
         choice(
           "daily",
@@ -45,11 +34,9 @@ module.exports = grammar({
           "quarterly",
           "yearly",
           /every \d+ (days?|weeks?|months?|quarters?|years?)/,
-          /\d{4}[-\/]\d{1,2}[-\/]\d{1,2}/, // specific dates
+          $.date, // specific dates
         ),
       ),
-
-    status: () => choice("*", "!"),
 
     code: () => token(seq("(", /[^)]*/, ")")),
 
@@ -59,20 +46,26 @@ module.exports = grammar({
 
     posting: ($) =>
       seq(
-        $._whitespace,
         choice(
           $.account, // regular account
           seq("(", $.account, ")"), // virtual account
           seq("[", $.account, "]"), // balanced virtual account
         ),
-        optional($.amount),
-        optional($.cost_spec),
-        optional($.balance_assertion),
+        optional(
+          choice(
+            seq(
+              $.amount,
+              optional(seq(optional($._whitespace), $.cost_spec)),
+              optional(seq(optional($._whitespace), $.balance_assertion)),
+            ),
+            seq($._whitespace, $.balance_assertion),
+          ),
+        ),
         optional($.comment),
         $._newline,
       ),
 
-    account: () => /[a-zA-Z][a-zA-Z0-9:_-]*/,
+    account: () => /[\p{L}\p{N}_][\p{L}\p{N}:_\/-]*/u,
 
     amount: ($) =>
       choice(
@@ -81,7 +74,7 @@ module.exports = grammar({
         // Commodity before number: $100, €50, £25
         seq($._commodity, $._number),
         // Number before commodity: 100 USD, -50.25 EUR
-        seq($._number, $._commodity),
+        prec(1, seq($._number, /[ \t]+/, $._commodity)),
         // Number only (assumes default commodity)
         $._number,
       ),
@@ -89,33 +82,36 @@ module.exports = grammar({
     commodity: ($) => $._commodity,
 
     cost_spec: ($) =>
-      choice(
-        seq("@", $.amount), // @ $150 (unit price)
-        seq("@@", $.amount), // @@ $1500 (total price)
+      seq(
+        choice(
+          "@", // unit price
+          "@@", // total price
+        ),
+        $.amount,
       ),
 
-    balance_assertion: ($) =>
-      choice(
-        seq("=", $.amount), // = $100
-        seq("==", $.amount), // == $100
-      ),
+    balance_assertion: ($) => seq(choice("=", "=="), $.amount),
 
     directive: ($) =>
-      choice(
-        seq("account", $.account, $._newline),
-        seq("commodity", $.commodity, $._newline),
-        seq("P", $.date, $.commodity, $.amount, $._newline),
-        seq("decimal-mark", $.mark, $._newline),
-        seq("payee", $.payee, $._newline),
-        seq("tag", $.account, $._newline),
-        seq("include", $.filepath, $._newline),
+      seq(
+        choice(
+          seq("account", $.account),
+          seq(
+            "commodity",
+            optional(
+              seq(choice($.commodity, seq($.commodity, $.amount), $.amount)),
+            ),
+          ),
+          seq("P", $.date, $.commodity, $.amount),
+          seq("decimal-mark", field("mark", choice(".", ","))),
+          seq("payee", field("payee", $._rest_of_line)),
+          seq("tag", $.account),
+          seq("include", field("filepath", $._rest_of_line)),
+          seq("alias", $._rest_of_line),
+        ),
+        optional($.comment),
+        $._newline,
       ),
-
-    mark: () => choice(".", ","),
-
-    payee: ($) => $._rest_of_line,
-
-    filepath: ($) => $._rest_of_line,
 
     comment_line: ($) => seq($._comment, $._newline),
     comment: ($) => $._comment,
@@ -126,11 +122,54 @@ module.exports = grammar({
 
     _commodity: () =>
       choice(
-        /[A-Z]{3,}|\$|€|£|¥|₹|₿/, // Standard commodities
+        /[\p{Lu}\p{Lt}][\p{L}\p{N}]*/u, // Unicode letter/number commodities starting with uppercase
+        /\$|€|£|¥|₹|₿|元|руб/, // Currency symbols including Unicode ones
         seq('"', /[^"]+/, '"'), // Quoted commodities like "Chocolate Frogs"
       ),
 
-    _number: () => /-?[0-9]+([,.][0-9]+)*/,
+    _number: () =>
+      token(
+        seq(
+          optional("-"),
+          choice(
+            // Integer part with optional thousands separators and fractional part
+            seq(
+              /[0-9]+([,][0-9]{3})*/, // Integer with thousands separators (commas)
+              optional(seq(".", /[0-9]+/)), // Optional decimal part
+            ),
+            seq(
+              /[0-9]+([.][0-9]{3})*/, // Integer with thousands separators (dots)
+              optional(seq(",", /[0-9]+/)), // Optional decimal part with comma
+            ),
+            seq(
+              /[0-9]+/, // Simple integer
+              optional(seq(/[,.]/, /[0-9]+/)), // Optional decimal part with comma or dot
+            ),
+            // Pure decimal starting with decimal point
+            seq(/[,.]/, /[0-9]+/),
+          ),
+          // Optional scientific notation
+          optional(seq(/[eE]/, optional(/[+-]/), /[0-9]+/)),
+        ),
+      ),
+
+    // Shared date pattern used by both date and interval rules
+    date: ($) =>
+      choice(
+        // Full date with consistent separators (supports any length year)
+        seq($._year, "/", $._month, "/", $._day), // YYYY/MM/DD
+        seq($._year, "-", $._month, "-", $._day), // YYYY-MM-DD
+        seq($._year, ".", $._month, ".", $._day), // YYYY.MM.DD
+        // Partial date with consistent separators (when default year is set)
+        seq($._month, "/", $._day), // MM/DD
+        seq($._month, "-", $._day), // MM-DD
+        seq($._month, ".", $._day), // MM.DD
+      ),
+
+    _year: () => /\d{4,}/,
+    _month: () => /\d{1,2}/,
+    _day: () => /\d{1,2}/,
+
     _whitespace: () => /[ \t]+/,
     _newline: () => /\r?\n/,
   },

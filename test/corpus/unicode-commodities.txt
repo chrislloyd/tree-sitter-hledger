@@ -1,9 +1,12 @@
 ================================================================================
-Date with dashes
+Unicode currency symbols - Asian
 ================================================================================
 
-2023-01-01 test
-    account    $10
+2023-01-01 Asian currency symbols
+    assets:bank    1000 ₹
+    assets:crypto    0.5 ₿
+    assets:china    5000 元
+    income:salary
 
 --------------------------------------------------------------------------------
 
@@ -13,14 +16,23 @@ Date with dashes
     (description)
     (posting
       (account)
-      (amount))))
+      (amount))
+    (posting
+      (account)
+      (amount))
+    (posting
+      (account)
+      (amount))
+    (posting
+      (account))))
 
 ================================================================================
-Date with slashes
+Unicode currency symbols - Eastern European
 ================================================================================
 
-2023/12/25 test
-    account    $10
+2023-01-01 Eastern European currencies
+    assets:russian    10000 руб
+    expenses:travel    -500 руб
 
 --------------------------------------------------------------------------------
 
@@ -30,14 +42,20 @@ Date with slashes
     (description)
     (posting
       (account)
+      (amount))
+    (posting
+      (account)
       (amount))))
 
 ================================================================================
-Single digit month and day
+Unicode commodity symbols before amount
 ================================================================================
 
-2023-1-5 test
-    account    $10
+2023-01-01 Symbol prefix test
+    assets:rupees    ₹1000
+    assets:bitcoin    ₿0.1
+    assets:yuan    元500
+    expenses:food    -₹100
 
 --------------------------------------------------------------------------------
 
@@ -47,14 +65,25 @@ Single digit month and day
     (description)
     (posting
       (account)
+      (amount))
+    (posting
+      (account)
+      (amount))
+    (posting
+      (account)
+      (amount))
+    (posting
+      (account)
       (amount))))
 
 ================================================================================
-Date with periods
+Unicode commodity codes - three letter
 ================================================================================
 
-2023.12.25 test
-    account    $10
+2023-01-01 Three letter Unicode commodities
+    assets:account1    1000 РУБ
+    assets:account2    500 ЮАН
+    expenses:test    -100 ЕВР
 
 --------------------------------------------------------------------------------
 
@@ -64,14 +93,25 @@ Date with periods
     (description)
     (posting
       (account)
+      (amount))
+    (posting
+      (account)
+      (amount))
+    (posting
+      (account)
       (amount))))
 
 ================================================================================
-Partial date with slashes
+Mixed Unicode and ASCII commodities
 ================================================================================
 
-12/25 test
-    account    $10
+2023-01-01 Mixed commodity test
+    assets:usd    1000 USD
+    assets:rupees    5000 ₹
+    assets:bitcoin    0.1 ₿
+    assets:euros    €500
+    assets:yuan    元1000
+    expenses:transfer    -10 USD
 
 --------------------------------------------------------------------------------
 
@@ -81,14 +121,31 @@ Partial date with slashes
     (description)
     (posting
       (account)
+      (amount))
+    (posting
+      (account)
+      (amount))
+    (posting
+      (account)
+      (amount))
+    (posting
+      (account)
+      (amount))
+    (posting
+      (account)
+      (amount))
+    (posting
+      (account)
       (amount))))
 
 ================================================================================
-Partial date with dashes
+Quoted Unicode commodities
 ================================================================================
 
-1-5 test
-    account    $10
+2023-01-01 Quoted commodity test
+    assets:custom    100 "比特币"
+    assets:shares    50 "公司股票"
+    expenses:food    -20 "代金券"
 
 --------------------------------------------------------------------------------
 
@@ -98,14 +155,22 @@ Partial date with dashes
     (description)
     (posting
       (account)
+      (amount))
+    (posting
+      (account)
+      (amount))
+    (posting
+      (account)
       (amount))))
 
 ================================================================================
-Partial date with periods
+Unicode commodities with scientific notation
 ================================================================================
 
-12.31 test
-    account    $10
+2023-01-01 Unicode with scientific
+    assets:crypto    1.5e-6 ₿
+    assets:micro    2.3E8 元
+    expenses:fees    -1e-3 ₹
 
 --------------------------------------------------------------------------------
 
@@ -115,55 +180,10 @@ Partial date with periods
     (description)
     (posting
       (account)
-      (amount))))
-
-================================================================================
-Ancient date with 4+ digit year
-================================================================================
-
-1066-10-14 Battle of Hastings
-    expenses:battle    100 GOLD
-
---------------------------------------------------------------------------------
-
-(source_file
-  (transaction
-    (date)
-    (description)
+      (amount))
     (posting
       (account)
-      (amount))))
-
-================================================================================
-Far future date with extended year
-================================================================================
-
-9999-12-31 End of era
-    expenses:celebration    500 CREDITS
-
---------------------------------------------------------------------------------
-
-(source_file
-  (transaction
-    (date)
-    (description)
-    (posting
-      (account)
-      (amount))))
-
-================================================================================
-Very old date with slashes
-================================================================================
-
-0001/12/25 Ancient event
-    assets:gold    1000 DENARII
-
---------------------------------------------------------------------------------
-
-(source_file
-  (transaction
-    (date)
-    (description)
+      (amount))
     (posting
       (account)
       (amount))))
