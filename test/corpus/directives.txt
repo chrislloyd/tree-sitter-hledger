@@ -8,8 +8,7 @@ account assets:checking
 
 (source_file
   (directive
-    (account_directive
-      (account))))
+    (account)))
 
 ================================================================================
 Commodity directive
@@ -21,8 +20,7 @@ commodity USD
 
 (source_file
   (directive
-    (commodity_directive
-      (commodity))))
+    (commodity)))
 
 ================================================================================
 Price directive
@@ -34,10 +32,69 @@ P 2023-01-01 EUR $1.20
 
 (source_file
   (directive
-    (price_directive
-      (date)
-      (commodity)
-      (amount))))
+    (date)
+    (commodity)
+    (amount)))
+
+================================================================================
+Decimal mark directive with period
+================================================================================
+
+decimal-mark .
+
+--------------------------------------------------------------------------------
+
+(source_file
+  (directive
+    (mark)))
+
+================================================================================
+Decimal mark directive with comma
+================================================================================
+
+decimal-mark ,
+
+--------------------------------------------------------------------------------
+
+(source_file
+  (directive
+    (mark)))
+
+================================================================================
+Payee directive
+================================================================================
+
+payee John Doe
+
+--------------------------------------------------------------------------------
+
+(source_file
+  (directive
+    (payee)))
+
+================================================================================
+Tag directive
+================================================================================
+
+tag important
+
+--------------------------------------------------------------------------------
+
+(source_file
+  (directive
+    (account)))
+
+================================================================================
+Include directive
+================================================================================
+
+include other.journal
+
+--------------------------------------------------------------------------------
+
+(source_file
+  (directive
+    (filepath)))
 
 ================================================================================
 Multiple directives
@@ -46,18 +103,27 @@ Multiple directives
 account expenses:food
 commodity BTC
 P 2023-12-25 BTC $45000
+decimal-mark ,
+payee ABC Store
+tag urgent
+include shared.journal
 
 --------------------------------------------------------------------------------
 
 (source_file
   (directive
-    (account_directive
-      (account)))
+    (account))
   (directive
-    (commodity_directive
-      (commodity)))
+    (commodity))
   (directive
-    (price_directive
-      (date)
-      (commodity)
-      (amount))))
+    (date)
+    (commodity)
+    (amount))
+  (directive
+    (mark))
+  (directive
+    (payee))
+  (directive
+    (account))
+  (directive
+    (filepath)))

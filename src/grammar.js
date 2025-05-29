@@ -4,8 +4,9 @@
 module.exports = grammar({
   name: "hledger",
 
-  // Only skip spaces and tabs; we want newlines and semicolons to be significant
-  extras: ($) => [/[ \t]/],
+  // Only skip spaces and tabs; we want newlines and semicolons to be
+  // significant
+  extras: () => [/[ \t]/],
 
   rules: {
     source_file: ($) =>
@@ -21,11 +22,7 @@ module.exports = grammar({
         repeat($.posting),
       ),
 
-    status: ($) => choice("*", "!"),
-
-    code: ($) => token(seq("(", /[^)]*/, ")")),
-
-    date: ($) =>
+    date: () =>
       token(
         choice(
           // Full date with consistent separators
@@ -39,7 +36,7 @@ module.exports = grammar({
         ),
       ),
 
-    interval: ($) =>
+    interval: () =>
       token(
         choice(
           "daily",
@@ -52,14 +49,22 @@ module.exports = grammar({
         ),
       ),
 
+    status: () => choice("*", "!"),
+
+    code: () => token(seq("(", /[^)]*/, ")")),
+
     // Use low precedence (-1) so that specific tokens like status (*) and code (...)
     // are matched first when there's ambiguity, rather than being consumed by description
-    description: ($) => token(prec(-1, /[^\r\n;]+/)),
+    description: () => token(prec(-1, /[^\r\n;]+/)),
 
     posting: ($) =>
       seq(
         $._whitespace,
-        $.account,
+        choice(
+          $.account, // regular account
+          seq("(", $.account, ")"), // virtual account
+          seq("[", $.account, "]"), // balanced virtual account
+        ),
         optional($.amount),
         optional($.cost_spec),
         optional($.balance_assertion),
@@ -67,54 +72,7 @@ module.exports = grammar({
         $._newline,
       ),
 
-    directive: ($) =>
-      choice(
-        $.account_directive,
-        $.commodity_directive,
-        $.price_directive,
-        $.decimal_mark_directive,
-        $.payee_directive,
-        $.tag_directive,
-        $.include_directive,
-      ),
-
-    account_directive: ($) => seq("account", $.account, $._newline),
-
-    commodity_directive: ($) => seq("commodity", $.commodity, $._newline),
-
-    price_directive: ($) => seq("P", $.date, $.commodity, $.amount, $._newline),
-
-    decimal_mark_directive: ($) =>
-      seq("decimal-mark", choice(".", ","), $._newline),
-
-    payee_directive: ($) => seq("payee", /[^\r\n]+/, $._newline),
-
-    tag_directive: ($) => seq("tag", /[a-zA-Z][a-zA-Z0-9_-]*/, $._newline),
-
-    include_directive: ($) => seq("include", /[^\r\n]+/, $._newline),
-
-    comment_line: ($) => seq(choice(";", "#"), /[^\r\n]*/, $._newline),
-
-    cost_spec: ($) =>
-      choice(
-        seq("@", $.amount), // @ $150 (unit price)
-        seq("@@", $.amount), // @@ $1500 (total price)
-      ),
-
-    balance_assertion: ($) =>
-      choice(
-        seq("=", $.amount), // = $100
-        seq("==", $.amount), // == $100
-      ),
-
-    comment: ($) => seq(choice(";", "#"), /[^\r\n]*/),
-
-    account: ($) =>
-      choice(
-        /[a-zA-Z][a-zA-Z0-9:_-]*/, // regular account
-        seq("(", /[a-zA-Z][a-zA-Z0-9:_-]*/, ")"), // virtual account
-        seq("[", /[a-zA-Z][a-zA-Z0-9:_-]*/, "]"), // balanced virtual account
-      ),
+    account: () => /[a-zA-Z][a-zA-Z0-9:_-]*/,
 
     amount: ($) =>
       choice(
@@ -130,15 +88,50 @@ module.exports = grammar({
 
     commodity: ($) => $._commodity,
 
-    _commodity: ($) =>
+    cost_spec: ($) =>
+      choice(
+        seq("@", $.amount), // @ $150 (unit price)
+        seq("@@", $.amount), // @@ $1500 (total price)
+      ),
+
+    balance_assertion: ($) =>
+      choice(
+        seq("=", $.amount), // = $100
+        seq("==", $.amount), // == $100
+      ),
+
+    directive: ($) =>
+      choice(
+        seq("account", $.account, $._newline),
+        seq("commodity", $.commodity, $._newline),
+        seq("P", $.date, $.commodity, $.amount, $._newline),
+        seq("decimal-mark", $.mark, $._newline),
+        seq("payee", $.payee, $._newline),
+        seq("tag", $.account, $._newline),
+        seq("include", $.filepath, $._newline),
+      ),
+
+    mark: () => choice(".", ","),
+
+    payee: ($) => $._rest_of_line,
+
+    filepath: ($) => $._rest_of_line,
+
+    comment_line: ($) => seq($._comment, $._newline),
+    comment: ($) => $._comment,
+
+    _rest_of_line: () => /[^\r\n]+/,
+    _comment_chars: () => choice(";", "#"),
+    _comment: ($) => seq($._comment_chars, /[^\r\n]*/),
+
+    _commodity: () =>
       choice(
         /[A-Z]{3,}|\$|€|£|¥|₹|₿/, // Standard commodities
         seq('"', /[^"]+/, '"'), // Quoted commodities like "Chocolate Frogs"
       ),
 
-    _number: ($) => /-?[0-9]+([,.][0-9]+)*/,
-
-    _whitespace: ($) => /[ \t]+/,
-    _newline: ($) => /\r?\n/,
+    _number: () => /-?[0-9]+([,.][0-9]+)*/,
+    _whitespace: () => /[ \t]+/,
+    _newline: () => /\r?\n/,
   },
 });

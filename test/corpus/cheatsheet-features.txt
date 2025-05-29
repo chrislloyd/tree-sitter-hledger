@@ -34,7 +34,7 @@ decimal-mark .
 
 (source_file
   (directive
-    (decimal_mark_directive)))
+    (mark)))
 
 ================================================================================
 Payee directive
@@ -46,7 +46,7 @@ payee Whole Foods Market
 
 (source_file
   (directive
-    (payee_directive)))
+    (payee)))
 
 ================================================================================
 Tag directive
@@ -58,7 +58,7 @@ tag business-trip
 
 (source_file
   (directive
-    (tag_directive)))
+    (account)))
 
 ================================================================================
 Include directive
@@ -70,7 +70,7 @@ include other.journal
 
 (source_file
   (directive
-    (include_directive)))
+    (filepath)))
 
 ================================================================================
 Quoted commodity
