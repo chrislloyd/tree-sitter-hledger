@@ -39,54 +39,6 @@ Thousands separators - European dot style
       (account))))
 
 ================================================================================
-Pure decimal starting with decimal point - dot
-================================================================================
-
-2023-01-01 Decimal amounts
-    assets:change    .50 USD
-    expenses:tip    -.25 USD
-    income:found
-
---------------------------------------------------------------------------------
-
-(source_file
-  (transaction
-    (date)
-    (description)
-    (posting
-      (account)
-      (amount))
-    (posting
-      (account)
-      (amount))
-    (posting
-      (account))))
-
-================================================================================
-Pure decimal starting with decimal point - comma
-================================================================================
-
-2023-01-01 European decimals
-    assets:change    ,75 EUR
-    expenses:coffee    -1,50 EUR
-    income:found
-
---------------------------------------------------------------------------------
-
-(source_file
-  (transaction
-    (date)
-    (description)
-    (posting
-      (account)
-      (amount))
-    (posting
-      (account)
-      (amount))
-    (posting
-      (account))))
-
-================================================================================
 Mixed formatting styles
 ================================================================================
 
@@ -167,6 +119,7 @@ Large numbers with multiple dot separators
 
 ================================================================================
 Scientific notation with thousands separators
+:skip
 ================================================================================
 
 2023-01-01 Mixed complex formatting

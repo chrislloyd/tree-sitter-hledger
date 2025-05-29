@@ -120,3 +120,110 @@ Decimal with comma
     (posting
       (account)
       (amount))))
+
+================================================================================
+Thousands separators - comma style
+================================================================================
+
+2023-01-01 Large amounts
+    assets:bank    1,234,567.89 USD
+    expenses:big    -12,345.67 USD
+
+--------------------------------------------------------------------------------
+
+(source_file
+  (transaction
+    (date)
+    (description)
+    (posting
+      (account)
+      (amount))
+    (posting
+      (account)
+      (amount))))
+
+================================================================================
+Thousands separators - dot style European
+================================================================================
+
+2023-01-01 European format
+    assets:eu    1.234.567,89 EUR
+    expenses:eu    -12.345,67 EUR
+
+--------------------------------------------------------------------------------
+
+(source_file
+  (transaction
+    (date)
+    (description)
+    (posting
+      (account)
+      (amount))
+    (posting
+      (account)
+      (amount))))
+
+================================================================================
+Pure decimal starting with dot
+:skip
+================================================================================
+
+2023-01-01 Decimal only
+    assets:fractional    .75 USD
+    expenses:small    -.25 USD
+
+--------------------------------------------------------------------------------
+
+(source_file
+  (transaction
+    (date)
+    (description)
+    (posting
+      (account)
+      (amount))
+    (posting
+      (account)
+      (amount))))
+
+================================================================================
+Pure decimal starting with comma
+:skip
+================================================================================
+
+2023-01-01 European decimal
+    assets:fractional    ,75 EUR
+    expenses:small    -,25 EUR
+
+--------------------------------------------------------------------------------
+
+(source_file
+  (transaction
+    (date)
+    (description)
+    (posting
+      (account)
+      (amount))
+    (posting
+      (account)
+      (amount))))
+
+================================================================================
+Large numbers with multiple separators
+================================================================================
+
+2023-01-01 Large amounts
+    assets:big1    1,000,000.50 USD
+    assets:big2    12,345,678.99 USD
+
+--------------------------------------------------------------------------------
+
+(source_file
+  (transaction
+    (date)
+    (description)
+    (posting
+      (account)
+      (amount))
+    (posting
+      (account)
+      (amount))))

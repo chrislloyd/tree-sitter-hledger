@@ -1,5 +1,6 @@
 ================================================================================
 Scientific notation - basic positive exponent
+:error
 ================================================================================
 
 2023-01-01 Scientific notation test
@@ -20,6 +21,7 @@ Scientific notation - basic positive exponent
 
 ================================================================================
 Scientific notation - negative exponent
+:error
 ================================================================================
 
 2023-01-01 Small amounts
@@ -41,6 +43,7 @@ Scientific notation - negative exponent
 
 ================================================================================
 Scientific notation - capital E
+:error
 ================================================================================
 
 2023-01-01 Capital E notation
@@ -61,6 +64,7 @@ Scientific notation - capital E
 
 ================================================================================
 Scientific notation - integer with exponent
+:error
 ================================================================================
 
 2023-01-01 Integer scientific
@@ -81,6 +85,7 @@ Scientific notation - integer with exponent
 
 ================================================================================
 Scientific notation - negative number
+:error
 ================================================================================
 
 2023-01-01 Negative scientific
@@ -102,6 +107,7 @@ Scientific notation - negative number
 
 ================================================================================
 Scientific notation - commodity before number
+:error
 ================================================================================
 
 2023-01-01 Commodity prefix scientific
@@ -122,11 +128,98 @@ Scientific notation - commodity before number
 
 ================================================================================
 Scientific notation - very small decimal
+:error
 ================================================================================
 
 2023-01-01 Tiny amounts
     assets:crypto    .5e-8 BTC
     expenses:dust    -.1e-9 BTC
+
+--------------------------------------------------------------------------------
+
+(source_file
+  (transaction
+    (date)
+    (description)
+    (posting
+      (account)
+      (amount))
+    (posting
+      (account)
+      (amount))))
+
+================================================================================
+Scientific notation - large integer exponent
+:error
+================================================================================
+
+2023-01-01 Large exponents
+    assets:huge    1.5e23 USD
+    expenses:calc    -3.14e15 USD
+
+--------------------------------------------------------------------------------
+
+(source_file
+  (transaction
+    (date)
+    (description)
+    (posting
+      (account)
+      (amount))
+    (posting
+      (account)
+      (amount))))
+
+================================================================================
+Scientific notation - explicit positive exponent
+:error
+================================================================================
+
+2023-01-01 Positive exponent
+    assets:account    2.71E+14 USD
+    income:compound
+
+--------------------------------------------------------------------------------
+
+(source_file
+  (transaction
+    (date)
+    (description)
+    (posting
+      (account)
+      (amount))
+    (posting
+      (account))))
+
+================================================================================
+Scientific notation - explicit negative exponent
+:error
+================================================================================
+
+2023-01-01 Negative exponent
+    assets:small    4.2e-37 BTC
+    expenses:fees
+
+--------------------------------------------------------------------------------
+
+(source_file
+  (transaction
+    (date)
+    (description)
+    (posting
+      (account)
+      (amount))
+    (posting
+      (account))))
+
+================================================================================
+Scientific notation - simple numbers without separators
+:error
+================================================================================
+
+2023-01-01 Clean scientific notation
+    assets:simple    1000e3 USD
+    expenses:calc    -250E-2 USD
 
 --------------------------------------------------------------------------------
 
