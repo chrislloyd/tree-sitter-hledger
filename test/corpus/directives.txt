@@ -90,7 +90,8 @@ include other.journal
 --------------------------------------------------------------------------------
 
 (source_file
-  (directive))
+  (directive
+    (filepath)))
 
 ================================================================================
 Alias directive - simple account alias
@@ -153,5 +154,5 @@ alias cash = assets:wallet:cash
   (directive)
   (directive
     (account))
-  (directive)
-  (directive))
+  (directive
+    (filepath)))

@@ -18,9 +18,9 @@ module.exports = grammar({
           $.date, // fixed
           seq("~", $.interval), // periodic
         ),
-        optional(field("status", choice("*", "!"))),
-        optional($.code),
-        optional($.description),
+        optional(seq($._whitespace, $.status)),
+        optional(seq(optional($._whitespace), $.code)),
+        optional(seq(optional($._whitespace), $.description)),
         $._newline,
         repeat($.posting),
       ),
@@ -36,6 +36,8 @@ module.exports = grammar({
         $.date, // specific dates
       ),
 
+    status: () => choice("*", "!"),
+    
     code: () => token(seq("(", /[^)]*/, ")")),
 
     // Use low precedence (-1) so that specific tokens like status (*) and code (...)
@@ -44,6 +46,7 @@ module.exports = grammar({
 
     posting: ($) =>
       seq(
+        $._whitespace,  // postings must be indented
         choice(
           $.account, // regular account
           seq("(", $.account, ")"), // virtual account
@@ -52,6 +55,7 @@ module.exports = grammar({
         optional(
           choice(
             seq(
+              $._whitespace,
               $.amount,
               optional(seq(optional($._whitespace), $.cost_spec)),
               optional(seq(optional($._whitespace), $.balance_assertion)),
@@ -85,10 +89,11 @@ module.exports = grammar({
           "@", // unit price
           "@@", // total price
         ),
+        optional($._whitespace),
         $.amount,
       ),
 
-    balance_assertion: ($) => seq(choice("=", "=="), $.amount),
+    balance_assertion: ($) => seq(choice("=", "=="), optional($._whitespace), $.amount),
 
     directive: ($) =>
       seq(
@@ -99,7 +104,7 @@ module.exports = grammar({
           seq("decimal-mark", field("mark", choice(".", ","))),
           seq("payee", field("payee", $._rest_of_line)),
           seq("tag", $.account),
-          seq("include", field("filepath", $._rest_of_line)),
+          seq("include", $._whitespace, $.filepath),
           seq("alias", $._rest_of_line),
         ),
         optional($.comment),
@@ -107,8 +112,10 @@ module.exports = grammar({
       ),
 
     comment_line: ($) => seq($._comment, $._newline),
-    comment: ($) => $._comment,
+    comment: ($) => seq(optional($._whitespace), $._comment),
 
+    filepath: () => token(/[^\r\n;#\s]+(\s+[^\r\n;#\s]+)*/),
+    
     _rest_of_line: () => /[^\r\n]+/,
     _comment_chars: () => choice(";", "#"),
     _comment: ($) => seq($._comment_chars, /[^\r\n]*/),

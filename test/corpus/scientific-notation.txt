@@ -1,6 +1,5 @@
 ================================================================================
 Scientific notation - basic positive exponent
-:error
 ================================================================================
 
 2023-01-01 Scientific notation test
@@ -21,7 +20,6 @@ Scientific notation - basic positive exponent
 
 ================================================================================
 Scientific notation - negative exponent
-:error
 ================================================================================
 
 2023-01-01 Small amounts
@@ -43,7 +41,6 @@ Scientific notation - negative exponent
 
 ================================================================================
 Scientific notation - capital E
-:error
 ================================================================================
 
 2023-01-01 Capital E notation
@@ -64,7 +61,6 @@ Scientific notation - capital E
 
 ================================================================================
 Scientific notation - integer with exponent
-:error
 ================================================================================
 
 2023-01-01 Integer scientific
@@ -85,7 +81,6 @@ Scientific notation - integer with exponent
 
 ================================================================================
 Scientific notation - negative number
-:error
 ================================================================================
 
 2023-01-01 Negative scientific
@@ -107,7 +102,6 @@ Scientific notation - negative number
 
 ================================================================================
 Scientific notation - commodity before number
-:error
 ================================================================================
 
 2023-01-01 Commodity prefix scientific
@@ -128,7 +122,6 @@ Scientific notation - commodity before number
 
 ================================================================================
 Scientific notation - very small decimal
-:error
 ================================================================================
 
 2023-01-01 Tiny amounts
@@ -150,7 +143,6 @@ Scientific notation - very small decimal
 
 ================================================================================
 Scientific notation - large integer exponent
-:error
 ================================================================================
 
 2023-01-01 Large exponents
@@ -172,7 +164,6 @@ Scientific notation - large integer exponent
 
 ================================================================================
 Scientific notation - explicit positive exponent
-:error
 ================================================================================
 
 2023-01-01 Positive exponent
@@ -193,7 +184,6 @@ Scientific notation - explicit positive exponent
 
 ================================================================================
 Scientific notation - explicit negative exponent
-:error
 ================================================================================
 
 2023-01-01 Negative exponent
@@ -214,7 +204,6 @@ Scientific notation - explicit negative exponent
 
 ================================================================================
 Scientific notation - simple numbers without separators
-:error
 ================================================================================
 
 2023-01-01 Clean scientific notation

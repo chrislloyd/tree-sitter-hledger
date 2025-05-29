@@ -1,6 +1,5 @@
 ================================================================================
 Unicode currency symbols - Asian
-:error
 ================================================================================
 
 2023-01-01 Asian currency symbols
@@ -29,7 +28,6 @@ Unicode currency symbols - Asian
 
 ================================================================================
 Unicode currency symbols - Eastern European
-:error
 ================================================================================
 
 2023-01-01 Eastern European currencies
@@ -51,7 +49,6 @@ Unicode currency symbols - Eastern European
 
 ================================================================================
 Unicode commodity symbols before amount
-:error
 ================================================================================
 
 2023-01-01 Symbol prefix test
@@ -81,7 +78,6 @@ Unicode commodity symbols before amount
 
 ================================================================================
 Unicode commodity codes - three letter
-:error
 ================================================================================
 
 2023-01-01 Three letter Unicode commodities
@@ -107,7 +103,6 @@ Unicode commodity codes - three letter
 
 ================================================================================
 Mixed Unicode and ASCII commodities
-:error
 ================================================================================
 
 2023-01-01 Mixed commodity test
@@ -145,7 +140,6 @@ Mixed Unicode and ASCII commodities
 
 ================================================================================
 Quoted Unicode commodities
-:skip
 ================================================================================
 
 2023-01-01 Quoted commodity test
@@ -171,7 +165,6 @@ Quoted Unicode commodities
 
 ================================================================================
 Unicode commodities with scientific notation
-:error
 ================================================================================
 
 2023-01-01 Unicode with scientific

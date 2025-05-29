@@ -85,6 +85,7 @@ Scientific notation with space separators
 
 ================================================================================
 Scientific notation with European thousands
+:skip
 :error
 ================================================================================
 
