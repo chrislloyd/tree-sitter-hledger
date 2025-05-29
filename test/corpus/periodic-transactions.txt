@@ -8,8 +8,8 @@ Monthly periodic transaction
 --------------------------------------------------------------------------------
 
 (source_file
-  (periodic_transaction
-    (period_expression)
+  (transaction
+    (interval)
     (description)
     (posting
       (account)
@@ -25,8 +25,8 @@ Weekly periodic transaction
 --------------------------------------------------------------------------------
 
 (source_file
-  (periodic_transaction
-    (period_expression)
+  (transaction
+    (interval)
     (description)
     (posting
       (account)
@@ -42,8 +42,8 @@ Every N periods
 --------------------------------------------------------------------------------
 
 (source_file
-  (periodic_transaction
-    (period_expression)
+  (transaction
+    (interval)
     (description)
     (posting
       (account)
@@ -59,8 +59,8 @@ Periodic transaction with status
 --------------------------------------------------------------------------------
 
 (source_file
-  (periodic_transaction
-    (period_expression)
+  (transaction
+    (interval)
     (status)
     (description)
     (posting
@@ -77,8 +77,8 @@ Simple period expression
 --------------------------------------------------------------------------------
 
 (source_file
-  (periodic_transaction
-    (period_expression)
+  (transaction
+    (interval)
     (description)
     (posting
       (account)
