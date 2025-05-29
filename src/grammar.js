@@ -34,7 +34,16 @@ module.exports = grammar({
 
     code: ($) => token(seq("(", /[^)]*/, ")")),
 
-    date: ($) => /\d{4}[-\/\.]\d{1,2}[-\/\.]\d{1,2}/,
+    date: ($) => choice(
+      // Full date with consistent separators
+      /\d{4}\/\d{1,2}\/\d{1,2}/,    // YYYY/MM/DD
+      /\d{4}-\d{1,2}-\d{1,2}/,      // YYYY-MM-DD  
+      /\d{4}\.\d{1,2}\.\d{1,2}/,    // YYYY.MM.DD
+      // Partial date with consistent separators (when default year is set)
+      /\d{1,2}\/\d{1,2}/,           // MM/DD
+      /\d{1,2}-\d{1,2}/,            // MM-DD
+      /\d{1,2}\.\d{1,2}/            // MM.DD
+    ),
 
     period_expression: ($) => choice(
       "daily",

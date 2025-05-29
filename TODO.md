@@ -11,32 +11,35 @@
 - [x] **Create comprehensive test corpus** - all syntax elements covered
 
 ### Extended Features (Medium Priority)  
-- [x] **Add support for different date formats** - YYYY/MM/DD, YYYY-MM-DD
-- [x] **Implement comment parsing** - semicolon comments (line and inline)
+- [x] **Add support for different date formats** - YYYY/MM/DD, YYYY-MM-DD, YYYY.MM.DD, MM/DD, M/D (consistent separators enforced)
+- [x] **Implement comment parsing** - semicolon and hash comments (line and inline)
 - [x] **Add directive parsing** - account, commodity, price declarations
+- [x] **Extended directive support** - decimal-mark, payee, tag, include directives
 
 ### Advanced Features (Low Priority)
 - [x] **Support virtual postings** - parentheses `(account)` and brackets `[account]` syntax
+- [x] **Balance assertions and assignments support** - `= $100`, `== $100` syntax
+- [x] **Cost and price syntax** - `@`, `@@` for unit costs and total costs  
+- [x] **Periodic transaction support** - `~` prefix for recurring transactions
 
-## Pending Features 🔄
+## Potential Future Enhancements 🔄
 
-### Advanced Syntax (Low Priority)
-- [ ] **Add balance assertions and assignments support** - `= $100`, `== $100` syntax
-- [ ] **Implement cost and price syntax** - `@`, `@@` for unit costs and total costs  
-- [ ] **Add periodic transaction support** - `~` prefix for recurring transactions
+### Edge Case Improvements
+- [ ] **Enhanced error recovery** - better handling of malformed syntax
+- [ ] **Account aliases** - support for account aliasing syntax
+- [ ] **Transaction modifiers** - support for automatic posting rules
+
+### Parser Robustness
+- [ ] **Better whitespace handling** - more flexible spacing rules
+- [ ] **Improved number parsing** - handle edge cases in numeric formats
+- [ ] **Extended period expressions** - more sophisticated recurring transaction patterns
 
 ## Known Issues 🐛
 
-### Edge Cases from Corpus Tests
-- [ ] **Negative number amounts** - `-100 USD` format not parsing correctly
-- [ ] **Transactions without descriptions** - some edge cases in parsing
-
-### Potential Improvements
-- [ ] **Enhanced error recovery** - better handling of malformed syntax
-- [ ] **More date formats** - support for additional date separators and formats
-- [ ] **Extended comment syntax** - support for `#` and `*` comment prefixes
-- [ ] **Account aliases** - support for account aliasing syntax
-- [ ] **Include directives** - support for file inclusion
+### Edge Cases That May Need Testing
+- [ ] **Complex nested account names** - verify deep hierarchy parsing
+- [ ] **Multiple commodity formats** - ensure all variations work correctly
+- [ ] **Unicode in account names** - international character support
 
 ## Grammar Design Notes 📝
 
@@ -77,6 +80,6 @@
 
 ---
 
-*Last updated: Generated during Tree-Sitter HLedger grammar development*
+*Last updated: Updated to reflect actual implementation status from grammar.js - most major features are now complete!*
 
 *For development tips and workflows, see [AGENT.md](./AGENT.md)*
