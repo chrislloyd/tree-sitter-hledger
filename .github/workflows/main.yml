@@ -10,6 +10,8 @@ jobs:
 
     steps:
       - uses: actions/checkout@v4
+        with:
+          submodules: true
 
       - uses: actions/setup-node@v4
         with:
@@ -21,3 +23,12 @@ jobs:
       - run: npm run build
 
       - run: npm test
+
+      - run: |
+          npm run codegen
+          if ! git diff --exit-code; then
+            echo "Error: Found uncommitted changes after running 'npm run codegen'"
+            echo "Please run 'npm run codegen' locally and commit the changes"
+            git diff
+            exit 1
+          fi

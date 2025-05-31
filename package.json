@@ -6,6 +6,7 @@
   "license": "MIT",
   "scripts": {
     "build": "npx tree-sitter generate src/grammar.js",
+    "codegen": "node src/extract-tests.js && npm test -- --update",
     "test": "npx tree-sitter test"
   },
   "dependencies": {

@@ -1,6 +1,29 @@
 # tree-sitter-hledger
 
-A [Tree Sitter](http://tree-sitter.github.io) grammer for the [hledger](https://hledger.org/) journal format.
+A [Tree Sitter](http://tree-sitter.github.io) grammar for the [hledger](https://hledger.org/) journal format.
+
+## Features
+
+This grammar provides comprehensive parsing and syntax highlighting for hledger journal files with support for:
+
+### Core Features ✅
+- **Transactions** with dates, status, codes, and descriptions
+- **Postings** with accounts and amounts
+- **Virtual postings** (parentheses and brackets)
+- **Balance assertions** (`=` and `==`)
+- **Cost/price specifications** (`@` and `@@`)
+- **Comments** (`;` and `#`)
+- **Directives** (account, commodity, include, alias, payee, tag, P, decimal-mark)
+- **Periodic transactions** (with `~` and intervals)
+- **Multi-format number parsing** (1,234.56, 1.234,56, scientific notation)
+- **Unicode support** for accounts and commodities
+- **Syntax highlighting** via Tree-sitter queries
+
+### Advanced Support
+- Multiple date formats (YYYY-MM-DD, YYYY/MM/DD, YYYY.MM.DD)
+- Currency symbols and quoted commodities
+- Complex amount formatting with thousands separators
+- Account names with Unicode characters
 
 ## Motivation
 
@@ -10,77 +33,80 @@ Eventually, I would like to use this to create a `hledger` autoformatter.
 
 ## Roadmap
 
-The general goal is full support for the hledger format as described in the [official documentation](https://hledger.org/journal.html). Missing features (in no particular order):
+Future enhancements to consider:
 
 - [ ] Secondary dates
 - [ ] Posting dates
-- [ ] Pipes in descriptions
-- [ ] Spaces in account names
-- [ ] Full parse all amounts
-- [ ] Virtual postings
-- [ ] Balance assertions
 - [ ] Balance assignments
-- [ ] Transaction pricing
-- [ ] Comments
-- [ ] Directives
-- [ ] Periodic rules
 - [ ] Auto-postings
+- [ ] More directive types
+- [ ] Error recovery improvements
 
-## Development
+## Installation & Usage
 
-### Test Corpus Sync with hledger
+### As a Tree-sitter Grammar
 
-This project automatically syncs test cases from the official hledger repository to ensure compatibility:
+This parser can be used with any editor that supports Tree-sitter grammars (Neovim, Emacs, VS Code with extensions, etc.).
+
+### Development
 
 ```bash
-# Initial setup (already done)
-git submodule add https://github.com/simonmichael/hledger.git hledger
+# Install dependencies
+npm install
 
-# Update to latest hledger tests
-git submodule update --remote hledger
-node extract-tests.js
-
-# Build and test
+# Generate parser from grammar
 npm run build
+
+# Run tests
 npm run test
 ```
 
-The `extract-tests.js` script:
-- Extracts 674+ real test cases from hledger's test suite
-- Preserves any manual parse tree assertions you've written
+### File Support
+
+The grammar recognizes these file extensions:
+- `.journal`
+- `.j`
+- `.hledger`
+- `.ledger`
+
+### Testing
+
+The test suite consists of two types of tests:
+
+#### Manual Test Corpus
+Hand-written tests in `test/corpus/` covering:
+- Basic transactions and postings
+- Virtual postings and balance assertions
+- Unicode accounts and commodities
+- Number formatting variations
+- Directives and comments
+- Periodic transactions
+- Error cases
+
+#### Generated Tests from hledger
+The project includes a test extraction system that pulls real-world test cases from the official hledger repository:
+
+```bash
+# Update hledger submodule to latest version
+git submodule update --remote hledger
+
+# Extract test cases from hledger's test suite and updates assertions
+npm run codegen
+```
+
+The extraction process:
+- Scans 600+ test files from hledger's test suite
+- Extracts journal content from shelltest format
 - Generates `corpus/extracted_from_hledger.txt` with smart merging
-- Never clobbers your manual work
+- **Preserves any manual parse tree assertions** you've written
+- Never overwrites your custom work
 
-### Writing Manual Assertions
+#### Running Tests
 
-Add detailed parse trees for important test cases in `corpus/extracted_from_hledger.txt`:
+```bash
+# Run all tests (manual + any generated)
+npm test
 
+# Run tests for specific corpus file
+npx tree-sitter test --corpus test/corpus/basic.txt
 ```
-==================
-test_name
-==================
-
-journal content here
-
----
-
-(source_file
-  (transaction
-    (entry
-      (date ...)
-      (payee ...))
-    (posting ...)))
-```
-
-These assertions are automatically preserved when syncing with hledger updates.
-
-### Workflow
-
-1. **Develop grammar**: Edit `grammar.js` and add manual assertions
-2. **Sync tests**: Run `node extract-tests.js` periodically
-3. **Validate**: Run `npm test` to ensure parsing works
-4. **Your assertions survive** - never lost during hledger updates
-
-## Contributing
-
-This is a side project for me. I'm happy to accept contributions as pull-requests but don't have time (or the energy) to answer issues. If you find a bug, please add it to the corpus or submit a fix.
