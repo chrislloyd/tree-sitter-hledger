@@ -25,21 +25,29 @@ jobs:
       - run: npm test
 
       - run: |
+          echo "::group::Running npm run codegen"
           npm run codegen
+          echo "::endgroup::"
+          
           if [ -n "$(git status --porcelain)" ]; then
             echo "Error: Found uncommitted changes after running 'npm run codegen'"
             echo "Please run 'npm run codegen' locally and commit the changes"
-            echo ""
-            echo "=== Git Status ==="
+            
+            echo "::group::Git Status"
             git status
-            echo ""
-            echo "=== Changes to existing files ==="
-            git diff
-            echo ""
-            echo "=== New untracked files ==="
+            echo "::endgroup::"
+            
+            echo "::group::New untracked files"
             git ls-files --others --exclude-standard | head -20
             if [ $(git ls-files --others --exclude-standard | wc -l) -gt 20 ]; then
               echo "... and $(( $(git ls-files --others --exclude-standard | wc -l) - 20 )) more files"
             fi
+            echo "::endgroup::"
+            
+            echo "::group::Full diff (all changes)"
+            git add -N .
+            git diff
+            echo "::endgroup::"
+            
             exit 1
           fi
