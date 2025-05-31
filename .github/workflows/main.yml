@@ -26,9 +26,10 @@ jobs:
 
       - run: |
           npm run codegen
-          if ! git diff --exit-code; then
+          if [ -n "$(git status --porcelain)" ]; then
             echo "Error: Found uncommitted changes after running 'npm run codegen'"
             echo "Please run 'npm run codegen' locally and commit the changes"
+            git status
             git diff
             exit 1
           fi
