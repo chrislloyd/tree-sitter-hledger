@@ -77,8 +77,5 @@
   "]"
 ] @punctuation.bracket
 
-";" @punctuation.delimiter
-"#" @punctuation.delimiter
-
 ; Error nodes
 (ERROR) @error

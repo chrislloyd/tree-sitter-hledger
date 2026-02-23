@@ -1,3 +1,5 @@
 build
 node_modules
 log.html
+fuzz-bugs.json
+fuzz-mismatches.json

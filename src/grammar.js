@@ -97,10 +97,10 @@ module.exports = grammar({
     amount: ($) =>
       choice(
         // Negative commodity before number: -$100, -€50
-        seq("-", $._commodity, $._number),
-        // Commodity before number: $100, €50, £25
-        seq($._commodity, $._number),
-        // Number before commodity: 100 USD, -50.25 EUR
+        seq("-", $._commodity_prefix, $._number),
+        // Commodity before number: $100, €50, £25, EUR6024
+        seq($._commodity_prefix, $._number),
+        // Number before commodity: 100 USD, -50.25 EUR, 100 VTI2
         prec(1, seq($._number, /[ \t]+/, $._commodity)),
         // Number only (assumes default commodity)
         $._number,
@@ -135,7 +135,7 @@ module.exports = grammar({
         $._newline,
       ),
 
-    comment_line: ($) => seq($._comment, $._newline),
+    comment_line: ($) => prec.right(seq($._comment, optional($._newline))),
     comment: ($) => seq(optional($._whitespace), $._comment),
 
     filepath: () =>
@@ -147,19 +147,25 @@ module.exports = grammar({
       ),
 
     _rest_of_line: () => /[^\r\n]+/,
-    _comment_chars: () => choice(";", "#"),
-    _comment: ($) => seq($._comment_chars, /[^\r\n]*/),
+    _comment: () => token(seq(/[ \t]*/, /[;#]/, /[^\r\n]*/)),
 
+    // Commodity when followed by number with no space (EUR6024) - letters only
+    _commodity_prefix: () =>
+      choice(
+        // Unicode letter commodities - NO digits (so EUR6024 splits as EUR + 6024)
+        token(seq(/[\p{Lu}\p{Lt}]/u, /[\p{L}]*/u)),
+        // Currency symbols
+        /\$|€|£|¥|₹|₿|元|руб/,
+        // Quoted commodities
+        token(seq('"', /[^"]+/, '"')),
+      ),
+
+    // Commodity when separated by space (100 VTI2) - allows digits
     _commodity: () =>
       choice(
-        // Unicode letter commodities (USD, EUR, etc.)
-        token(
-          seq(
-            /[\p{Lu}\p{Lt}]/u, // first: uppercase letter
-            /[\p{L}\p{N}]*/u, // rest: any letters/numbers
-          ),
-        ),
-        // Currency symbols including Unicode ones
+        // Unicode letter commodities (USD, EUR, VTI2, etc.)
+        token(seq(/[\p{Lu}\p{Lt}]/u, /[\p{L}\p{N}]*/u)),
+        // Currency symbols
         /\$|€|£|¥|₹|₿|元|руб/,
         // Quoted commodities like "Chocolate Frogs"
         token(seq('"', /[^"]+/, '"')),

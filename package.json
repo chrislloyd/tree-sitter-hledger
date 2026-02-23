@@ -7,7 +7,9 @@
   "scripts": {
     "build": "npx tree-sitter generate src/grammar.js",
     "codegen": "node src/extract-tests.js && npm test -- --update",
-    "test": "npx tree-sitter test"
+    "test": "npx tree-sitter test",
+    "fuzz": "node src/diff-fuzz.js",
+    "fuzz:bugs": "node src/diff-fuzz.js --bugs"
   },
   "dependencies": {
     "nan": "^2.22.2"
