@@ -15,16 +15,20 @@ Unicode currency symbols - Asian
     (date)
     (description)
     (posting
-      (account)
+      (account
+        (account_name))
       (amount))
     (posting
-      (account)
+      (account
+        (account_name))
       (amount))
     (posting
-      (account)
+      (account
+        (account_name))
       (amount))
     (posting
-      (account))))
+      (account
+        (account_name)))))
 
 ================================================================================
 Unicode currency symbols - Eastern European
@@ -41,10 +45,12 @@ Unicode currency symbols - Eastern European
     (date)
     (description)
     (posting
-      (account)
+      (account
+        (account_name))
       (amount))
     (posting
-      (account)
+      (account
+        (account_name))
       (amount))))
 
 ================================================================================
@@ -64,16 +70,20 @@ Unicode commodity symbols before amount
     (date)
     (description)
     (posting
-      (account)
+      (account
+        (account_name))
       (amount))
     (posting
-      (account)
+      (account
+        (account_name))
       (amount))
     (posting
-      (account)
+      (account
+        (account_name))
       (amount))
     (posting
-      (account)
+      (account
+        (account_name))
       (amount))))
 
 ================================================================================
@@ -92,13 +102,16 @@ Unicode commodity codes - three letter
     (date)
     (description)
     (posting
-      (account)
+      (account
+        (account_name))
       (amount))
     (posting
-      (account)
+      (account
+        (account_name))
       (amount))
     (posting
-      (account)
+      (account
+        (account_name))
       (amount))))
 
 ================================================================================
@@ -120,22 +133,28 @@ Mixed Unicode and ASCII commodities
     (date)
     (description)
     (posting
-      (account)
+      (account
+        (account_name))
       (amount))
     (posting
-      (account)
+      (account
+        (account_name))
       (amount))
     (posting
-      (account)
+      (account
+        (account_name))
       (amount))
     (posting
-      (account)
+      (account
+        (account_name))
       (amount))
     (posting
-      (account)
+      (account
+        (account_name))
       (amount))
     (posting
-      (account)
+      (account
+        (account_name))
       (amount))))
 
 ================================================================================
@@ -154,13 +173,16 @@ Quoted Unicode commodities
     (date)
     (description)
     (posting
-      (account)
+      (account
+        (account_name))
       (amount))
     (posting
-      (account)
+      (account
+        (account_name))
       (amount))
     (posting
-      (account)
+      (account
+        (account_name))
       (amount))))
 
 ================================================================================
@@ -179,11 +201,14 @@ Unicode commodities with scientific notation
     (date)
     (description)
     (posting
-      (account)
+      (account
+        (account_name))
       (amount))
     (posting
-      (account)
+      (account
+        (account_name))
       (amount))
     (posting
-      (account)
+      (account
+        (account_name))
       (amount))))

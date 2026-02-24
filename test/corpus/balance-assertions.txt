@@ -12,7 +12,8 @@ Simple balance assertion
     (date)
     (description)
     (posting
-      (account)
+      (account
+        (account_name))
       (amount)
       (balance_assertion
         (amount)))))
@@ -31,7 +32,8 @@ Double equals balance assertion
     (date)
     (description)
     (posting
-      (account)
+      (account
+        (account_name))
       (amount)
       (balance_assertion
         (amount)))))
@@ -50,7 +52,8 @@ Balance assertion with space
     (date)
     (description)
     (posting
-      (account)
+      (account
+        (account_name))
       (amount)
       (balance_assertion
         (amount)))))
@@ -69,7 +72,8 @@ Balance assertion with comment
     (date)
     (description)
     (posting
-      (account)
+      (account
+        (account_name))
       (amount)
       (balance_assertion
         (amount))
@@ -90,12 +94,14 @@ Multiple balance assertions
     (date)
     (description)
     (posting
-      (account)
+      (account
+        (account_name))
       (amount)
       (balance_assertion
         (amount)))
     (posting
-      (account)
+      (account
+        (account_name))
       (amount)
       (balance_assertion
         (amount)))))
@@ -114,6 +120,7 @@ Balance assertion without posting amount
     (date)
     (description)
     (posting
-      (account)
+      (account
+        (account_name))
       (balance_assertion
         (amount)))))

@@ -13,10 +13,12 @@ Thousands separators - comma style
     (date)
     (description)
     (posting
-      (account)
+      (account
+        (account_name))
       (amount))
     (posting
-      (account))))
+      (account
+        (account_name)))))
 
 ================================================================================
 Thousands separators - European dot style
@@ -33,10 +35,12 @@ Thousands separators - European dot style
     (date)
     (description)
     (posting
-      (account)
+      (account
+        (account_name))
       (amount))
     (posting
-      (account))))
+      (account
+        (account_name)))))
 
 ================================================================================
 Mixed formatting styles
@@ -55,16 +59,20 @@ Mixed formatting styles
     (date)
     (description)
     (posting
-      (account)
+      (account
+        (account_name))
       (amount))
     (posting
-      (account)
+      (account
+        (account_name))
       (amount))
     (posting
-      (account)
+      (account
+        (account_name))
       (amount))
     (posting
-      (account)
+      (account
+        (account_name))
       (amount))))
 
 ================================================================================
@@ -83,13 +91,16 @@ Large numbers with multiple comma separators
     (date)
     (description)
     (posting
-      (account)
+      (account
+        (account_name))
       (amount))
     (posting
-      (account)
+      (account
+        (account_name))
       (amount))
     (posting
-      (account)
+      (account
+        (account_name))
       (amount))))
 
 ================================================================================
@@ -108,13 +119,16 @@ Large numbers with multiple dot separators
     (date)
     (description)
     (posting
-      (account)
+      (account
+        (account_name))
       (amount))
     (posting
-      (account)
+      (account
+        (account_name))
       (amount))
     (posting
-      (account)
+      (account
+        (account_name))
       (amount))))
 
 ================================================================================
@@ -133,11 +147,14 @@ Scientific notation with thousands separators
     (date)
     (description)
     (posting
-      (account)
+      (account
+        (account_name))
       (amount))
     (posting
-      (account)
+      (account
+        (account_name))
       (amount))
     (posting
-      (account)
+      (account
+        (account_name))
       (amount))))

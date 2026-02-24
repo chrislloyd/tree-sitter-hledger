@@ -12,7 +12,8 @@ Unit price with @
     (date)
     (description)
     (posting
-      (account)
+      (account
+        (account_name))
       (amount)
       (cost_spec
         (amount)))))
@@ -31,7 +32,8 @@ Total price with @@
     (date)
     (description)
     (posting
-      (account)
+      (account
+        (account_name))
       (amount)
       (cost_spec
         (amount)))))
@@ -50,7 +52,8 @@ Cost spec with balance assertion
     (date)
     (description)
     (posting
-      (account)
+      (account
+        (account_name))
       (amount)
       (cost_spec
         (amount))
@@ -71,7 +74,8 @@ Cost spec with comment
     (date)
     (description)
     (posting
-      (account)
+      (account
+        (account_name))
       (amount)
       (cost_spec
         (amount))

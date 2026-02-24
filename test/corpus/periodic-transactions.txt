@@ -12,7 +12,8 @@ Monthly periodic transaction
     (interval)
     (description)
     (posting
-      (account)
+      (account
+        (account_name))
       (amount))))
 
 ================================================================================
@@ -29,7 +30,8 @@ Weekly periodic transaction
     (interval)
     (description)
     (posting
-      (account)
+      (account
+        (account_name))
       (amount))))
 
 ================================================================================
@@ -46,7 +48,8 @@ Every N periods
     (interval)
     (description)
     (posting
-      (account)
+      (account
+        (account_name))
       (amount))))
 
 ================================================================================
@@ -64,7 +67,8 @@ Periodic transaction with status
     (status)
     (description)
     (posting
-      (account)
+      (account
+        (account_name))
       (amount))))
 
 ================================================================================
@@ -81,5 +85,6 @@ Simple period expression
     (interval)
     (description)
     (posting
-      (account)
+      (account
+        (account_name))
       (amount))))

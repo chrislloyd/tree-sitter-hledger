@@ -12,7 +12,8 @@ Simple account
     (date)
     (description)
     (posting
-      (account)
+      (account
+        (account_name))
       (amount))))
 
 ================================================================================
@@ -29,7 +30,8 @@ Hierarchical account with colons
     (date)
     (description)
     (posting
-      (account)
+      (account
+        (account_name))
       (amount))))
 
 ================================================================================
@@ -46,7 +48,8 @@ Account with numbers
     (date)
     (description)
     (posting
-      (account)
+      (account
+        (account_name))
       (amount))))
 
 ================================================================================
@@ -63,7 +66,8 @@ Account with underscores and hyphens
     (date)
     (description)
     (posting
-      (account)
+      (account
+        (account_name))
       (amount))))
 
 ================================================================================
@@ -80,5 +84,6 @@ Deep account hierarchy
     (date)
     (description)
     (posting
-      (account)
+      (account
+        (account_name))
       (amount))))

@@ -13,10 +13,12 @@ Scientific notation - basic positive exponent
     (date)
     (description)
     (posting
-      (account)
+      (account
+        (account_name))
       (amount))
     (posting
-      (account))))
+      (account
+        (account_name)))))
 
 ================================================================================
 Scientific notation - negative exponent
@@ -33,10 +35,12 @@ Scientific notation - negative exponent
     (date)
     (description)
     (posting
-      (account)
+      (account
+        (account_name))
       (amount))
     (posting
-      (account)
+      (account
+        (account_name))
       (amount))))
 
 ================================================================================
@@ -54,10 +58,12 @@ Scientific notation - capital E
     (date)
     (description)
     (posting
-      (account)
+      (account
+        (account_name))
       (amount))
     (posting
-      (account))))
+      (account
+        (account_name)))))
 
 ================================================================================
 Scientific notation - integer with exponent
@@ -74,10 +80,12 @@ Scientific notation - integer with exponent
     (date)
     (description)
     (posting
-      (account)
+      (account
+        (account_name))
       (amount))
     (posting
-      (account))))
+      (account
+        (account_name)))))
 
 ================================================================================
 Scientific notation - negative number
@@ -94,10 +102,12 @@ Scientific notation - negative number
     (date)
     (description)
     (posting
-      (account)
+      (account
+        (account_name))
       (amount))
     (posting
-      (account)
+      (account
+        (account_name))
       (amount))))
 
 ================================================================================
@@ -115,10 +125,12 @@ Scientific notation - commodity before number
     (date)
     (description)
     (posting
-      (account)
+      (account
+        (account_name))
       (amount))
     (posting
-      (account))))
+      (account
+        (account_name)))))
 
 ================================================================================
 Scientific notation - very small decimal
@@ -135,10 +147,12 @@ Scientific notation - very small decimal
     (date)
     (description)
     (posting
-      (account)
+      (account
+        (account_name))
       (amount))
     (posting
-      (account)
+      (account
+        (account_name))
       (amount))))
 
 ================================================================================
@@ -156,10 +170,12 @@ Scientific notation - large integer exponent
     (date)
     (description)
     (posting
-      (account)
+      (account
+        (account_name))
       (amount))
     (posting
-      (account)
+      (account
+        (account_name))
       (amount))))
 
 ================================================================================
@@ -177,10 +193,12 @@ Scientific notation - explicit positive exponent
     (date)
     (description)
     (posting
-      (account)
+      (account
+        (account_name))
       (amount))
     (posting
-      (account))))
+      (account
+        (account_name)))))
 
 ================================================================================
 Scientific notation - explicit negative exponent
@@ -197,10 +215,12 @@ Scientific notation - explicit negative exponent
     (date)
     (description)
     (posting
-      (account)
+      (account
+        (account_name))
       (amount))
     (posting
-      (account))))
+      (account
+        (account_name)))))
 
 ================================================================================
 Scientific notation - simple numbers without separators
@@ -217,8 +237,10 @@ Scientific notation - simple numbers without separators
     (date)
     (description)
     (posting
-      (account)
+      (account
+        (account_name))
       (amount))
     (posting
-      (account)
+      (account
+        (account_name))
       (amount))))

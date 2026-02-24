@@ -8,7 +8,8 @@ account assets:checking
 
 (source_file
   (directive
-    (account)))
+    (account
+      (account_name))))
 
 ================================================================================
 Commodity directive
@@ -79,7 +80,8 @@ tag important
 
 (source_file
   (directive
-    (account)))
+    (account
+      (account_name))))
 
 ================================================================================
 Include directive
@@ -143,7 +145,8 @@ alias cash = assets:wallet:cash
 
 (source_file
   (directive
-    (account))
+    (account
+      (account_name)))
   (directive
     (commodity))
   (directive
@@ -153,6 +156,7 @@ alias cash = assets:wallet:cash
   (directive)
   (directive)
   (directive
-    (account))
+    (account
+      (account_name)))
   (directive
     (filepath)))

@@ -56,7 +56,8 @@ tag business-trip
 
 (source_file
   (directive
-    (account)))
+    (account
+      (account_name))))
 
 ================================================================================
 Include directive
@@ -84,7 +85,8 @@ Quoted commodity
     (date)
     (description)
     (posting
-      (account)
+      (account
+        (account_name))
       (amount))))
 
 ================================================================================
@@ -101,7 +103,8 @@ Dot date format
     (date)
     (description)
     (posting
-      (account)
+      (account
+        (account_name))
       (amount))))
 
 ================================================================================
@@ -118,6 +121,7 @@ Hash inline comments
     (date)
     (description)
     (posting
-      (account)
+      (account
+        (account_name))
       (amount)
       (comment))))

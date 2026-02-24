@@ -11,7 +11,8 @@ Transaction with only date
   (transaction
     (date)
     (posting
-      (account)
+      (account
+        (account_name))
       (amount))))
 
 ================================================================================
@@ -28,7 +29,8 @@ Transaction with status only
     (date)
     (status)
     (posting
-      (account)
+      (account
+        (account_name))
       (amount))))
 
 ================================================================================
@@ -45,7 +47,8 @@ Transaction with code only
     (date)
     (code)
     (posting
-      (account)
+      (account
+        (account_name))
       (amount))))
 
 ================================================================================
@@ -63,7 +66,8 @@ Transaction with status and code
     (status)
     (code)
     (posting
-      (account)
+      (account
+        (account_name))
       (amount))))
 
 ================================================================================
@@ -81,7 +85,8 @@ Transaction with urgent status
     (status)
     (description)
     (posting
-      (account)
+      (account
+        (account_name))
       (amount))))
 
 ================================================================================
@@ -99,7 +104,8 @@ Transaction with empty code
     (code)
     (description)
     (posting
-      (account)
+      (account
+        (account_name))
       (amount))))
 
 ================================================================================
@@ -116,5 +122,6 @@ Long description
     (date)
     (description)
     (posting
-      (account)
+      (account
+        (account_name))
       (amount))))

@@ -8,6 +8,8 @@ module.exports = grammar({
 
   extras: () => [WHITESPACE],
 
+  externals: ($) => [$.account_name],
+
   rules: {
     source_file: ($) =>
       repeat(choice($.transaction, $.auto_posting_rule, $.directive, $.comment_line, $._newline)),
@@ -103,13 +105,8 @@ module.exports = grammar({
         $._newline,
       ),
 
-    account: () =>
-      token(
-        seq(
-          /[\p{L}\p{N}_]/u, // first char: letter, number, or underscore
-          /[\p{L}\p{N}:_\/-]*/u, // rest: also allows colon, slash, hyphen
-        ),
-      ),
+    // Account names can contain single spaces; 2+ spaces ends the name
+    account: ($) => $.account_name,
 
     amount: ($) =>
       choice(

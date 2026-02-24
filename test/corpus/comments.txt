@@ -38,7 +38,8 @@ Comment with posting
     (date)
     (description)
     (posting
-      (account)
+      (account
+        (account_name))
       (amount)
       (comment))))
 
@@ -57,11 +58,13 @@ Multiple postings with comments
     (date)
     (description)
     (posting
-      (account)
+      (account
+        (account_name))
       (amount)
       (comment))
     (posting
-      (account)
+      (account
+        (account_name))
       (amount)
       (comment))))
 
@@ -79,7 +82,8 @@ Empty comment
     (date)
     (description)
     (posting
-      (account)
+      (account
+        (account_name))
       (amount)
       (comment))))
 
@@ -98,8 +102,10 @@ Comment without amount
     (date)
     (description)
     (posting
-      (account)
+      (account
+        (account_name))
       (amount))
     (posting
-      (account)
+      (account
+        (account_name))
       (comment))))

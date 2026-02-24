@@ -21,10 +21,12 @@ Simple transaction
     (date)
     (description)
     (posting
-      (account)
+      (account
+        (account_name))
       (amount))
     (posting
-      (account))))
+      (account
+        (account_name)))))
 
 ================================================================================
 Transaction with status and code
@@ -43,10 +45,12 @@ Transaction with status and code
     (code)
     (description)
     (posting
-      (account)
+      (account
+        (account_name))
       (amount))
     (posting
-      (account))))
+      (account
+        (account_name)))))
 
 ================================================================================
 Posting with comment
@@ -63,9 +67,11 @@ Posting with comment
     (date)
     (description)
     (posting
-      (account)
+      (account
+        (account_name))
       (amount)
       (comment))
     (posting
-      (account)
+      (account
+        (account_name))
       (comment))))
