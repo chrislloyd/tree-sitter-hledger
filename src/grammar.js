@@ -75,9 +75,10 @@ module.exports = grammar({
             choice(
               seq(
                 $.amount,
-                optional(seq(optional($._whitespace), $.cost_spec)),
-                optional(seq(optional($._whitespace), $.balance_assertion)),
+                optional($.cost_spec),
+                optional($.balance_assertion),
               ),
+              seq($.cost_spec, optional($.balance_assertion)),
               $.balance_assertion,
             ),
           ),
@@ -110,14 +111,11 @@ module.exports = grammar({
 
     cost_spec: ($) =>
       seq(
-        choice(
-          "@", // unit price
-          "@@", // total price
-        ),
+        token(seq(/[ \t]*/, choice("@@", "@"))),
         $.amount,
       ),
 
-    balance_assertion: ($) => seq(choice("=", "=="), $.amount),
+    balance_assertion: ($) => seq(token(seq(/[ \t]*/, choice("==", "="))), $.amount),
 
     directive: ($) =>
       seq(

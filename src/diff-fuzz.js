@@ -32,14 +32,36 @@ function randomAccountName() {
 }
 
 function randomCommodity() {
-  return pick(["$", "€", "£", "USD", "EUR", "GBP", "BTC", ""]);
+  return pick(["$", "€", "£", "¥", "USD", "EUR", "GBP", "BTC", "VTI", '"VTSAX"', ""]);
 }
 
 function randomNumber() {
-  const integer = Math.floor(Math.random() * 10000);
-  const decimal = maybe(() => "." + String(Math.floor(Math.random() * 100)).padStart(2, "0"), 0.5);
+  const format = pick(["simple", "thousands", "european", "scientific"]);
   const negative = maybe(() => "-", 0.2);
-  return `${negative}${integer}${decimal}`;
+
+  switch (format) {
+    case "thousands": {
+      const n = Math.floor(Math.random() * 10000000);
+      const formatted = n.toLocaleString("en-US");
+      const decimal = maybe(() => "." + String(Math.floor(Math.random() * 100)).padStart(2, "0"), 0.3);
+      return `${negative}${formatted}${decimal}`;
+    }
+    case "european": {
+      const n = Math.floor(Math.random() * 10000);
+      const decimal = maybe(() => "," + String(Math.floor(Math.random() * 100)).padStart(2, "0"), 0.3);
+      return `${negative}${n}${decimal}`;
+    }
+    case "scientific": {
+      const mantissa = (Math.random() * 10).toFixed(2);
+      const exp = Math.floor(Math.random() * 6) - 2;
+      return `${negative}${mantissa}e${exp}`;
+    }
+    default: {
+      const integer = Math.floor(Math.random() * 10000);
+      const decimal = maybe(() => "." + String(Math.floor(Math.random() * 100)).padStart(2, "0"), 0.5);
+      return `${negative}${integer}${decimal}`;
+    }
+  }
 }
 
 function randomAmount() {
@@ -70,12 +92,40 @@ function randomDescription() {
   return times(count, () => pick(words)).join(" ");
 }
 
+function randomBalanceAssertion() {
+  const op = pick(["=", "=="]);
+  return `${op} ${randomAmount()}`;
+}
+
+function randomCostSpec() {
+  const op = pick(["@", "@@"]);
+  return `${op} ${randomAmount()}`;
+}
+
 function randomPosting() {
   const indent = "    ";
   const account = randomAccountName();
+
+  // Virtual posting wrapper
+  const wrapper = pick(["none", "none", "none", "virtual", "balanced"]);
+  let acct;
+  switch (wrapper) {
+    case "virtual":
+      acct = `(${account})`;
+      break;
+    case "balanced":
+      acct = `[${account}]`;
+      break;
+    default:
+      acct = account;
+  }
+
   const amount = maybe(() => "  " + randomAmount(), 0.8);
+  const cost = maybe(() => " " + randomCostSpec(), 0.1);
+  const assertion = maybe(() => " " + randomBalanceAssertion(), 0.1);
   const comment = maybe(() => "  ; " + pick(["note", "tag:value", "memo"]), 0.1);
-  return `${indent}${account}${amount}${comment}`;
+
+  return `${indent}${acct}${amount}${cost}${assertion}${comment}`;
 }
 
 function randomTransaction() {
@@ -89,6 +139,15 @@ function randomTransaction() {
   return `${date} ${status}${code}${description}\n${postings}`;
 }
 
+function randomPeriodicTransaction() {
+  const interval = pick(["daily", "weekly", "monthly", "quarterly", "yearly", "every 2 weeks", "every 3 months"]);
+  const description = randomDescription();
+  const postingCount = 2 + Math.floor(Math.random() * 2);
+  const postings = times(postingCount, () => randomPosting()).join("\n");
+
+  return `~ ${interval} ${description}\n${postings}`;
+}
+
 function randomComment() {
   const prefix = pick([";", "#"]);
   return `${prefix} ${pick(["comment", "note", "todo", "fixme"])}`;
@@ -99,6 +158,10 @@ function randomDirective() {
     () => `account ${randomAccountName()}`,
     () => `commodity ${randomCommodity() || "USD"}`,
     () => `P ${randomDate()} ${randomCommodity() || "EUR"} ${randomAmount()}`,
+    () => `payee ${pick(["Amazon", "Whole Foods", "Landlord", "Employer Inc"])}`,
+    () => `tag ${pick(["project", "client", "trip"])}`,
+    () => `decimal-mark ${pick([".", ","])}`,
+    () => `alias ${randomAccountName()} = ${randomAccountName()}`,
   ];
   return pick(directives)();
 }
@@ -108,10 +171,16 @@ function generateJournal() {
   const itemCount = 1 + Math.floor(Math.random() * 5);
 
   for (let i = 0; i < itemCount; i++) {
-    const type = pick(["transaction", "transaction", "transaction", "comment", "directive"]);
+    const type = pick([
+      "transaction", "transaction", "transaction", "transaction",
+      "periodic", "comment", "directive"
+    ]);
     switch (type) {
       case "transaction":
         parts.push(randomTransaction());
+        break;
+      case "periodic":
+        parts.push(randomPeriodicTransaction());
         break;
       case "comment":
         parts.push(randomComment());

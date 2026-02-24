@@ -61,14 +61,6 @@
   "yearly"
 ] @keyword.repeat
 
-; Operators
-[
-  "="
-  "=="
-  "@"
-  "@@"
-] @operator
-
 ; Punctuation
 [
   "("
