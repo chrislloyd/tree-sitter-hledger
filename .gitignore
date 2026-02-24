@@ -3,5 +3,3 @@ node_modules
 log.html
 fuzz-bugs.json
 fuzz-mismatches.json
-test/corpus/extracted_from_hledger.txt
-test/corpus/extraction_summary.md

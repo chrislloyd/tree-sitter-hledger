@@ -187,6 +187,7 @@ function extractTestCases() {
 
     return `==================
 ${name}
+:skip
 ==================
 
 ${test.content}

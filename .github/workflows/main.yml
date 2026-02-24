@@ -24,6 +24,6 @@ jobs:
 
       - run: npm test
 
-      - run: npm test -- --update
+      - run: npm run codegen
 
       - uses: NathanielHill/fail-if-changes@v1.1.1
