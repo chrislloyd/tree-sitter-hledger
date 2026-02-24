@@ -1,6 +1,5 @@
 ==================
 1__simple_alias_directive
-:skip
 ==================
 
 alias checking = assets:bank:checking
@@ -19,7 +18,6 @@ alias checking = assets:bank:checking
 
 ==================
 2__simple_alias_matches_whole_account_name_components_only
-:skip
 ==================
 
 alias a:b = A:B
@@ -47,7 +45,6 @@ alias a:b = A:B
 
 ==================
 3__a_simple_alias_matching_the_whole_account_name_works
-:skip
 ==================
 
 alias a:b = A:B
@@ -66,7 +63,6 @@ alias a:b = A:B
 
 ==================
 4__regex_alias_directive
-:skip
 ==================
 
 alias /^(.+):bank:([^:]+):?(.*)/ = \1:\2 \3
@@ -85,7 +81,6 @@ alias /^(.+):bank:([^:]+):?(.*)/ = \1:\2 \3
 
 ==================
 test_12
-:skip
 ==================
 
 alias /a/ = b
@@ -101,11 +96,22 @@ alias /A (.)/=\1
 
 ---
 
-(source_file)
+(source_file
+  (auto_posting_rule
+    (query)
+    (posting
+      (account)
+      (amount))
+    (posting
+      (account)))
+  (transaction
+    (date)
+    (posting
+      (account)
+      (amount))))
 
 ==================
 test_16
-:skip
 ==================
 
 2011/01/01
@@ -119,7 +125,6 @@ test_16
 
 ==================
 7__alias_options_are_applied_after_alias_directives_
-:skip
 ==================
 
 alias /^a/=B
@@ -145,7 +150,6 @@ alias E=F
 
 ==================
 8__alias_options
-:skip
 ==================
 
 01/01 Opening balances
@@ -211,7 +215,6 @@ alias E=F
 
 ==================
 9__query_will_search_both_origin_and_substitution_in_alias
-:skip
 ==================
 
 alias a = b
@@ -234,7 +237,6 @@ alias a = b
 
 ==================
 10__recursive_command_line_simple_aliases_
-:skip
 ==================
 
 2000/01/01
@@ -251,7 +253,6 @@ alias a = b
 
 ==================
 test_23
-:skip
 ==================
 
 alias two = three
@@ -261,11 +262,17 @@ alias one = two
 
 ---
 
-(source_file)
+(source_file
+  (directive)
+  (directive)
+  (transaction
+    (date)
+    (posting
+      (account)
+      (amount))))
 
 ==================
 12__only_one_of_these_is_applied_
-:skip
 ==================
 
 alias one = three
@@ -286,7 +293,6 @@ alias one = two
 
 ==================
 13__recursive_command_line_regexp_aliases_
-:skip
 ==================
 
 2000/01/01
@@ -303,7 +309,6 @@ alias one = two
 
 ==================
 test_27
-:skip
 ==================
 
 alias /two/ = three
@@ -313,11 +318,17 @@ alias /one/ = two
 
 ---
 
-(source_file)
+(source_file
+  (directive)
+  (directive)
+  (transaction
+    (date)
+    (posting
+      (account)
+      (amount))))
 
 ==================
 15__only_one_of_these_is_applied_
-:skip
 ==================
 
 alias /one/ = three
@@ -338,7 +349,6 @@ alias /one/ = two
 
 ==================
 16__for_example__you_can_erase_an_account_name_
-:skip
 ==================
 
 alias /a:.*/=
@@ -360,7 +370,6 @@ alias /a:.*/=
 
 ==================
 test_32
-:skip
 ==================
 
 2021-01-01
@@ -380,7 +389,6 @@ test_32
 
 ==================
 18__make_sure_you_can_match_forward_slashes_in_regexps_by_escaping_them____982_
-:skip
 ==================
 
 alias /\// = :
@@ -402,7 +410,6 @@ alias /\// = :
 
 ==================
 19__make_sure_you_can_escape_special_regexp_characters_
-:skip
 ==================
 
 alias /\./ = :
@@ -416,7 +423,6 @@ alias /\./ = :
 
 ==================
 20__including_backslashes
-:skip
 ==================
 
 alias /\\/ = :
@@ -430,7 +436,6 @@ alias /\\/ = :
 
 ==================
 test_3
-:skip
 ==================
 
 2018/1/1
@@ -444,32 +449,30 @@ test_3
 
 ---
 
-; NOTICE: Content updated from hledger, but preserved manual assertion
-; Previous content length: 167, new: 79
 (source_file
   (transaction
     (date)
-    (description)
     (posting
       (account)
-      (amount))
-    (posting
-      (account)
-      (amount))
-    (posting
-      (account)))
+      (amount)))
   (transaction
     (date)
-    (description)
     (posting
       (account)
-      (amount))
+      (amount)))
+  (transaction
+    (date)
     (posting
-      (account))))
+      (account)
+      (amount)))
+  (transaction
+    (date)
+    (posting
+      (account)
+      (amount))))
 
 ==================
 test_9
-:skip
 ==================
 
 account b:k
@@ -490,29 +493,46 @@ account d
 
 ---
 
-; NOTICE: Content updated from hledger, but preserved manual assertion
-; Previous content length: 116, new: 153
 (source_file
+  (directive
+    (account))
+  (directive
+    (account))
+  (directive
+    (account))
   (transaction
     (date)
-    (description)
     (posting
       (account)
-      (amount))
-    (posting
-      (account)))
+      (amount)))
   (transaction
     (date)
-    (description)
     (posting
-      (account))
+      (account)
+      (amount)))
+  (transaction
+    (date)
+    (posting
+      (account)
+      (amount)))
+  (transaction
+    (date)
+    (posting
+      (account)
+      (amount)))
+  (transaction
+    (date)
+    (posting
+      (account)
+      (amount)))
+  (transaction
+    (date)
     (posting
       (account)
       (amount))))
 
 ==================
 1__basic_accounts_report
-:skip
 ==================
 
 account a
@@ -521,11 +541,18 @@ account a
 
 ---
 
-(source_file)
+(source_file
+  (directive
+    (account))
+  (transaction
+    (date)
+    (comment)
+    (posting
+      (account)
+      (amount))))
 
 ==================
 6__show_account_types_
-:skip
 ==================
 
 account asset
@@ -545,7 +572,6 @@ account asset
 
 ==================
 7__equity_conversion__and_several_other_names__are_detected_as_v_conversion_type_by_default_
-:skip
 ==================
 
 account equity:conversion
@@ -567,7 +593,6 @@ account equity:trading
 
 ==================
 8__if_any_other_account_name_is_declared_with_v_type__those_default_names_become_just_ordinary_equity_accounts_
-:skip
 ==================
 
 account trade  ; type: V
@@ -593,7 +618,6 @@ account equity:trading
 
 ==================
 9____infer_equity_uses_equity_conversion_as_its_base_account_by_default_
-:skip
 ==================
 
 2024-01-01
@@ -602,11 +626,18 @@ account equity:trading
 
 ---
 
-(source_file)
+(source_file
+  (transaction
+    (date)
+    (posting
+      (account)
+      (amount))
+    (posting
+      (account)
+      (amount))))
 
 ==================
 10__with_a_custom_conversion_account_declared____infer_equity_uses_that_instead_
-:skip
 ==================
 
 account trade  ; type:V
@@ -616,11 +647,21 @@ account trade  ; type:V
 
 ---
 
-(source_file)
+(source_file
+  (directive
+    (account)
+    (comment))
+  (transaction
+    (date)
+    (posting
+      (account)
+      (amount))
+    (posting
+      (account)
+      (amount))))
 
 ==================
 1__activity_report_is_daily_by_default_
-:skip
 ==================
 
 2023-01-01
@@ -644,7 +685,6 @@ account trade  ; type:V
 
 ==================
 2__a_weekly_activity_report_
-:skip
 ==================
 
 2023-01-01
@@ -668,7 +708,6 @@ account trade  ; type:V
 
 ==================
 2__a_7_day_activity_report_starting_on_an_date_
-:skip
 ==================
 
 2023-01-01
@@ -692,7 +731,6 @@ account trade  ; type:V
 
 ==================
 1__should_prompt_again_for_a_bad_date
-:skip
 ==================
 
 2009/1/32
@@ -705,7 +743,6 @@ account trade  ; type:V
 
 ==================
 3__simple_add_with_no_existing_journal__no_commodity_entered
-:skip
 ==================
 
 a
@@ -719,7 +756,6 @@ b
 
 ==================
 4__default_commodity_with_greater_precision_does_not_alter_entered_precision
-:skip
 ==================
 
 a
@@ -733,7 +769,6 @@ b
 
 ==================
 5__default_commodity_with_less_precision_does_not_alter_entered_precision
-:skip
 ==================
 
 a
@@ -747,7 +782,6 @@ b
 
 ==================
 6__default_commodity_symbol_is_not_added_when_not_provided___815_
-:skip
 ==================
 
 a
@@ -761,7 +795,6 @@ b
 
 ==================
 7__existing_commodity_with_greater_precision
-:skip
 ==================
 
 a
@@ -775,7 +808,6 @@ b
 
 ==================
 8__existing_commodity_with_less_precision
-:skip
 ==================
 
 a
@@ -789,7 +821,6 @@ b
 
 ==================
 9__default_amounts_should_not_fail_to_balance_due_to_precision
-:skip
 ==================
 
 2010/1/1
@@ -806,7 +837,6 @@ c
 
 ==================
 test_13
-:skip
 ==================
 
 #
@@ -814,11 +844,12 @@ test_13
 
 ---
 
-(source_file)
+(source_file
+  (comment_line)
+  (comment_line))
 
 ==================
 1__print
-:skip
 ==================
 
 2010/1/1
@@ -845,7 +876,6 @@ test_13
 
 ==================
 2__register
-:skip
 ==================
 
 2010/1/1
@@ -872,7 +902,6 @@ test_13
 
 ==================
 3__balance
-:skip
 ==================
 
 2010/1/1
@@ -899,7 +928,6 @@ test_13
 
 ==================
 4__a_single_commodity_zero_amount_s_commodity_decimal_places_price_is_preserved__when_possible
-:skip
 ==================
 
 2010/3/1 x
@@ -908,11 +936,20 @@ test_13
 
 ---
 
-(source_file)
+(source_file
+  (transaction
+    (date)
+    (description)
+    (posting
+      (account)
+      (amount)
+      (cost_spec
+        (amount)))
+    (posting
+      (account))))
 
 ==================
 test_9
-:skip
 ==================
 
 D 1000,00€
@@ -925,8 +962,6 @@ D 1000,00€
 
 ---
 
-; NOTICE: Content updated from hledger, but preserved manual assertion
-; Previous content length: 116, new: 104
 (source_file
   (transaction
     (date)
@@ -947,7 +982,6 @@ D 1000,00€
 
 ==================
 aregister_command
-:skip
 ==================
 
 2021-01-01
@@ -975,7 +1009,6 @@ aregister_command
 
 ==================
 1__aregister_only_shows_transactions_matching_the_account_query__and_displays_other_accounts_involved
-:skip
 ==================
 
 2023-01-01
@@ -1007,7 +1040,6 @@ aregister_command
 
 ==================
 test_11
-:skip
 ==================
 
 ~ 2021-01-03  sixth, because forecast transactions come after normal transactions
@@ -1028,11 +1060,58 @@ test_11
 
 ---
 
-(source_file)
+(source_file
+  (transaction
+    (interval
+      (date))
+    (description)
+    (posting
+      (account)
+      (amount)))
+  (transaction
+    (date)
+    (description)
+    (posting
+      (account)
+      (amount)))
+  (transaction
+    (date)
+    (description)
+    (posting
+      (account)
+      (amount)))
+  (transaction
+    (date)
+    (description)
+    (posting
+      (account)
+      (amount)))
+  (transaction
+    (date)
+    (description)
+    (posting
+      (account)
+      (amount)))
+  (transaction
+    (date)
+    (description)
+    (posting
+      (account)
+      (amount)
+      (comment)))
+  (transaction
+    (date)
+    (description)
+    (posting
+      (account)
+      (amount))
+    (posting
+      (account)
+      (amount)
+      (comment))))
 
 ==================
 test_13
-:skip
 ==================
 
 2021-01-01=2021-02-02
@@ -1040,11 +1119,16 @@ test_13
 
 ---
 
-(source_file)
+(source_file
+  (transaction
+    (date)
+    (description)
+    (posting
+      (account)
+      (amount))))
 
 ==================
 test_1
-:skip
 ==================
 
 commodity A1,000.0
@@ -1053,8 +1137,6 @@ commodity A1,000.0
 
 ---
 
-; NOTICE: Content updated from hledger, but preserved manual assertion
-; Previous content length: 26, new: 56
 (source_file
   (transaction
     (date)
@@ -1068,7 +1150,6 @@ commodity A1,000.0
 
 ==================
 test_3
-:skip
 ==================
 
 2015-01-01
@@ -1083,32 +1164,34 @@ test_3
 
 ---
 
-; NOTICE: Content updated from hledger, but preserved manual assertion
-; Previous content length: 167, new: 314
 (source_file
   (transaction
     (date)
-    (description)
     (posting
       (account)
       (amount))
     (posting
       (account)
-      (amount))
-    (posting
-      (account)))
+      (amount)))
   (transaction
     (date)
-    (description)
     (posting
       (account)
       (amount))
     (posting
-      (account))))
+      (account)
+      (amount)))
+  (transaction
+    (date)
+    (posting
+      (account)
+      (amount))
+    (posting
+      (account)
+      (amount))))
 
 ==================
 1__hledger_should_give_this_balance_
-:skip
 ==================
 
 1/1
@@ -1141,7 +1224,6 @@ test_3
 
 ==================
 2__as_above__but_the_prices_have_a_commodity___should_work_the_same_
-:skip
 ==================
 
 1/1
@@ -1174,7 +1256,6 @@ test_3
 
 ==================
 3__period_reporting_works_for_a_specific_year
-:skip
 ==================
 
 2015/10/10 Client A | Invoice #1
@@ -1244,7 +1325,6 @@ test_3
 
 ==================
 4__period_reporting_works_for_two_years
-:skip
 ==================
 
 2015/10/10 Client A | Invoice #1
@@ -1314,7 +1394,6 @@ test_3
 
 ==================
 5__period_reporting_works_for_one_month
-:skip
 ==================
 
 2015/10/10 Client A | Invoice #1
@@ -1384,7 +1463,6 @@ test_3
 
 ==================
 6__period_reporting_works_for_one_month_in_another_year
-:skip
 ==================
 
 2015/10/10 Client A | Invoice #1
@@ -1454,7 +1532,6 @@ test_3
 
 ==================
 7__default_csv_output_
-:skip
 ==================
 
 2021-01-01 Test
@@ -1476,7 +1553,6 @@ test_3
 
 ==================
 8__csv_output_in_tree_mode_
-:skip
 ==================
 
 2021-01-01 Test
@@ -1498,7 +1574,6 @@ test_3
 
 ==================
 9__csv_output_always_does_not_show_thousands_separators
-:skip
 ==================
 
 2021-01-01 Test
@@ -1511,7 +1586,6 @@ test_3
 
 ==================
 test_13
-:skip
 ==================
 
 account a
@@ -1522,11 +1596,20 @@ account b
 
 ---
 
-(source_file)
+(source_file
+  (directive
+    (account))
+  (directive
+    (account))
+  (directive
+    (account))
+  (directive
+    (account))
+  (directive
+    (account)))
 
 ==================
 11__in_list_mode_we_can_see_that_non_leaf_declared_accounts_are_excluded_
-:skip
 ==================
 
 account a
@@ -1551,7 +1634,6 @@ account b
 
 ==================
 12__not_acct_queries_work_with_declared_accounts_
-:skip
 ==================
 
 account a
@@ -1576,7 +1658,6 @@ account b
 
 ==================
 15____count_counts_postings_
-:skip
 ==================
 
 2023-01-01
@@ -1600,7 +1681,6 @@ account b
 
 ==================
 test_3
-:skip
 ==================
 
 ~ daily from 2016/1/1
@@ -1628,11 +1708,9 @@ test_3
 
 ---
 
-; NOTICE: Content updated from hledger, but preserved manual assertion
-; Previous content length: 167, new: 391
 (source_file
   (transaction
-    (date)
+    (interval)
     (description)
     (posting
       (account)
@@ -1644,7 +1722,41 @@ test_3
       (account)))
   (transaction
     (date)
-    (description)
+    (posting
+      (account)
+      (amount))
+    (posting
+      (account)))
+  (transaction
+    (date)
+    (posting
+      (account)
+      (amount))
+    (posting
+      (account)))
+  (transaction
+    (date)
+    (posting
+      (account)
+      (amount))
+    (posting
+      (account)))
+  (transaction
+    (date)
+    (posting
+      (account)
+      (amount))
+    (posting
+      (account)))
+  (transaction
+    (date)
+    (posting
+      (account)
+      (amount))
+    (posting
+      (account)))
+  (transaction
+    (date)
     (posting
       (account)
       (amount))
@@ -1653,7 +1765,6 @@ test_3
 
 ==================
 test_6
-:skip
 ==================
 
 2016/12/01
@@ -1684,11 +1795,76 @@ test_6
 
 ---
 
-(source_file)
+(source_file
+  (transaction
+    (date)
+    (posting
+      (account)
+      (amount)
+      (cost_spec
+        (amount)))
+    (posting
+      (account)))
+  (transaction
+    (date)
+    (posting
+      (account)
+      (amount)
+      (cost_spec
+        (amount)))
+    (posting
+      (account)))
+  (transaction
+    (date)
+    (posting
+      (account)
+      (amount)
+      (cost_spec
+        (amount)))
+    (posting
+      (account)))
+  (transaction
+    (date)
+    (posting
+      (account)
+      (amount))
+    (posting
+      (account)))
+  (transaction
+    (date)
+    (posting
+      (account)
+      (amount))
+    (posting
+      (account)))
+  (transaction
+    (date)
+    (posting
+      (account)
+      (amount))
+    (posting
+      (account)))
+  (transaction
+    (date)
+    (posting
+      (account)
+      (amount))
+    (posting
+      (account)))
+  (transaction
+    (interval)
+    (description)
+    (posting
+      (account)
+      (amount))
+    (posting
+      (account)
+      (amount))
+    (posting
+      (account))))
 
 ==================
 test_8
-:skip
 ==================
 
 ~ daily
@@ -1708,11 +1884,47 @@ test_8
 
 ---
 
-(source_file)
+(source_file
+  (transaction
+    (interval)
+    (posting
+      (account)
+      (amount)))
+  (transaction
+    (interval)
+    (posting
+      (account)
+      (amount)))
+  (transaction
+    (interval)
+    (posting
+      (account)
+      (amount)))
+  (transaction
+    (date)
+    (posting
+      (account)
+      (amount))
+    (posting
+      (account)
+      (amount))
+    (posting
+      (account)
+      (amount)))
+  (transaction
+    (date)
+    (posting
+      (account)
+      (amount))
+    (posting
+      (account)
+      (amount))
+    (posting
+      (account)
+      (amount))))
 
 ==================
 7__a_bounded_two_day_budget__the_end_date_is_exclusive_as_usual_
-:skip
 ==================
 
 ~ daily from 2018/1/2 to 2018/1/4
@@ -1774,7 +1986,6 @@ test_8
 
 ==================
 8__multiple_bounded_budgets_
-:skip
 ==================
 
 ~ daily from 2018/1/1 to 2018/1/3
@@ -1828,7 +2039,6 @@ test_8
 
 ==================
 9__a__from_a_to_b__budget_should_not_be_included_in_a_report_beginning_on_b_
-:skip
 ==================
 
 ~ daily
@@ -1859,7 +2069,6 @@ test_8
 
 ==================
 12__subaccounts_of_budgeted_accounts_count_towards_budget
-:skip
 ==================
 
 ~ daily
@@ -1883,7 +2092,6 @@ test_8
 
 ==================
 13__budget_goals_on_both_parent_and_subaccounts_are_counted
-:skip
 ==================
 
 ~ daily
@@ -1915,7 +2123,6 @@ test_8
 
 ==================
 15__respect___value
-:skip
 ==================
 
 P 2018/01/26 SHARE €10
@@ -1967,7 +2174,6 @@ P 2018/01/26 SHARE €10
 
 ==================
 16__with_subaccounts__child_accounts_are_properly_included_in_the_parent_balance_when_budget_is_checked
-:skip
 ==================
 
 ~ monthly from 2019/01
@@ -2024,7 +2230,6 @@ P 2018/01/26 SHARE €10
 
 ==================
 22__subaccounts___nested_budgets
-:skip
 ==================
 
 ~ monthly from 2019/01
@@ -2085,7 +2290,6 @@ P 2018/01/26 SHARE €10
 
 ==================
 26__zero_budget____no_budget
-:skip
 ==================
 
 ~ monthly from 2019-01
@@ -2168,7 +2372,6 @@ P 2018/01/26 SHARE €10
 
 ==================
 test_49
-:skip
 ==================
 
 ~ monthly in 2020
@@ -2182,61 +2385,30 @@ test_49
 
 ---
 
-; NOTICE: Content updated from hledger, but preserved manual assertion
-; Previous content length: 227, new: 147
 (source_file
-  (directive
-    (date)
-    (commodity)
-    (amount))
-  (directive
-    (date)
-    (commodity)
-    (amount))
-  (directive
-    (date)
-    (commodity)
-    (amount))
-  (directive
-    (date)
-    (commodity)
-    (amount))
-  (directive
-    (date)
-    (commodity)
-    (amount))
+  (transaction
+    (interval)
+    (description)
+    (posting
+      (account)
+      (amount)))
   (transaction
     (date)
     (posting
       (account)
-      (amount)
-      (cost_spec
-        (amount))))
+      (amount))
+    (posting
+      (account)))
   (transaction
     (date)
     (posting
       (account)
-      (amount)
-      (cost_spec
-        (amount))))
-  (transaction
-    (date)
+      (amount))
     (posting
-      (account)
-      (amount)
-      (cost_spec
-        (amount))))
-  (transaction
-    (date)
-    (posting
-      (account)
-      (amount)
-      (cost_spec
-        (amount)))))
+      (account))))
 
 ==================
 33__34__select_from_multiple_named_budgets_
-:skip
 ==================
 
 ~ weekly   weekly budget
@@ -2262,7 +2434,6 @@ test_49
 
 ==================
 35__cumulative_budget_report_
-:skip
 ==================
 
 ~ monthly
@@ -2293,7 +2464,6 @@ test_49
 
 ==================
 37__historical_budget_report_where_the_periodic_transaction_has_date_bounds_
-:skip
 ==================
 
 ~ every february 2nd from 2020/01
@@ -2305,7 +2475,6 @@ test_49
 
 ==================
 38__budget_report_applies_command_line_commodity_styles_to_goal_amounts___1905__
-:skip
 ==================
 
 ~ daily
@@ -2329,7 +2498,6 @@ test_49
 
 ==================
 39__tall_budget_report_adds_per_column_zeroes_properly_
-:skip
 ==================
 
 2020-01-15
@@ -2357,7 +2525,6 @@ test_49
 
 ==================
 test_58
-:skip
 ==================
 
 2023-07-01
@@ -2369,11 +2536,26 @@ test_58
 
 ---
 
-(source_file)
+(source_file
+  (transaction
+    (date)
+    (posting
+      (account)
+      (amount))
+    (posting
+      (account)))
+  (transaction
+    (interval)
+    (description)
+    (posting
+      (account)
+      (amount))
+    (posting
+      (account)
+      (amount))))
 
 ==================
 balance_command_with___date2_flag
-:skip
 ==================
 
 2009/1/1 x
@@ -2405,7 +2587,6 @@ balance_command_with___date2_flag
 
 ==================
 1__drop_works_in_flat_mode
-:skip
 ==================
 
 2018/1/1
@@ -2450,7 +2631,6 @@ balance_command_with___date2_flag
 
 ==================
 1_
-:skip
 ==================
 
 1/1
@@ -2462,11 +2642,27 @@ balance_command_with___date2_flag
 
 ---
 
-(source_file)
+(source_file
+  (transaction
+    (date)
+    (posting
+      (account)
+      (amount))
+    (posting
+      (account)
+      (amount))
+    (posting
+      (account)
+      (amount))
+    (posting
+      (account)
+      (amount))
+    (posting
+      (account)
+      (amount))))
 
 ==================
 2_
-:skip
 ==================
 
 1/1
@@ -2499,7 +2695,6 @@ balance_command_with___date2_flag
 
 ==================
 test_0
-:skip
 ==================
 
 2020-09-01 Test
@@ -2508,28 +2703,18 @@ test_0
 
 ---
 
-; NOTICE: Content updated from hledger, but preserved manual assertion
-; Previous content length: 55, new: 37
 (source_file
   (transaction
     (date)
+    (description)
     (posting
       (account)
-      (amount)))
-  (transaction
-    (date)
+      (amount))
     (posting
-      (account)
-      (amount)))
-  (transaction
-    (date)
-    (posting
-      (account)
-      (amount))))
+      (account))))
 
 ==================
 3__with___empty__includes_leading_trailing_empty_periods
-:skip
 ==================
 
 2012/12/31
@@ -2560,7 +2745,6 @@ test_0
 
 ==================
 17____date2_should_work
-:skip
 ==================
 
 2014/1/1
@@ -2585,7 +2769,6 @@ test_0
 
 ==================
 test_27
-:skip
 ==================
 
 2014/1/5
@@ -2603,7 +2786,6 @@ test_27
 
 ==================
 15__multicolumn_balance_report_with___layout_bare_and_null_commodity
-:skip
 ==================
 
 2018/1/1
@@ -2631,7 +2813,6 @@ test_27
 
 ==================
 17__multicolumn_budget_report_with___layout_bare___transpose_
-:skip
 ==================
 
 ~ daily from 2016/1/1
@@ -2716,7 +2897,6 @@ test_27
 
 ==================
 23__should_omit_commodity_from_totals_row_when_the_sum_is_zero_with___layout_bare____1789_
-:skip
 ==================
 
 2021-01-01 Test
@@ -2738,7 +2918,6 @@ test_27
 
 ==================
 balance_reports_with_multiple_commodities
-:skip
 ==================
 
 2020-01-01
@@ -2753,11 +2932,35 @@ balance_reports_with_multiple_commodities
 
 ---
 
-(source_file)
+(source_file
+  (transaction
+    (date)
+    (posting
+      (account)
+      (amount))
+    (posting
+      (account)
+      (amount))
+    (posting
+      (account)
+      (amount))
+    (posting
+      (account)
+      (amount)))
+  (transaction
+    (date)
+    (posting
+      (account)
+      (amount))
+    (posting
+      (account)
+      (amount))
+    (posting
+      (account)
+      (amount))))
 
 ==================
 4__display_elided_to_a_specific_width_if_requested
-:skip
 ==================
 
 2020-02-22
@@ -2783,7 +2986,6 @@ balance_reports_with_multiple_commodities
 
 ==================
 balance_command___no_total_and___no_elide_flags
-:skip
 ==================
 
 2010/04/01 tr1
@@ -2795,11 +2997,28 @@ balance_command___no_total_and___no_elide_flags
 
 ---
 
-(source_file)
+(source_file
+  (transaction
+    (date)
+    (description)
+    (posting
+      (account)
+      (amount))
+    (posting
+      (account)
+      (amount)))
+  (transaction
+    (date)
+    (description)
+    (posting
+      (account)
+      (amount))
+    (posting
+      (account)
+      (amount))))
 
 ==================
 1__one_commodity__zero_accounts_should_be_elided_but_the_final_total_should_not_
-:skip
 ==================
 
 1/1
@@ -2816,7 +3035,6 @@ balance_command___no_total_and___no_elide_flags
 
 ==================
 3__but_not_with___no_elide
-:skip
 ==================
 
 1/1
@@ -2837,7 +3055,6 @@ balance_command___no_total_and___no_elide_flags
 
 ==================
 4__nor_when_it_has_more_than_one_subaccount
-:skip
 ==================
 
 2020/1/1
@@ -2870,7 +3087,6 @@ balance_command___no_total_and___no_elide_flags
 
 ==================
 test_0
-:skip
 ==================
 
 1/1
@@ -2879,28 +3095,18 @@ test_0
 
 ---
 
-; NOTICE: Content updated from hledger, but preserved manual assertion
-; Previous content length: 55, new: 22
 (source_file
   (transaction
     (date)
     (posting
       (account)
-      (amount)))
-  (transaction
-    (date)
-    (posting
-      (account)
-      (amount)))
-  (transaction
-    (date)
+      (amount))
     (posting
       (account)
       (amount))))
 
 ==================
 default_sort__without_account_declarations
-:skip
 ==================
 
 2018/1/1
@@ -2938,7 +3144,6 @@ default_sort__without_account_declarations
 
 ==================
 default_sort__with_account_declarations
-:skip
 ==================
 
 account b:k
@@ -2999,7 +3204,6 @@ account d
 
 ==================
 5__in_flat_mode_with__s__largest__most_positive__amounts_are_shown_first_
-:skip
 ==================
 
 2018/1/1
@@ -3037,7 +3241,6 @@ account d
 
 ==================
 test_17
-:skip
 ==================
 
 2018/1/1
@@ -3048,11 +3251,27 @@ test_17
 
 ---
 
-(source_file)
+(source_file
+  (transaction
+    (date)
+    (posting
+      (account)
+      (amount)
+      (cost_spec
+        (amount)))
+    (posting
+      (account)
+      (amount)
+      (cost_spec
+        (amount))))
+  (transaction
+    (date)
+    (posting
+      (account)
+      (amount))))
 
 ==================
 9___1279_in_hledger_1_11_1_18__bal__s_did_not_respect_the_hierarchy__should_work_now_
-:skip
 ==================
 
 2020-01-01
@@ -3077,7 +3296,6 @@ test_17
 
 ==================
 12___1283_most_negative_amounts_are_sorted_last__so_eg_largest_revenues_liabilities_are_last_
-:skip
 ==================
 
 2020-01-01
@@ -3102,7 +3320,6 @@ test_17
 
 ==================
 14__or_a_sign_flipping_command_like_incomestatement_
-:skip
 ==================
 
 2021-01-01 Post in X
@@ -3164,7 +3381,6 @@ test_17
 
 ==================
 test_0
-:skip
 ==================
 
 2016/12/01
@@ -3192,28 +3408,63 @@ test_0
 
 ---
 
-; NOTICE: Content updated from hledger, but preserved manual assertion
-; Previous content length: 55, new: 391
 (source_file
   (transaction
     (date)
     (posting
       (account)
-      (amount)))
+      (amount))
+    (posting
+      (account)))
   (transaction
     (date)
     (posting
       (account)
-      (amount)))
+      (amount))
+    (posting
+      (account)))
   (transaction
     (date)
     (posting
       (account)
-      (amount))))
+      (amount))
+    (posting
+      (account)))
+  (transaction
+    (date)
+    (posting
+      (account)
+      (amount))
+    (posting
+      (account)))
+  (transaction
+    (date)
+    (posting
+      (account)
+      (amount))
+    (posting
+      (account)))
+  (transaction
+    (date)
+    (posting
+      (account)
+      (amount))
+    (posting
+      (account)))
+  (transaction
+    (interval)
+    (description)
+    (posting
+      (account)
+      (amount))
+    (posting
+      (account)
+      (amount))
+    (posting
+      (account))))
 
 ==================
 test_3
-:skip
 ==================
 
 2016/1/1
@@ -3222,23 +3473,9 @@ test_3
 
 ---
 
-; NOTICE: Content updated from hledger, but preserved manual assertion
-; Previous content length: 167, new: 24
 (source_file
   (transaction
     (date)
-    (description)
-    (posting
-      (account)
-      (amount))
-    (posting
-      (account)
-      (amount))
-    (posting
-      (account)))
-  (transaction
-    (date)
-    (description)
     (posting
       (account)
       (amount))
@@ -3247,7 +3484,6 @@ test_3
 
 ==================
 2__account_type_autodetection_is_case_insensitive_
-:skip
 ==================
 
 2016/1/1
@@ -3267,7 +3503,6 @@ test_3
 
 ==================
 6__tree_output_still_works___565
-:skip
 ==================
 
 2017/1/1
@@ -3284,7 +3519,6 @@ test_3
 
 ==================
 7__flat_output_still_works___552
-:skip
 ==================
 
 2017/1/1
@@ -3301,7 +3535,6 @@ test_3
 
 ==================
 8__an_empty_section_does_not_disrupt_the_overall_totals___588
-:skip
 ==================
 
 2017/1/1
@@ -3318,7 +3551,6 @@ test_3
 
 ==================
 9__with___pretty__tables_use_box_drawing_characters_and_more_borders_
-:skip
 ==================
 
 2016/1/1
@@ -3338,7 +3570,6 @@ test_3
 
 ==================
 test_40
-:skip
 ==================
 
 2018-10-01
@@ -3359,7 +3590,6 @@ test_40
 
 ==================
 11__check_that_starting_balances_are_also_filtered_by_subreport_query___see_issue__1335_
-:skip
 ==================
 
 2020-03-01 * Rent
@@ -3393,7 +3623,6 @@ test_40
 
 ==================
 13__csv_output_supports___drop_
-:skip
 ==================
 
 2020-03-01 * Rent
@@ -3406,7 +3635,6 @@ test_40
 
 ==================
 test_48
-:skip
 ==================
 
 account assets:cash       ; type: Cash
@@ -3419,11 +3647,27 @@ account assets:checking   ; type: Asset
 
 ---
 
-(source_file)
+(source_file
+  (directive
+    (account)
+    (comment))
+  (directive
+    (account)
+    (comment))
+  (comment_line)
+  (transaction
+    (date)
+    (posting
+      (account)
+      (amount)))
+  (transaction
+    (date)
+    (posting
+      (account)
+      (amount))))
 
 ==================
 1_
-:skip
 ==================
 
 2016/1/1
@@ -3432,11 +3676,17 @@ account assets:checking   ; type: Asset
 
 ---
 
-(source_file)
+(source_file
+  (transaction
+    (date)
+    (posting
+      (account)
+      (amount))
+    (posting
+      (account))))
 
 ==================
 10__exclude_fixed_assets_from_cashflow
-:skip
 ==================
 
 2016/1/1
@@ -3452,7 +3702,6 @@ account assets:checking   ; type: Asset
 
 ==================
 1__check_accounts_succeeds_when_all_accounts_are_declared
-:skip
 ==================
 
 account a
@@ -3472,7 +3721,6 @@ account a
 
 ==================
 2__and_otherwise_fails_
-:skip
 ==================
 
 2020-01-01
@@ -3489,7 +3737,6 @@ account a
 
 ==================
 3__also_fails_for_forecast_accounts
-:skip
 ==================
 
 commodity $
@@ -3516,7 +3763,6 @@ account a
 
 ==================
 5__also_fails_for_auto_accounts
-:skip
 ==================
 
 commodity $
@@ -3529,11 +3775,26 @@ account a
 
 ---
 
-(source_file)
+(source_file
+  (directive
+    (commodity))
+  (directive
+    (account))
+  (auto_posting_rule
+    (query)
+    (posting
+      (account)
+      (amount)))
+  (transaction
+    (date)
+    (posting
+      (account)
+      (amount)))
+  (transaction
+    (date)))
 
 ==================
 1__check_that_prices_balance_without_auto_inferring_prices
-:skip
 ==================
 
 2011/01/01 x
@@ -3542,11 +3803,19 @@ account a
 
 ---
 
-(source_file)
+(source_file
+  (transaction
+    (date)
+    (description)
+    (posting
+      (account)
+      (amount))
+    (posting
+      (account)
+      (amount))))
 
 ==================
 1__check_commodities_succeeds_when_all_commodities_are_declared
-:skip
 ==================
 
 commodity $1.
@@ -3559,7 +3828,6 @@ commodity $1.
 
 ==================
 2__and_otherwise_fails
-:skip
 ==================
 
 2020-01-01
@@ -3567,13 +3835,7 @@ commodity $1.
 
 ---
 
-; NOTICE: Content updated from hledger, but preserved manual assertion
-; Previous content length: 41, new: 20
 (source_file
-  (transaction
-    (date))
-  (transaction
-    (date))
   (transaction
     (date)
     (posting
@@ -3582,7 +3844,6 @@ commodity $1.
 
 ==================
 3__but_commodityless_zero_amounts_will_not_fail
-:skip
 ==================
 
 2020-01-01
@@ -3599,7 +3860,6 @@ commodity $1.
 
 ==================
 4__but_zero_amounts_with_undeclared_commodities_still_fail
-:skip
 ==================
 
 2020-01-01
@@ -3616,7 +3876,6 @@ commodity $1.
 
 ==================
 1__check_ordereddates_succeeds_when_transaction_dates_are_ordered
-:skip
 ==================
 
 2020-01-01
@@ -3635,7 +3894,6 @@ commodity $1.
 
 ==================
 2__and_otherwise_fails
-:skip
 ==================
 
 2020-01-01
@@ -3658,7 +3916,6 @@ commodity $1.
 
 ==================
 3____date2_and_secondary_dates_are_ignored
-:skip
 ==================
 
 2020-01-02
@@ -3675,7 +3932,6 @@ commodity $1.
 
 ==================
 4__ordereddates_is_checked_before_balance_assertions__when_both_are_enabled
-:skip
 ==================
 
 2024-01-02
@@ -3701,7 +3957,6 @@ commodity $1.
 
 ==================
 5__enabling_the_ordereddates_check_does_not_disable_the_balance_assertions_check
-:skip
 ==================
 
 2024-01-01
@@ -3727,7 +3982,6 @@ commodity $1.
 
 ==================
 test_1
-:skip
 ==================
 
 payee foo
@@ -3736,62 +3990,30 @@ payee foo
 
 ---
 
-; NOTICE: Content updated from hledger, but preserved manual assertion
-; Previous content length: 26, new: 58
 (source_file
+  (directive)
   (transaction
     (date)
-    (description)
-    (posting
-      (account)
-      (amount))
-    (posting
-      (account)
-      (amount))))
+    (description))
+  (transaction
+    (date)
+    (description)))
 
 ==================
 test_2
-:skip
 ==================
 
 2020-01-01 foo
 
 ---
 
-; NOTICE: Content updated from hledger, but preserved manual assertion
-; Previous content length: 171, new: 14
 (source_file
-  (directive
-    (account)
-    (comment))
-  (directive
-    (account)
-    (comment))
-  (directive
-    (account)
-    (comment))
-  (directive
-    (account)
-    (comment))
-  (directive
-    (account))
   (transaction
     (date)
-    (posting
-      (account)
-      (amount)))
-  (transaction
-    (date)
-    (posting
-      (account)
-      (amount))
-    (posting
-      (account)
-      (amount))))
+    (description)))
 
 ==================
 test_3
-:skip
 ==================
 
 payee foo
@@ -3799,32 +4021,14 @@ payee foo
 
 ---
 
-; NOTICE: Content updated from hledger, but preserved manual assertion
-; Previous content length: 167, new: 36
 (source_file
+  (directive)
   (transaction
     (date)
-    (description)
-    (posting
-      (account)
-      (amount))
-    (posting
-      (account)
-      (amount))
-    (posting
-      (account)))
-  (transaction
-    (date)
-    (description)
-    (posting
-      (account)
-      (amount))
-    (posting
-      (account))))
+    (description)))
 
 ==================
 1__tags_can_be_declared
-:skip
 ==================
 
 tag atag  ; this is atag. tags: on tags are not allowed and will be ignored.
@@ -3836,7 +4040,6 @@ tag atag  ; this is atag. tags: on tags are not allowed and will be ignored.
 
 ==================
 2__check_tags_succeeds_when_all_tags_are_declared
-:skip
 ==================
 
 tag atag
@@ -3848,11 +4051,26 @@ account a  ; atag:
 
 ---
 
-(source_file)
+(source_file
+  (directive
+    (account))
+  (directive
+    (account))
+  (directive
+    (account))
+  (directive
+    (account)
+    (comment))
+  (transaction
+    (date)
+    (comment)
+    (posting
+      (account)
+      (amount)
+      (comment))))
 
 ==================
 3__it_detects_an_undeclared_account_tag
-:skip
 ==================
 
 account a  ; atag:
@@ -3866,18 +4084,19 @@ account a  ; atag:
 
 ==================
 4__it_detects_an_undeclared_transaction_tag
-:skip
 ==================
 
 2023-01-01 ; ttag:
 
 ---
 
-(source_file)
+(source_file
+  (transaction
+    (date)
+    (comment)))
 
 ==================
 5__it_detects_an_undeclared_posting_tag
-:skip
 ==================
 
 2023-01-01
@@ -3895,7 +4114,6 @@ account a  ; atag:
 
 ==================
 test_8
-:skip
 ==================
 
 2024-01-01
@@ -3919,11 +4137,29 @@ test_8
 
 ---
 
-(source_file)
+(source_file
+  (transaction
+    (date))
+  (comment_line)
+  (comment_line)
+  (comment_line)
+  (comment_line)
+  (comment_line)
+  (comment_line)
+  (comment_line)
+  (comment_line)
+  (comment_line)
+  (comment_line)
+  (comment_line)
+  (comment_line)
+  (comment_line)
+  (comment_line)
+  (comment_line)
+  (comment_line)
+  (comment_line))
 
 ==================
 test_10
-:skip
 ==================
 
 tag date                    ; overrides a posting's date
@@ -3946,11 +4182,61 @@ tag _conversion-posting     ; exists on postings which have been matched with a 
 
 ---
 
-(source_file)
+(source_file
+  (directive
+    (account)
+    (comment))
+  (directive
+    (account)
+    (comment))
+  (directive
+    (account)
+    (comment))
+  (directive
+    (account)
+    (comment))
+  (directive
+    (account)
+    (comment))
+  (directive
+    (account)
+    (comment))
+  (directive
+    (account)
+    (comment))
+  (directive
+    (account)
+    (comment))
+  (directive
+    (account)
+    (comment))
+  (directive
+    (account)
+    (comment))
+  (directive
+    (account)
+    (comment))
+  (directive
+    (account)
+    (comment))
+  (directive
+    (account)
+    (comment))
+  (directive
+    (account)
+    (comment))
+  (directive
+    (account)
+    (comment))
+  (directive
+    (account)
+    (comment))
+  (directive
+    (account)
+    (comment)))
 
 ==================
 test_1
-:skip
 ==================
 
 2020-01-01
@@ -3959,12 +4245,9 @@ test_1
 
 ---
 
-; NOTICE: Content updated from hledger, but preserved manual assertion
-; Previous content length: 26, new: 34
 (source_file
   (transaction
     (date)
-    (description)
     (posting
       (account)
       (amount))
@@ -3974,7 +4257,6 @@ test_1
 
 ==================
 test_2
-:skip
 ==================
 
 2020-01-01
@@ -3983,28 +4265,7 @@ test_2
 
 ---
 
-; NOTICE: Content updated from hledger, but preserved manual assertion
-; Previous content length: 171, new: 34
 (source_file
-  (directive
-    (account)
-    (comment))
-  (directive
-    (account)
-    (comment))
-  (directive
-    (account)
-    (comment))
-  (directive
-    (account)
-    (comment))
-  (directive
-    (account))
-  (transaction
-    (date)
-    (posting
-      (account)
-      (amount)))
   (transaction
     (date)
     (posting
@@ -4016,7 +4277,6 @@ test_2
 
 ==================
 1__test_whether_only_the_style_without_a_symbol_is_changed
-:skip
 ==================
 
 2021-07-09 no symbol
@@ -4050,7 +4310,6 @@ test_2
 
 ==================
 2__test_whether_setting_the_style_of_multiple_symbols_work
-:skip
 ==================
 
 2021-07-09 Euro
@@ -4076,7 +4335,6 @@ test_2
 
 ==================
 3__when_setting_the_same_symbol_multiple_times__the_last_one_is_in_effect
-:skip
 ==================
 
 2021-07-09 Euro
@@ -4094,7 +4352,6 @@ test_2
 
 ==================
 4__commodity_styles_are_applied_to_quantity_and_price_of_a_commodity__except_for_precision_
-:skip
 ==================
 
 2021-09-12 buy A
@@ -4114,7 +4371,6 @@ test_2
 
 ==================
 0__a__every_nth_day__of_month___periodic_rule_will_generate_occurrences_only_after_the_start_date____2218_
-:skip
 ==================
 
 ~ every 31st day from 2024-07 to 2024-09
@@ -4126,7 +4382,6 @@ test_2
 
 ==================
 1__account_pattern_with_space
-:skip
 ==================
 
 2010/3/1 x
@@ -4142,7 +4397,6 @@ test_2
 
 ==================
 2__description_pattern_with_space
-:skip
 ==================
 
 2010/3/1 x
@@ -4174,7 +4428,6 @@ test_2
 
 ==================
 3__multiple_patterns__spaced_and_punctuated_patterns
-:skip
 ==================
 
 2011/9/11
@@ -4187,7 +4440,6 @@ test_2
 
 ==================
 4__patterns_with_quotation_marks_in_them
-:skip
 ==================
 
 2020-09-19 Quoting
@@ -4203,7 +4455,6 @@ test_2
 
 ==================
 close_command
-:skip
 ==================
 
 2016/1/1 open
@@ -4261,7 +4512,6 @@ close_command
 
 ==================
 7__closing_a_multi_priced_balance__by_default_the_transaction_prices_are_ignored_
-:skip
 ==================
 
 2019/01/01
@@ -4271,11 +4521,24 @@ close_command
 
 ---
 
-(source_file)
+(source_file
+  (transaction
+    (date)
+    (posting
+      (account)
+      (amount)
+      (cost_spec
+        (amount)))
+    (posting
+      (account)
+      (amount)
+      (cost_spec
+        (amount)))
+    (posting
+      (account))))
 
 ==================
 test_14
-:skip
 ==================
 
 2019/01/01
@@ -4285,11 +4548,24 @@ test_14
 
 ---
 
-(source_file)
+(source_file
+  (transaction
+    (date)
+    (posting
+      (account)
+      (amount)
+      (cost_spec
+        (amount))))
+  (transaction
+    (date)
+    (posting
+      (account)
+      (amount)
+      (cost_spec
+        (amount)))))
 
 ==================
 test_18
-:skip
 ==================
 
 2016/01/31
@@ -4311,24 +4587,54 @@ test_18
 
 ---
 
-; NOTICE: Content updated from hledger, but preserved manual assertion
-; Previous content length: 48, new: 615
 (source_file
-  (directive
+  (transaction
     (date)
-    (commodity)
-    (amount))
+    (posting
+      (account)
+      (amount))
+    (posting
+      (account)))
   (transaction
     (date)
     (posting
       (account)
       (amount)
-      (balance_assertion
-        (amount)))))
+      (cost_spec
+        (amount)))
+    (posting
+      (account)
+      (amount))
+    (posting
+      (account)
+      (amount))
+    (posting
+      (account)))
+  (transaction
+    (date)
+    (posting
+      (account)
+      (amount))
+    (posting
+      (account)))
+  (transaction
+    (date)
+    (posting
+      (account)
+      (amount)
+      (cost_spec
+        (amount)))
+    (posting
+      (account)
+      (amount))
+    (posting
+      (account)
+      (amount))
+    (posting
+      (account))))
 
 ==================
 13__a_tricky_case_where_a_closing_posting_was_rounded_and_failed_to_balance___1164_
-:skip
 ==================
 
 commodity $0.00
@@ -4347,7 +4653,6 @@ commodity AAA 0.00000000
 
 ==================
 15___the_default_closing_date_is_yesterday__or_the_journal_s_end_date__whichever_is_later__
-:skip
 ==================
 
 999999-12-31
@@ -4359,7 +4664,6 @@ commodity AAA 0.00000000
 
 ==================
 17__close__and_print__should_add_trailing_decimal_marks_when_needed_to_posting_amounts_and_costs_
-:skip
 ==================
 
 commodity $1,000.00
@@ -4372,7 +4676,6 @@ commodity $1,000.00
 
 ==================
 codes_command
-:skip
 ==================
 
 1/1 (123)
@@ -4428,7 +4731,6 @@ codes_command
 
 ==================
 1__read_csv_to_hledger_journal_format
-:skip
 ==================
 
 10/2009/09,Flubber Co,50
@@ -4444,7 +4746,6 @@ account1 assets:myacct
 
 ==================
 2__reading_csv_with_in_field_and_out_field
-:skip
 ==================
 
 10/2009/09,Flubber Co🎅,50,
@@ -4464,7 +4765,6 @@ currency $
 
 ==================
 3__handle_conditions_assigning_multiple_fields
-:skip
 ==================
 
 10/2009/09,Flubber Co,50
@@ -4483,7 +4783,6 @@ if Flubber
 
 ==================
 4__read_csv_with_balance_field
-:skip
 ==================
 
 10/2009/09,Flubber Co,50,123
@@ -4499,7 +4798,6 @@ account1 assets:myacct
 
 ==================
 5__read_csv_with_empty_balance_field
-:skip
 ==================
 
 10/2009/09,Flubber Co,50,123
@@ -4516,7 +4814,6 @@ account1 assets:myacct
 
 ==================
 6__read_csv_with_only_whitespace_in_balance_field
-:skip
 ==================
 
 10/2009/09,Flubber Co,50,123
@@ -4533,7 +4830,6 @@ account1 assets:myacct
 
 ==================
 7__read_csv_with_rule_double_negating_column
-:skip
 ==================
 
 date,payee,amount
@@ -4553,7 +4849,6 @@ account2 expense:other
 
 ==================
 8__reading_with_custom_separator__ssv__semicolon_separated_
-:skip
 ==================
 
 10/2009/09;Flubber Co🎅;50;
@@ -4574,7 +4869,6 @@ currency $
 
 ==================
 9__read_csv_with_balance2_field
-:skip
 ==================
 
 10/2009/09,Flubber Co,50,123
@@ -4590,7 +4884,6 @@ account1 assets:myacct
 
 ==================
 10__read_csv_with_balance1_and_balance2_fields
-:skip
 ==================
 
 10/2009/09,Flubber Co,50,321,123
@@ -4606,7 +4899,6 @@ account1 assets:myacct
 
 ==================
 11__more_than_two_postings
-:skip
 ==================
 
 10/2009/09,Flubber Co,50,321,123,0.234,VAT
@@ -4624,7 +4916,6 @@ account4 the:remainder
 
 ==================
 12__more_than_two_postings_and_different_currencies
-:skip
 ==================
 
 10/2009/09,Flubber Co,50,321,123,£,0.234,VAT
@@ -4642,7 +4933,6 @@ account4 the:remainder
 
 ==================
 13__reading_csv_with_in_field_and_out_field__where_one_could_be_zero
-:skip
 ==================
 
 10/2009/09,Flubber Co🎅,50,0
@@ -4662,7 +4952,6 @@ currency $
 
 ==================
 14__multiline_descriptions
-:skip
 ==================
 
 10/2009/09,"Flubber Co
@@ -4681,7 +4970,6 @@ account1 assets:myacct
 
 ==================
 15__recursive_interpolation
-:skip
 ==================
 
 myacct,10/2009/09,Flubber Co,50,
@@ -4699,7 +4987,6 @@ if Flubber
 
 ==================
 16__real_life_ish_paypal_parsing_example
-:skip
 ==================
 
 "12/22/2018","06:22:50","PST","Someone","Subscription Payment","Completed","USD","10.00","-0.59","9.41","someone@some.where","simon@joyful.com","123456789","Joyful Systems","","9KCXINCOME:UNKNOWNZXXAX","","57.60",""
@@ -4723,7 +5010,6 @@ description %description for %itemtitle
 
 ==================
 17__show_that__415_is_fixed
-:skip
 ==================
 
 "2016/01/01","$1"
@@ -4740,7 +5026,6 @@ date-format %Y/%m/%d
 
 ==================
 18__conditional_skips
-:skip
 ==================
 
 HEADER
@@ -4771,7 +5056,6 @@ if MIDDLE
 
 ==================
 19__lines_with_just_balance__no_amount___1000_
-:skip
 ==================
 
 2018-10-15,100
@@ -4791,7 +5075,6 @@ account2 income
 
 ==================
 20__test_for__1001___empty_assignment_to_amount_show_not_eat_next_line
-:skip
 ==================
 
 2018-10-15,1
@@ -4806,7 +5089,6 @@ comment x
 
 ==================
 21__amountless_postings_and_conditional_third_posting
-:skip
 ==================
 
 "12/22/2018","06:22:50","PST","Someone","Subscription Payment","Completed","USD","10.00","-0.59","9.41","someone@some.where","simon@joyful.com","123456789","Joyful Systems","","9KCXINCOME:UNKNOWNZXXAX","","57.60",""
@@ -4834,7 +5116,6 @@ if Conditional Empty Fee
 
 ==================
 22__read_csv_with_balance_type_directive
-:skip
 ==================
 
 10/2009/09,Flubber Co,50,123
@@ -4851,7 +5132,6 @@ account1 assets:myacct
 
 ==================
 23__create_unbalanced_virtual_posting
-:skip
 ==================
 
 10/2009/09,Flubber Co,50,123
@@ -4867,7 +5147,6 @@ account1 (assets:myacct)
 
 ==================
 24__create_balanced_virtual_posting
-:skip
 ==================
 
 10/2009/09,Flubber Co,50,-50
@@ -4884,7 +5163,6 @@ account2 [assets:another-acct]
 
 ==================
 25__specify_reserved_word_whitespace_separator_in_rules
-:skip
 ==================
 
 2009/10/01	Flubber Co	50	123
@@ -4900,7 +5178,6 @@ separator TAB
 
 ==================
 26__manually_setting_hledger_s_default__expenses_unknown___income_unknown__names_works___1192_
-:skip
 ==================
 
 2020-01-01,5
@@ -4915,7 +5192,6 @@ account2 expenses:unknown
 
 ==================
 27__query_by_description
-:skip
 ==================
 
 2020-01-01, 1
@@ -4931,7 +5207,6 @@ if %desc 1
 
 ==================
 test_35
-:skip
 ==================
 
 2020-01-01, 1,
@@ -4940,11 +5215,24 @@ fields date, amount,
 
 ---
 
-(source_file)
+(source_file
+  (auto_posting_rule
+    (query)
+    (posting
+      (account)
+      (amount)))
+  (transaction
+    (date)
+    (posting
+      (account)
+      (amount)
+      (comment))
+    (posting
+      (account)
+      (amount))))
 
 ==================
 test_37
-:skip
 ==================
 
 2020-01-01, 1, a
@@ -4953,8 +5241,6 @@ fields date, amount, account1
 
 ---
 
-; NOTICE: Content updated from hledger, but preserved manual assertion
-; Previous content length: 38, new: 52
 (source_file
   (transaction
     (interval)
@@ -4965,7 +5251,6 @@ fields date, amount, account1
 
 ==================
 30__leave_unknown_account_name_as_is_when_explicitly_set_by_user___1192__
-:skip
 ==================
 
 2020-01-01, 1, a
@@ -4979,7 +5264,6 @@ account2 expenses:unknown
 
 ==================
 31__can_generate_a_transaction_with_amount_on_the_first_posting_only_
-:skip
 ==================
 
 2020-01-01, 1
@@ -4993,7 +5277,6 @@ account2 b
 
 ==================
 32__can_generate_a_transaction_with_an_amount_on_the_second_posting_only_
-:skip
 ==================
 
 2020-01-01, 1
@@ -5007,7 +5290,6 @@ account1 a
 
 ==================
 33__the_unnumbered_amount_rule_converts_posting_2_s_amount_to_cost_
-:skip
 ==================
 
 2020-01-01, 1
@@ -5021,7 +5303,6 @@ amount  %amt @@ 1 EUR
 
 ==================
 test_43
-:skip
 ==================
 
 2020-01-01,1,1
@@ -5034,7 +5315,6 @@ fields date, amount-out, amount2
 
 ==================
 35__tabular_rules_assigning_multiple_fields
-:skip
 ==================
 
 10/2009/09,Flubber Co,50
@@ -5052,7 +5332,6 @@ Flubber,acct,cmt
 
 ==================
 36__tabular_rules_assigning_multiple_fields_followed_by_regular_rules
-:skip
 ==================
 
 10/2009/09,Flubber Co,50
@@ -5075,7 +5354,6 @@ Blubber
 
 ==================
 37__tabular_rules_with_empty_values
-:skip
 ==================
 
 10/2009/09,Flubber Co,50
@@ -5095,7 +5373,6 @@ Blubber,acct2,
 
 ==================
 38__tabular_rules_with_field_matchers_and_____separator
-:skip
 ==================
 
 10/2009/09,Flubber Co,50
@@ -5115,7 +5392,6 @@ if|account2|comment
 
 ==================
 39__insufficient_number_of_values_in_tabular_rules_error
-:skip
 ==================
 
 10/2009/09,Flubber Co,50
@@ -5135,7 +5411,6 @@ if|account2|comment
 
 ==================
 40__unindented_condition_block_error
-:skip
 ==================
 
 10/2009/09,Flubber Co,50
@@ -5154,7 +5429,6 @@ comment cmt
 
 ==================
 41__assignment_to_custom_field___1264____spaces_after_the_if___1120_
-:skip
 ==================
 
 10/2009/09,Flubber Co,50
@@ -5174,7 +5448,6 @@ account2 %myaccount2
 
 ==================
 42__rules_override_each_other_in_the_order_listed_in_the_file
-:skip
 ==================
 
 10/2009/09,Flubber Co,50
@@ -5196,7 +5469,6 @@ if 10/2009/09.*Flubber
 
 ==================
 43__attempt_to_use_space_as_a_separator_in_the_tabular_rules
-:skip
 ==================
 
 10/2009/09,Flubber Co,50
@@ -5216,7 +5488,6 @@ if account2 comment
 
 ==================
 44__handle_matchers_with___prefix
-:skip
 ==================
 
 10/2009/09,Flubber Co,50
@@ -5236,7 +5507,6 @@ if Flubber
 
 ==================
 45__handle_matchers_with_both___and__
-:skip
 ==================
 
 10/2009/09,Flubber Co,50
@@ -5256,7 +5526,6 @@ if Flubber
 
 ==================
 test_60
-:skip
 ==================
 
 2020-01-01,"1,000"
@@ -5271,7 +5540,6 @@ decimal-mark .
 
 ==================
 test_62
-:skip
 ==================
 
 2020-01-01,"1,000"
@@ -5286,7 +5554,6 @@ decimal-mark ,
 
 ==================
 48__account_aliases_work_when_reading_from_csv_
-:skip
 ==================
 
 2020-01-01,10
@@ -5299,7 +5566,6 @@ fields date,amount
 
 ==================
 49__allow_for_whitespace_in_csv_amounts
-:skip
 ==================
 
 2009-09-10,+ $20
@@ -5318,7 +5584,6 @@ account1 assets:myacct
 
 ==================
 50__handle_an_entry_with_all_zeros
-:skip
 ==================
 
 Date;Description;Category;Debit;Credit;Balance
@@ -5335,7 +5600,6 @@ account1 assets:bank:checking
 
 ==================
 51__allow_unicode_field_references___1809_
-:skip
 ==================
 
 Date, Description, Id, Amount
@@ -5352,7 +5616,6 @@ code         %unicöde
 
 ==================
 52__throw_an_error_when_unable_to_substitute_csv_templates
-:skip
 ==================
 
 "2021-12-23","caffe_siciliaexpenses:cibo:dolce","-10.5"
@@ -5366,7 +5629,6 @@ fields date, description, account2, amount
 
 ==================
 53__we_can_t_parse_double_quotes_inside_an_unquoted_field__or_other_non_rfc4180_data____1966_
-:skip
 ==================
 
 2022-01-01,B"B",C
@@ -5379,7 +5641,6 @@ fields date, b, c
 
 ==================
 54__a_top_level_skip_directive_is_able_to_skip_lines_which_would_fail_to_parse_as_csv____1967_
-:skip
 ==================
 
 2022-01-01,B"B",C
@@ -5393,7 +5654,6 @@ fields date, b, c
 
 ==================
 test_72
-:skip
 ==================
 
 title
@@ -5409,7 +5669,6 @@ fields date, amount
 
 ==================
 test_74
-:skip
 ==================
 
 2022-01-01,1
@@ -5423,7 +5682,6 @@ account1 assets    %amt
 
 ==================
 57__make_sure_transaction_tags_are_functional___2114___including_ones_on_subsequent_lines___2241_
-:skip
 ==================
 
 2020-01-01, 1
@@ -5440,7 +5698,6 @@ if %desc 1
 
 ==================
 59__handle_newlines_in_an_assignment_value__without_breaking_interpolations___2134_
-:skip
 ==================
 
 2023-01-01,1
@@ -5455,7 +5712,6 @@ comment \n %amount
 
 ==================
 60__specify_ssv_prefix_and_no_extension
-:skip
 ==================
 
 12/11/2019;Foo;123;10.23
@@ -5469,7 +5725,6 @@ date-format %d/%m/%Y
 
 ==================
 61__tabular_rules_with_comments
-:skip
 ==================
 
 10/2009/09,Flubber Co,50
@@ -5492,7 +5747,6 @@ if|account2|comment
 
 ==================
 62__single_ampersands_within_a_matcher_are_part_of_the_regexp__not_an_and_operator____2352_
-:skip
 ==================
 
 2025-01-01,STOP & SHOP,100
@@ -5508,7 +5762,6 @@ if
 
 ==================
 test_2
-:skip
 ==================
 
 2018/1/1 foo  ; foo:
@@ -5518,40 +5771,21 @@ test_2
 
 ---
 
-; NOTICE: Content updated from hledger, but preserved manual assertion
-; Previous content length: 171, new: 47
 (source_file
-  (directive
-    (account)
-    (comment))
-  (directive
-    (account)
-    (comment))
-  (directive
-    (account)
-    (comment))
-  (directive
-    (account)
-    (comment))
-  (directive
-    (account))
   (transaction
     (date)
+    (description)
+    (comment)
     (posting
-      (account)
-      (amount)))
+      (account)))
   (transaction
     (date)
+    (description)
     (posting
-      (account)
-      (amount))
-    (posting
-      (account)
-      (amount))))
+      (account))))
 
 ==================
 test_4
-:skip
 ==================
 
 2016/12/31
@@ -5566,11 +5800,34 @@ test_4
 
 ---
 
-(source_file)
+(source_file
+  (transaction
+    (date)
+    (posting
+      (account)
+      (amount))
+    (posting
+      (account)))
+  (transaction
+    (interval)
+    (description)
+    (posting
+      (account)
+      (amount))
+    (posting
+      (account)
+      (amount))
+    (posting
+      (account)
+      (amount))
+    (posting
+      (account)
+      (amount))
+    (posting
+      (account))))
 
 ==================
 1__a_balance_report_with_forecasted_transactions_
-:skip
 ==================
 
 2016/12/31
@@ -5613,7 +5870,6 @@ test_4
 
 ==================
 2__print_forecasted_transactions__with_status_and_description_
-:skip
 ==================
 
 2016/12/31
@@ -5628,11 +5884,35 @@ test_4
 
 ---
 
-(source_file)
+(source_file
+  (transaction
+    (date)
+    (posting
+      (account)
+      (amount))
+    (posting
+      (account)))
+  (transaction
+    (interval)
+    (description)
+    (comment)
+    (posting
+      (account)
+      (amount))
+    (posting
+      (account)
+      (amount))
+    (posting
+      (account)
+      (amount))
+    (posting
+      (account)
+      (amount))
+    (posting
+      (account))))
 
 ==================
 3__a_register_with_forecasted_transactions__with_a_comment_and_tag_
-:skip
 ==================
 
 2016/01/01
@@ -5675,7 +5955,6 @@ test_4
 
 ==================
 4__check_that___forecast_generates_transactions_only_after_last_transaction_date_in_journal_
-:skip
 ==================
 
 Y 2000
@@ -5689,7 +5968,6 @@ Y 2000
 
 ==================
 test_11
-:skip
 ==================
 
 Y 2000
@@ -5703,7 +5981,6 @@ Y 2000
 
 ==================
 6__y_also_sets_the_month_to_1__affecting_d_dates_
-:skip
 ==================
 
 Y 2000
@@ -5717,7 +5994,6 @@ Y 2000
 
 ==================
 7__y_also_sets_the_day_to_1__affecting_relative_dates_
-:skip
 ==================
 
 2016/12/31
@@ -5748,7 +6024,6 @@ Y 2000
 
 ==================
 test_16
-:skip
 ==================
 
 commodity 1,000.00 USD
@@ -5763,7 +6038,6 @@ commodity 1,000.00 USD
 
 ==================
 10__amount_display_style_is_applied_to_forecasted_transactions_
-:skip
 ==================
 
 2021-09-01  Normal Balance Assertion Works
@@ -5812,7 +6086,6 @@ commodity 1,000.00 USD
 
 ==================
 11__forecast_transactions_work_with_balance_assignments
-:skip
 ==================
 
 2021-08-01
@@ -5827,7 +6100,6 @@ commodity 1,000.00 USD
 
 ==================
 12__generated_forecast_for_weekday_transactions
-:skip
 ==================
 
 2021-08-01
@@ -5842,7 +6114,6 @@ commodity 1,000.00 USD
 
 ==================
 13__generated_forecast_for_weekend_transactions
-:skip
 ==================
 
 2021-01-01
@@ -5866,7 +6137,6 @@ commodity 1,000.00 USD
 
 ==================
 test_25
-:skip
 ==================
 
 ~ daily
@@ -5874,11 +6144,15 @@ test_25
 
 ---
 
-(source_file)
+(source_file
+  (transaction
+    (interval)
+    (posting
+      (account)
+      (amount))))
 
 ==================
 test_37
-:skip
 ==================
 
 ~ quarterly from next quarter
@@ -5896,7 +6170,6 @@ test_37
 
 ==================
 22__printed_json_with_forecast_transactions_reference_periodic_transactions_source_position
-:skip
 ==================
 
 ~ 2023-01-01   Forecasted
@@ -5919,7 +6192,6 @@ test_37
 
 ==================
 test_55
-:skip
 ==================
 
 ~ every 31st day of month
@@ -5931,7 +6203,6 @@ test_55
 
 ==================
 test_0
-:skip
 ==================
 
 2009-01-01 проверка
@@ -5940,28 +6211,18 @@ test_0
 
 ---
 
-; NOTICE: Content updated from hledger, but preserved manual assertion
-; Previous content length: 55, new: 43
 (source_file
   (transaction
     (date)
+    (description)
     (posting
       (account)
-      (amount)))
-  (transaction
-    (date)
+      (amount))
     (posting
-      (account)
-      (amount)))
-  (transaction
-    (date)
-    (posting
-      (account)
-      (amount))))
+      (account))))
 
 ==================
 test_0
-:skip
 ==================
 
 2009-01-01 проверка
@@ -5970,28 +6231,18 @@ test_0
 
 ---
 
-; NOTICE: Content updated from hledger, but preserved manual assertion
-; Previous content length: 55, new: 43
 (source_file
   (transaction
     (date)
+    (description)
     (posting
       (account)
-      (amount)))
-  (transaction
-    (date)
+      (amount))
     (posting
-      (account)
-      (amount)))
-  (transaction
-    (date)
-    (posting
-      (account)
-      (amount))))
+      (account))))
 
 ==================
 test_0
-:skip
 ==================
 
 2009-01-01 аура (cyrillic letters)
@@ -6003,28 +6254,26 @@ test_0
 
 ---
 
-; NOTICE: Content updated from hledger, but preserved manual assertion
-; Previous content length: 55, new: 102
 (source_file
   (transaction
     (date)
+    (description)
     (posting
       (account)
-      (amount)))
+      (amount))
+    (posting
+      (account)))
   (transaction
     (date)
+    (description)
     (posting
       (account)
-      (amount)))
-  (transaction
-    (date)
+      (amount))
     (posting
-      (account)
-      (amount))))
+      (account))))
 
 ==================
 test_0
-:skip
 ==================
 
 2009-01-01 broken entry
@@ -6033,28 +6282,19 @@ test_0
 
 ---
 
-; NOTICE: Content updated from hledger, but preserved manual assertion
-; Previous content length: 55, new: 49
 (source_file
   (transaction
     (date)
+    (description)
     (posting
       (account)
-      (amount)))
-  (transaction
-    (date)
-    (posting
-      (account)
-      (amount)))
-  (transaction
-    (date)
+      (amount))
     (posting
       (account)
       (amount))))
 
 ==================
 test_0
-:skip
 ==================
 
 2009-01-01 проверка
@@ -6063,28 +6303,18 @@ test_0
 
 ---
 
-; NOTICE: Content updated from hledger, but preserved manual assertion
-; Previous content length: 55, new: 48
 (source_file
   (transaction
     (date)
+    (description)
     (posting
       (account)
-      (amount)))
-  (transaction
-    (date)
+      (amount))
     (posting
-      (account)
-      (amount)))
-  (transaction
-    (date)
-    (posting
-      (account)
-      (amount))))
+      (account))))
 
 ==================
 test_0
-:skip
 ==================
 
 2009-01-01 проверка
@@ -6093,28 +6323,18 @@ test_0
 
 ---
 
-; NOTICE: Content updated from hledger, but preserved manual assertion
-; Previous content length: 55, new: 43
 (source_file
   (transaction
     (date)
+    (description)
     (posting
       (account)
-      (amount)))
-  (transaction
-    (date)
+      (amount))
     (posting
-      (account)
-      (amount)))
-  (transaction
-    (date)
-    (posting
-      (account)
-      (amount))))
+      (account))))
 
 ==================
 1_
-:skip
 ==================
 
 2000-01-01 transaction 1
@@ -6133,7 +6353,6 @@ test_0
 
 ==================
 1__simple_statement_works
-:skip
 ==================
 
 2016/1/1
@@ -6153,7 +6372,6 @@ test_0
 
 ==================
 2__period_reporting_works_for_a_specific_year
-:skip
 ==================
 
 2015/10/10 Client A | Invoice #1
@@ -6223,7 +6441,6 @@ test_0
 
 ==================
 3__period_reporting_works_for_two_years
-:skip
 ==================
 
 2015/10/10 Client A | Invoice #1
@@ -6293,7 +6510,6 @@ test_0
 
 ==================
 4__period_reporting_works_for_one_month
-:skip
 ==================
 
 2015/10/10 Client A | Invoice #1
@@ -6363,7 +6579,6 @@ test_0
 
 ==================
 5__period_reporting_works_for_one_month_in_another_year
-:skip
 ==================
 
 2015/10/10 Client A | Invoice #1
@@ -6433,7 +6648,6 @@ test_0
 
 ==================
 9__with___declared__declared_leaf_accounts_are_included__and_in_the_right_place_
-:skip
 ==================
 
 account revenues
@@ -6458,7 +6672,6 @@ account expenses
 
 ==================
 test_3
-:skip
 ==================
 
 account assets        ; type:Asset
@@ -6474,12 +6687,17 @@ account liabilities
 
 ---
 
-; NOTICE: Content updated from hledger, but preserved manual assertion
-; Previous content length: 167, new: 213
 (source_file
+  (directive
+    (account)
+    (comment))
+  (directive
+    (account)
+    (comment))
+  (directive
+    (account))
   (transaction
     (date)
-    (description)
     (posting
       (account)
       (amount))
@@ -6487,10 +6705,11 @@ account liabilities
       (account)
       (amount))
     (posting
-      (account)))
-  (transaction
-    (date)
-    (description)
+      (account)
+      (amount))
+    (posting
+      (account)
+      (amount))
     (posting
       (account)
       (amount))
@@ -6499,7 +6718,6 @@ account liabilities
 
 ==================
 test_9
-:skip
 ==================
 
 account assets        ; 
@@ -6510,29 +6728,24 @@ account assets:cash   ; type:Cash
 
 ---
 
-; NOTICE: Content updated from hledger, but preserved manual assertion
-; Previous content length: 116, new: 107
 (source_file
+  (directive
+    (account)
+    (comment))
+  (directive
+    (account)
+    (comment))
   (transaction
     (date)
-    (description)
     (posting
       (account)
       (amount))
-    (posting
-      (account)))
-  (transaction
-    (date)
-    (description)
-    (posting
-      (account))
     (posting
       (account)
       (amount))))
 
 ==================
 test_10
-:skip
 ==================
 
 2022/01/01
@@ -6543,11 +6756,23 @@ account other  ; type:A
 
 ---
 
-(source_file)
+(source_file
+  (transaction
+    (date)
+    (posting
+      (account)
+      (amount)))
+  (transaction
+    (date)
+    (posting
+      (account)
+      (amount)))
+  (directive
+    (account)
+    (comment)))
 
 ==================
 5__bal_detects_both
-:skip
 ==================
 
 account a         ; type:L
@@ -6584,7 +6809,6 @@ account a:aa:aaa  ; type:L
 
 ==================
 test_4
-:skip
 ==================
 
 1/1
@@ -6593,11 +6817,19 @@ test_4
 
 ---
 
-(source_file)
+(source_file
+  (transaction
+    (date)
+    (posting
+      (account)
+      (amount)
+      (cost_spec
+        (amount)))
+    (posting
+      (account))))
 
 ==================
 2__without_quotes__fail__xxx_parse_error_should_be_clearer_here
-:skip
 ==================
 
 2010-04-05 x
@@ -6618,7 +6850,6 @@ test_4
 
 ==================
 3__with_quotes__ok__quotes_appear_in_print_output
-:skip
 ==================
 
 2010-04-05 x
@@ -6639,7 +6870,6 @@ test_4
 
 ==================
 5__autobalance_with_prices
-:skip
 ==================
 
 2016/1/1
@@ -6665,7 +6895,6 @@ test_4
 
 ==================
 test_17
-:skip
 ==================
 
 ; use a commodity directive to ensure B is displayed with two decimal
@@ -6682,7 +6911,6 @@ P 2015/1/1 A 1.0001 B
 
 ==================
 7__a_multi_line_commodity_directive_also_works_
-:skip
 ==================
 
 commodity B
@@ -6698,7 +6926,6 @@ P 2015/1/1 A 1.0001 B
 
 ==================
 test_29
-:skip
 ==================
 
 2018-01-01
@@ -6706,11 +6933,29 @@ test_29
 
 ---
 
-(source_file)
+(source_file
+  (auto_posting_rule
+    (query)
+    (posting
+      (account)
+      (amount))
+    (posting
+      (account)
+      (amount))
+    (posting
+      (account)
+      (amount)))
+  (transaction
+    (date)
+    (posting
+      (account)
+      (amount))
+    (posting
+      (account)
+      (amount))))
 
 ==================
 test_31
-:skip
 ==================
 
 commodity 1 000  USD
@@ -6723,7 +6968,6 @@ commodity 1 000  USD
 
 ==================
 10__after_a_space_grouped_amount__a_posting_comment_should_parse_
-:skip
 ==================
 
 2018-01-01
@@ -6735,7 +6979,6 @@ commodity 1 000  USD
 
 ==================
 11__after_a_space_grouped_amount__trailing_whitespace_should_parse_
-:skip
 ==================
 
 2018-01-01
@@ -6747,7 +6990,6 @@ commodity 1 000  USD
 
 ==================
 12__after_commodity_on_the_right__don_t_parse_tab
-:skip
 ==================
 
 2020-07-21
@@ -6764,7 +7006,6 @@ commodity 1 000  USD
 
 ==================
 13__a_commodity_s_display_style_should_come_from_the_first_parsed_amount
-:skip
 ==================
 
 2020-01-01
@@ -6788,7 +7029,6 @@ commodity 1 000  USD
 
 ==================
 test_48
-:skip
 ==================
 
 commodity A 1.
@@ -6802,7 +7042,6 @@ commodity A 1.
 
 ==================
 15__unquoted_commodity_symbol_on_the_left__gives_this_long_error_message_
-:skip
 ==================
 
 2021-01-01
@@ -6814,7 +7053,6 @@ commodity A 1.
 
 ==================
 16__unquoted_commodity_symbol_on_the_right__gives_this_long_error_message_
-:skip
 ==================
 
 2021-01-01
@@ -6831,7 +7069,6 @@ commodity A 1.
 
 ==================
 17__unquoted_commodity_symbol_on_the_left_ending_with_numbers__could_parse_successfully_
-:skip
 ==================
 
 ; A 12
@@ -6844,7 +7081,6 @@ commodity A 1.
 
 ==================
 18__unquoted_commodity_symbol_on_the_right_beginning_with_numbers__could_parse_successfully_
-:skip
 ==================
 
 ; intended 1 "2A", parses as 12 A
@@ -6857,7 +7093,6 @@ commodity A 1.
 
 ==================
 test_56
-:skip
 ==================
 
 ; intended "A1E" 2, parses as A 1E2
@@ -6876,7 +7111,6 @@ test_56
 
 ==================
 test_58
-:skip
 ==================
 
 ; intended 1 "e2e", parses as 1e2 e
@@ -6885,11 +7119,16 @@ test_58
 
 ---
 
-(source_file)
+(source_file
+  (comment_line)
+  (transaction
+    (date)
+    (posting
+      (account)
+      (amount))))
 
 ==================
 test_60
-:skip
 ==================
 
 ; intended "111" 2, parses as 1112.
@@ -6902,7 +7141,6 @@ test_60
 
 ==================
 22__cur__and_amt__match_currency_before_cost_value_conversion__1625__balance_
-:skip
 ==================
 
 P 2021-01-01 A  10 B
@@ -6924,7 +7162,6 @@ P 2021-01-01 A  10 B
 
 ==================
 1__test_some_balance_assertions
-:skip
 ==================
 
 2013/1/1
@@ -6984,7 +7221,6 @@ P 2021-01-01 A  10 B
 
 ==================
 2__same_entries_as_1_but_different_parse_order__assertion_should_still_pass_based_on_date
-:skip
 ==================
 
 2013/1/1
@@ -7044,7 +7280,6 @@ P 2021-01-01 A  10 B
 
 ==================
 test_5
-:skip
 ==================
 
 2013/1/1
@@ -7060,30 +7295,50 @@ test_5
 
 ---
 
-; NOTICE: Content updated from hledger, but preserved manual assertion
-; Previous content length: 124, new: 138
 (source_file
   (transaction
     (date)
-    (description)
     (posting
       (account)
-      (amount))
+      (amount)
+      (balance_assertion
+        (amount)))
     (posting
-      (account)))
+      (account)
+      (balance_assertion
+        (amount))))
   (transaction
     (date)
-    (description)
     (posting
       (account)
-      (amount))
+      (amount)
+      (balance_assertion
+        (amount)))
     (posting
       (account)
-      (comment))))
+      (amount)
+      (balance_assertion
+        (amount))))
+  (transaction
+    (date)
+    (posting
+      (account)
+      (amount)
+      (balance_assertion
+        (amount)))
+    (posting
+      (account)
+      (amount)
+      (balance_assertion
+        (amount)))
+    (posting
+      (account)
+      (amount)
+      (balance_assertion
+        (amount)))))
 
 ==================
 4__should_also_work_without_commodity_symbols
-:skip
 ==================
 
 2013/1/1
@@ -7102,7 +7357,6 @@ test_5
 
 ==================
 5__should_work_for_fractional_amount_with_trailing_zeros
-:skip
 ==================
 
 2013/1/1
@@ -7154,7 +7408,6 @@ test_5
 
 ==================
 6__assertions_currently_check_only_a_single_commodity_s_balance__like_ledger
-:skip
 ==================
 
 1/2
@@ -7189,7 +7442,6 @@ test_5
 
 ==================
 7__balances_should_accumulate___195_
-:skip
 ==================
 
 1/1
@@ -7200,11 +7452,29 @@ test_5
 
 ---
 
-(source_file)
+(source_file
+  (transaction
+    (date)
+    (posting
+      (account)
+      (amount)
+      (balance_assertion
+        (amount)))
+    (posting
+      (account)
+      (amount)
+      (balance_assertion
+        (amount))))
+  (transaction
+    (date)
+    (posting
+      (account)
+      (amount)
+      (balance_assertion
+        (amount)))))
 
 ==================
 8__using_balance_assignment_to_set_balances_
-:skip
 ==================
 
 2013/1/1
@@ -7249,7 +7519,6 @@ test_5
 
 ==================
 9__multiple_assertions_for_an_account_in_the_same_transaction_
-:skip
 ==================
 
 2013/1/1
@@ -7309,7 +7578,6 @@ test_5
 
 ==================
 10__multiple_assertions_and_assignments_for_an_account_in_the_same_transaction_
-:skip
 ==================
 
 2013/1/1
@@ -7408,7 +7676,6 @@ test_5
 
 ==================
 11__assignments_and_virtual_postings
-:skip
 ==================
 
 2013/1/1
@@ -7423,11 +7690,36 @@ test_5
 
 ---
 
-(source_file)
+(source_file
+  (transaction
+    (date)
+    (posting
+      (account))
+    (posting
+      (account)
+      (amount))
+    (posting
+      (account)
+      (balance_assertion
+        (amount)))
+    (posting
+      (account))
+    (posting
+      (account)
+      (amount)))
+  (transaction
+    (date)
+    (posting
+      (account)
+      (balance_assertion
+        (amount)))
+    (posting
+      (account)
+      (balance_assertion
+        (amount)))))
 
 ==================
 12__having_both_assignments_and_posting_dates_is_not_supported_
-:skip
 ==================
 
 2013/1/1
@@ -7452,7 +7744,6 @@ test_5
 
 ==================
 13__posting_date
-:skip
 ==================
 
 2011/5/5
@@ -7511,7 +7802,6 @@ test_5
 
 ==================
 14__mix_different_commodities
-:skip
 ==================
 
 2016/1/1
@@ -7523,11 +7813,27 @@ test_5
 
 ---
 
-(source_file)
+(source_file
+  (transaction
+    (date)
+    (posting
+      (account)
+      (amount))
+    (posting
+      (account)
+      (amount)))
+  (transaction
+    (date)
+    (posting
+      (account)
+      (amount)
+      (balance_assertion
+        (amount)))
+    (posting
+      (account))))
 
 ==================
 15__mix_different_commodities_and_assignments
-:skip
 ==================
 
 2016/1/1
@@ -7543,11 +7849,38 @@ test_5
 
 ---
 
-(source_file)
+(source_file
+  (transaction
+    (date)
+    (posting
+      (account)
+      (amount))
+    (posting
+      (account)
+      (amount)))
+  (transaction
+    (date)
+    (posting
+      (account)
+      (balance_assertion
+        (amount))))
+  (transaction
+    (date)
+    (posting
+      (account)
+      (balance_assertion
+        (amount))))
+  (transaction
+    (date)
+    (posting
+      (account))
+    (posting
+      (account)
+      (balance_assertion
+        (amount)))))
 
 ==================
 16__total_assertions______parse_correctly
-:skip
 ==================
 
 2016/1/1
@@ -7575,7 +7908,6 @@ test_5
 
 ==================
 17__total_assertions_consider_entire_multicommodity_amount
-:skip
 ==================
 
 2016/1/1
@@ -7589,11 +7921,31 @@ test_5
 
 ---
 
-(source_file)
+(source_file
+  (transaction
+    (date)
+    (posting
+      (account)
+      (amount))
+    (posting
+      (account)))
+  (transaction
+    (date)
+    (posting
+      (account)
+      (amount))
+    (posting
+      (account)))
+  (transaction
+    (date)
+    (posting
+      (account)
+      (amount)
+      (balance_assertion
+        (amount)))))
 
 ==================
 18__mix_different_commodities_and_total_assignments
-:skip
 ==================
 
 2016/1/1
@@ -7609,11 +7961,41 @@ test_5
 
 ---
 
-(source_file)
+(source_file
+  (transaction
+    (date)
+    (posting
+      (account)
+      (amount))
+    (posting
+      (account)
+      (amount))
+    (posting
+      (account)))
+  (transaction
+    (date)
+    (posting
+      (account)
+      (balance_assertion
+        (amount)))
+    (posting
+      (account)
+      (amount)))
+  (transaction
+    (date)
+    (posting
+      (account)
+      (amount)
+      (balance_assertion
+        (amount)))
+    (posting
+      (account)
+      (amount)
+      (balance_assertion
+        (amount)))))
 
 ==================
 19__cost_is_ignored_when_checking_balance_assertions_
-:skip
 ==================
 
 2023-01-01
@@ -7621,11 +8003,19 @@ test_5
 
 ---
 
-(source_file)
+(source_file
+  (transaction
+    (date)
+    (posting
+      (account)
+      (amount)
+      (cost_spec
+        (amount))
+      (balance_assertion
+        (amount)))))
 
 ==================
 20__the_asserted_balance_may_have_a_cost__also_ignored
-:skip
 ==================
 
 2023-01-01
@@ -7637,7 +8027,6 @@ test_5
 
 ==================
 21__a_cost_does_not_disrupt_highlighting_in_the_balance_assertion_error_message_
-:skip
 ==================
 
 2023-01-01
@@ -7645,11 +8034,19 @@ test_5
 
 ---
 
-(source_file)
+(source_file
+  (transaction
+    (date)
+    (posting
+      (account)
+      (amount)
+      (cost_spec
+        (amount))
+      (balance_assertion
+        (amount)))))
 
 ==================
 22__balance_assignments_may_have_a_cost__and_it_s_used_for_the_posting_amount_
-:skip
 ==================
 
 2019/01/01
@@ -7661,7 +8058,6 @@ test_5
 
 ==================
 23__the_exact_amounts_are_compared__display_precision_does_not_affect_assertions_
-:skip
 ==================
 
 commodity $1000.00
@@ -7676,7 +8072,6 @@ commodity $1000.00
 
 ==================
 24__this_fails
-:skip
 ==================
 
 commodity $1000.00
@@ -7691,7 +8086,6 @@ commodity $1000.00
 
 ==================
 25__this_fails
-:skip
 ==================
 
 commodity $1000.00
@@ -7706,7 +8100,6 @@ commodity $1000.00
 
 ==================
 26__inclusive_assertions_include_balances_from_subaccounts_
-:skip
 ==================
 
 2019/1/1
@@ -7724,7 +8117,6 @@ commodity $1000.00
 
 ==================
 27__inclusive_balance_assignments_also_work___1207__
-:skip
 ==================
 
 2020-01-25
@@ -7742,7 +8134,6 @@ commodity $1000.00
 
 ==================
 test_47
-:skip
 ==================
 
 2022-01-01
@@ -7758,7 +8149,6 @@ test_47
 
 ==================
 test_50
-:skip
 ==================
 
 2024-01-01
@@ -7773,58 +8163,37 @@ test_50
 
 ---
 
-; NOTICE: Content updated from hledger, but preserved manual assertion
-; Previous content length: 215, new: 144
 (source_file
-  (directive
+  (transaction
     (date)
-    (commodity)
-    (amount))
-  (directive
-    (date)
-    (commodity)
-    (amount))
-  (directive
-    (date)
-    (commodity)
-    (amount))
-  (directive
-    (date)
-    (commodity)
-    (amount))
-  (directive
-    (date)
-    (commodity)
-    (amount))
-  (directive
-    (date)
-    (commodity)
-    (amount))
+    (posting
+      (account)
+      (amount))
+    (posting
+      (account)))
   (transaction
     (date)
     (posting
       (account)
       (amount)
       (cost_spec
+        (amount)))
+    (posting
+      (account)
+      (balance_assertion
         (amount))))
   (transaction
     (date)
     (posting
       (account)
       (amount)
-      (cost_spec
-        (amount))))
-  (transaction
-    (date)
+      (balance_assertion
+        (amount)))
     (posting
-      (account)
-      (amount)
-      (cost_spec
-        (amount)))))
+      (account))))
 
 ==================
 30___s_overrides__i
-:skip
 ==================
 
 2024-01-01
@@ -7843,7 +8212,6 @@ test_50
 
 ==================
 31__hledger_check_assertions_overrides__i
-:skip
 ==================
 
 2024-01-01
@@ -7862,7 +8230,6 @@ test_50
 
 ==================
 auto_posting_rules
-:skip
 ==================
 
 = ^income
@@ -7877,11 +8244,35 @@ auto_posting_rules
 
 ---
 
-(source_file)
+(source_file
+  (auto_posting_rule
+    (query)
+    (posting
+      (account)
+      (amount)
+      (comment)))
+  (transaction
+    (date)
+    (description)
+    (posting
+      (account)
+      (amount))
+    (posting
+      (account)
+      (amount))
+    (posting
+      (account)))
+  (transaction
+    (date)
+    (description)
+    (posting
+      (account)
+      (amount))
+    (posting
+      (account))))
 
 ==================
 test_6
-:skip
 ==================
 
 = trigger
@@ -7892,11 +8283,26 @@ test_6
 
 ---
 
-(source_file)
+(source_file
+  (auto_posting_rule
+    (query)
+    (posting
+      (account)
+      (amount)))
+  (transaction
+    (date)
+    (posting
+      (account)
+      (amount))
+    (posting
+      (account)
+      (amount)
+      (balance_assertion
+        (amount))
+      (comment))))
 
 ==================
 test_8
-:skip
 ==================
 
 = ^expenses:groceries
@@ -7908,11 +8314,27 @@ test_8
 
 ---
 
-(source_file)
+(source_file
+  (auto_posting_rule
+    (query)
+    (posting
+      (account)
+      (amount))
+    (posting
+      (account)
+      (amount)))
+  (transaction
+    (date)
+    (status)
+    (description)
+    (posting
+      (account))
+    (posting
+      (account)
+      (amount))))
 
 ==================
 test_10
-:skip
 ==================
 
 = assets:billable:client1
@@ -7923,11 +8345,24 @@ test_10
 
 ---
 
-(source_file)
+(source_file
+  (auto_posting_rule
+    (query)
+    (posting
+      (account)
+      (amount))
+    (posting
+      (account)))
+  (transaction
+    (date)
+    (posting
+      (account)
+      (amount)
+      (cost_spec
+        (amount)))))
 
 ==================
 test_12
-:skip
 ==================
 
 = assets:billable:client1
@@ -7938,11 +8373,22 @@ test_12
 
 ---
 
-(source_file)
+(source_file
+  (auto_posting_rule
+    (query)
+    (posting
+      (account)
+      (amount))
+    (posting
+      (account)))
+  (transaction
+    (date)
+    (posting
+      (account)
+      (amount))))
 
 ==================
 test_14
-:skip
 ==================
 
 = assets:billable:client1
@@ -7953,11 +8399,26 @@ test_14
 
 ---
 
-(source_file)
+(source_file
+  (auto_posting_rule
+    (query)
+    (posting
+      (account)
+      (amount)
+      (cost_spec
+        (amount)))
+    (posting
+      (account)))
+  (transaction
+    (date)
+    (posting
+      (account)
+      (amount)
+      (cost_spec
+        (amount)))))
 
 ==================
 test_16
-:skip
 ==================
 
 = ^expenses:foo
@@ -7975,11 +8436,46 @@ test_16
 
 ---
 
-(source_file)
+(source_file
+  (auto_posting_rule
+    (query)
+    (posting
+      (account)
+      (amount))
+    (posting
+      (account)
+      (amount)))
+  (transaction
+    (date)
+    (status)
+    (description)
+    (posting
+      (account)
+      (amount))
+    (posting
+      (account)))
+  (transaction
+    (date)
+    (status)
+    (description)
+    (posting
+      (account)
+      (amount))
+    (posting
+      (account)))
+  (transaction
+    (date)
+    (status)
+    (description)
+    (posting
+      (account))
+    (posting
+      (account)
+      (balance_assertion
+        (amount)))))
 
 ==================
 test_19
-:skip
 ==================
 
 = ^Expenses:Joint
@@ -7992,11 +8488,31 @@ test_19
 
 ---
 
-(source_file)
+(source_file
+  (auto_posting_rule
+    (query)
+    (posting
+      (account)
+      (amount))
+    (posting
+      (account)
+      (amount))
+    (posting
+      (account)
+      (amount)))
+  (transaction
+    (date)
+    (posting
+      (account)
+      (amount)
+      (cost_spec
+        (amount)))
+    (posting
+      (account)
+      (amount))))
 
 ==================
 test_21
-:skip
 ==================
 
 = ^Expenses:Joint
@@ -8009,11 +8525,31 @@ test_21
 
 ---
 
-(source_file)
+(source_file
+  (auto_posting_rule
+    (query)
+    (posting
+      (account)
+      (amount))
+    (posting
+      (account)
+      (amount))
+    (posting
+      (account)
+      (amount)))
+  (transaction
+    (date)
+    (posting
+      (account)
+      (amount)
+      (cost_spec
+        (amount)))
+    (posting
+      (account)
+      (amount))))
 
 ==================
 test_29
-:skip
 ==================
 
 = ^Expenses:Joint
@@ -8026,11 +8562,29 @@ test_29
 
 ---
 
-(source_file)
+(source_file
+  (auto_posting_rule
+    (query)
+    (posting
+      (account)
+      (amount))
+    (posting
+      (account)
+      (amount))
+    (posting
+      (account)
+      (amount)))
+  (transaction
+    (date)
+    (posting
+      (account)
+      (amount))
+    (posting
+      (account)
+      (amount))))
 
 ==================
 12_
-:skip
 ==================
 
 = ^income
@@ -8045,11 +8599,35 @@ test_29
 
 ---
 
-(source_file)
+(source_file
+  (auto_posting_rule
+    (query)
+    (posting
+      (account)
+      (amount)
+      (comment)))
+  (transaction
+    (interval)
+    (description)
+    (posting
+      (account)
+      (amount))
+    (posting
+      (account)
+      (amount))
+    (posting
+      (account)))
+  (transaction
+    (date)
+    (description)
+    (posting
+      (account)
+      (amount))
+    (posting
+      (account))))
 
 ==================
 test_33
-:skip
 ==================
 
 = ^expenses:groceries
@@ -8061,11 +8639,27 @@ test_33
 
 ---
 
-(source_file)
+(source_file
+  (auto_posting_rule
+    (query)
+    (posting
+      (account)
+      (amount))
+    (posting
+      (account)
+      (amount)))
+  (transaction
+    (date)
+    (status)
+    (description)
+    (posting
+      (account))
+    (posting
+      (account)
+      (amount))))
 
 ==================
 test_35
-:skip
 ==================
 
 = tag:tax20
@@ -8076,11 +8670,24 @@ test_35
 
 ---
 
-(source_file)
+(source_file
+  (auto_posting_rule
+    (query)
+    (posting
+      (account)
+      (amount)))
+  (transaction
+    (date)
+    (posting
+      (account)
+      (amount)
+      (comment))
+    (posting
+      (account)
+      (amount))))
 
 ==================
 17__commodity_display_styles_are_applied_to_auto_posting_amounts_
-:skip
 ==================
 
 2020-01-20
@@ -8097,7 +8704,6 @@ commodity 0. B
 
 ==================
 18__auto_generated_postings_with_currency_matching_only_matches_amounts_with_that_currency_in_an_auto_posting___1582_
-:skip
 ==================
 
 = assets cur:USD
@@ -8111,11 +8717,30 @@ commodity 0. B
 
 ---
 
-(source_file)
+(source_file
+  (auto_posting_rule
+    (query)
+    (posting
+      (account)
+      (amount)))
+  (auto_posting_rule
+    (query)
+    (posting
+      (account)
+      (amount)))
+  (transaction
+    (date)
+    (posting
+      (account)
+      (amount))
+    (posting
+      (account)
+      (amount))
+    (posting
+      (account))))
 
 ==================
 19__auto_generated_postings_match_only_the_amounts_which_match_amount_query_
-:skip
 ==================
 
 = assets amt:>50
@@ -8127,11 +8752,25 @@ commodity 0. B
 
 ---
 
-(source_file)
+(source_file
+  (auto_posting_rule
+    (query)
+    (posting
+      (account)
+      (amount)))
+  (transaction
+    (date)
+    (posting
+      (account)
+      (amount))
+    (posting
+      (account)
+      (amount))
+    (posting
+      (account))))
 
 ==================
 20__auto_generated_postings_apply_on_auto_balanced_periodic_postings_
-:skip
 ==================
 
 2021-01-01   Fixed
@@ -8145,11 +8784,32 @@ commodity 0. B
 
 ---
 
-(source_file)
+(source_file
+  (transaction
+    (date)
+    (description)
+    (posting
+      (account)
+      (amount))
+    (posting
+      (account)))
+  (transaction
+    (interval
+      (date))
+    (description)
+    (posting
+      (account)
+      (amount))
+    (posting
+      (account)))
+  (auto_posting_rule
+    (query)
+    (posting
+      (account)
+      (amount))))
 
 ==================
 21__redundant_costs_are_still_detected_properly_with___auto____2110_
-:skip
 ==================
 
 2023-01-01
@@ -8162,11 +8822,31 @@ commodity 0. B
 
 ---
 
-(source_file)
+(source_file
+  (transaction
+    (date)
+    (posting
+      (account)
+      (amount)
+      (cost_spec
+        (amount)))
+    (posting
+      (account)
+      (amount))
+    (posting
+      (account)
+      (amount))
+    (posting
+      (account)
+      (amount)))
+  (auto_posting_rule
+    (query)
+    (posting
+      (account)
+      (amount))))
 
 ==================
 1__accept_a_blank_description
-:skip
 ==================
 
 2010/1/1 
@@ -8179,7 +8859,6 @@ commodity 0. B
 
 ==================
 2__same__but_no_separator_space_after_the_date
-:skip
 ==================
 
 2010/1/1
@@ -8199,29 +8878,31 @@ commodity 0. B
 
 ==================
 test_4
-:skip
 ==================
 
 ; file comments, ignored
 
 ---
 
-(source_file)
+(source_file
+  (comment_line))
 
 ==================
 2__same_line_transaction_comments_start_only_with____the_description_can_contain___or___
-:skip
 ==================
 
 2017/1/1 this # and * are not ; the comment
 
 ---
 
-(source_file)
+(source_file
+  (transaction
+    (date)
+    (description)
+    (comment)))
 
 ==================
 3__same_line_posting_comments_start_only_with___
-:skip
 ==================
 
 2017/1/1
@@ -8239,7 +8920,6 @@ test_4
 
 ==================
 account_names_can_contain___or__not_at_start____
-:skip
 ==================
 
 2024-01-01
@@ -8255,7 +8935,6 @@ account_names_can_contain___or__not_at_start____
 
 ==================
 5__register_does_not_show_comments_
-:skip
 ==================
 
 2010/1/1 x
@@ -8277,7 +8956,6 @@ account_names_can_contain___or__not_at_start____
 
 ==================
 costs
-:skip
 ==================
 
 2011/01/01
@@ -8290,7 +8968,6 @@ costs
 
 ==================
 2___b___cost_converts_to_the_cost_price_s_commodity
-:skip
 ==================
 
 2011/01/01
@@ -8303,7 +8980,6 @@ costs
 
 ==================
 4__with___cost____infer_equity_is_ignored
-:skip
 ==================
 
 2011/01/01
@@ -8316,7 +8992,6 @@ costs
 
 ==================
 test_9
-:skip
 ==================
 
 2011/01/01
@@ -8329,8 +9004,6 @@ test_9
 
 ---
 
-; NOTICE: Content updated from hledger, but preserved manual assertion
-; Previous content length: 116, new: 263
 (source_file
   (transaction
     (date)
@@ -8351,7 +9024,6 @@ test_9
 
 ==================
 7__another__from_ledger_tests__just_one_posting_to_price_so_uses____
-:skip
 ==================
 
 2002/09/30 * 1a1a6305d06ce4b284dba0d267c23f69d70c20be
@@ -8374,7 +9046,6 @@ test_9
 
 ==================
 8__when_the_balance_has_more_than_two_commodities__don_t_bother
-:skip
 ==================
 
 2011/01/01
@@ -8388,7 +9059,6 @@ test_9
 
 ==================
 9__another
-:skip
 ==================
 
 2011/01/01
@@ -8403,7 +9073,6 @@ test_9
 
 ==================
 10__transaction_in_two_commodities_should_balance_out_properly
-:skip
 ==================
 
 2011/01/01 x
@@ -8412,11 +9081,20 @@ test_9
 
 ---
 
-(source_file)
+(source_file
+  (transaction
+    (date)
+    (description)
+    (posting
+      (account)
+      (amount)
+      (cost_spec
+        (amount)))
+    (posting
+      (account))))
 
 ==================
 test_18
-:skip
 ==================
 
 2011/01/01 x
@@ -8425,24 +9103,19 @@ test_18
 
 ---
 
-; NOTICE: Content updated from hledger, but preserved manual assertion
-; Previous content length: 48, new: 31
 (source_file
-  (directive
-    (date)
-    (commodity)
-    (amount))
   (transaction
     (date)
+    (description)
     (posting
       (account)
-      (amount)
-      (balance_assertion
-        (amount)))))
+      (amount))
+    (posting
+      (account)
+      (amount))))
 
 ==================
 15__should_not_infer_balancing_costs_when___strict_is_specified
-:skip
 ==================
 
 2011/01/01 x
@@ -8451,11 +9124,19 @@ test_18
 
 ---
 
-(source_file)
+(source_file
+  (transaction
+    (date)
+    (description)
+    (posting
+      (account)
+      (amount))
+    (posting
+      (account)
+      (amount))))
 
 ==================
 17__differently_priced_lots_of_a_commodity_should_be_merged_in_balance_report
-:skip
 ==================
 
 2011/1/1
@@ -8483,7 +9164,6 @@ test_18
 
 ==================
 18__this_should_balance
-:skip
 ==================
 
 2011/1/1
@@ -8493,11 +9173,25 @@ test_18
 
 ---
 
-(source_file)
+(source_file
+  (transaction
+    (date)
+    (posting
+      (account)
+      (amount)
+      (cost_spec
+        (amount)))
+    (posting
+      (account)
+      (amount)
+      (cost_spec
+        (amount)))
+    (posting
+      (account)
+      (amount))))
 
 ==================
 19__these_balance_because_of_the_unit_costs__and_should_parse_successfully
-:skip
 ==================
 
 1/1
@@ -8506,11 +9200,22 @@ test_18
 
 ---
 
-(source_file)
+(source_file
+  (transaction
+    (date)
+    (posting
+      (account)
+      (amount)
+      (cost_spec
+        (amount)))
+    (posting
+      (account)
+      (amount)
+      (cost_spec
+        (amount)))))
 
 ==================
 21__likewise_with_total_costs__note_how_the_primary_amount_s_sign_is_used_
-:skip
 ==================
 
 1/1
@@ -8519,11 +9224,22 @@ test_18
 
 ---
 
-(source_file)
+(source_file
+  (transaction
+    (date)
+    (posting
+      (account)
+      (amount)
+      (cost_spec
+        (amount)))
+    (posting
+      (account)
+      (amount)
+      (cost_spec
+        (amount)))))
 
 ==================
 test_28
-:skip
 ==================
 
 2022-01-01 Positive Unit cost
@@ -8547,26 +9263,76 @@ test_28
 
 ---
 
-; NOTICE: Content updated from hledger, but preserved manual assertion
-; Previous content length: 65, new: 449
 (source_file
-  (directive
-    (date)
-    (commodity)
-    (amount))
-  (directive
-    (date)
-    (commodity)
-    (amount))
   (transaction
     (date)
+    (description)
     (posting
       (account)
-      (amount))))
+      (amount))
+    (posting
+      (account)
+      (amount)
+      (cost_spec
+        (amount))))
+  (transaction
+    (date)
+    (description)
+    (posting
+      (account)
+      (amount))
+    (posting
+      (account)
+      (amount)
+      (cost_spec
+        (amount))))
+  (transaction
+    (date)
+    (description)
+    (posting
+      (account)
+      (amount))
+    (posting
+      (account)
+      (amount)
+      (cost_spec
+        (amount))))
+  (transaction
+    (date)
+    (description)
+    (posting
+      (account)
+      (amount))
+    (posting
+      (account)
+      (amount)
+      (cost_spec
+        (amount))))
+  (transaction
+    (date)
+    (description)
+    (posting
+      (account)
+      (amount))
+    (posting
+      (account)
+      (amount)
+      (cost_spec
+        (amount))))
+  (transaction
+    (date)
+    (description)
+    (posting
+      (account)
+      (amount))
+    (posting
+      (account)
+      (amount)
+      (cost_spec
+        (amount)))))
 
 ==================
 26__here__a_s_primary_amount_is_0__and_its_cost_is_1y__b_is_the_assigned_auto_balancing_amount_of__1y__per_issue_69_
-:skip
 ==================
 
 1/1
@@ -8577,11 +9343,29 @@ test_28
 
 ---
 
-(source_file)
+(source_file
+  (transaction
+    (date)
+    (posting
+      (account)
+      (amount)
+      (cost_spec
+        (amount)))
+    (posting
+      (account)
+      (amount)
+      (cost_spec
+        (amount)))
+    (posting
+      (account)
+      (amount)
+      (cost_spec
+        (amount)))
+    (posting
+      (account))))
 
 ==================
 29__the_equity_account_used_by___infer_equity_can_be_customised
-:skip
 ==================
 
 account  equity:trades   ; type:V
@@ -8595,7 +9379,6 @@ account  equity:trades   ; type:V
 
 ==================
 30__inferred_equity_postings_are_generated_early_enough_to_match_filters
-:skip
 ==================
 
 2011/01/01
@@ -8608,7 +9391,6 @@ account  equity:trades   ; type:V
 
 ==================
 31__infer_cost_with_first_matching_posting_when_equity_postings_are_present
-:skip
 ==================
 
 2011/01/01
@@ -8623,7 +9405,6 @@ account  equity:trades   ; type:V
 
 ==================
 34__inferred_equity_postings_with_non_standard_conversion_account
-:skip
 ==================
 
 account  whoopwhoop   ; type:V
@@ -8639,7 +9420,6 @@ account  whoopwhoop   ; type:V
 
 ==================
 35__can_manually_make_another_posting_match
-:skip
 ==================
 
 2011/01/01
@@ -8654,7 +9434,6 @@ account  whoopwhoop   ; type:V
 
 ==================
 36__can_manually_match_lots_of_different_posting_groups_so_long_as_there_is_no_conflict
-:skip
 ==================
 
 2011/01/01
@@ -8673,7 +9452,6 @@ account  whoopwhoop   ; type:V
 
 ==================
 38__transaction_posts_and_equity_conversion_postings_are_fine
-:skip
 ==================
 
 2011/01/01
@@ -8688,7 +9466,6 @@ account  whoopwhoop   ; type:V
 
 ==================
 test_86
-:skip
 ==================
 
 2023-01-01
@@ -8700,22 +9477,27 @@ test_86
 
 ---
 
-; NOTICE: Content updated from hledger, but preserved manual assertion
-; Previous content length: 36, new: 290
 (source_file
   (transaction
     (date)
     (posting
       (account)
-      (amount)
-      (cost_spec
-        (amount)))
+      (amount))
     (posting
-      (account))))
+      (account)
+      (amount))
+    (posting
+      (account)
+      (amount))
+    (posting
+      (account)
+      (amount))
+    (posting
+      (account)
+      (amount))))
 
 ==================
 40__we_can_combine__other__amounts_into_one_posting__if_they_still_match_up_
-:skip
 ==================
 
 2011-01-01
@@ -8737,7 +9519,6 @@ test_86
 
 ==================
 test_91
-:skip
 ==================
 
 2023/05/17 * Transfer
@@ -8770,7 +9551,6 @@ test_91
 
 ==================
 42__make_sure___cost_interacts_properly_with_interval_reports_with_an_early_end_date___2385_
-:skip
 ==================
 
 2025-03-02
@@ -8800,7 +9580,6 @@ test_91
 
 ==================
 1__valid_month_and_day__but_flipped
-:skip
 ==================
 
 2010/31/12 x
@@ -8821,7 +9600,6 @@ test_91
 
 ==================
 2__too_large_day
-:skip
 ==================
 
 2010/12/32 x
@@ -8842,7 +9620,6 @@ test_91
 
 ==================
 3__29th_feb_on_leap_year_should_be_ok
-:skip
 ==================
 
 2000/2/29 x
@@ -8863,7 +9640,6 @@ test_91
 
 ==================
 4__29th_feb_on_non_leap_year_should_fail
-:skip
 ==================
 
 2001/2/29 x
@@ -8884,7 +9660,6 @@ test_91
 
 ==================
 5__dates_must_be_followed_by_whitespace_or_newline
-:skip
 ==================
 
 2015/9/6*
@@ -8902,7 +9677,6 @@ test_91
 
 ==================
 1___apply_account__and__alias__affect__account__directives_
-:skip
 ==================
 
 apply account c
@@ -8915,7 +9689,6 @@ account a
 
 ==================
 test_5
-:skip
 ==================
 
 ; a liability
@@ -8931,30 +9704,33 @@ account b      ; type:L
 
 ---
 
-; NOTICE: Content updated from hledger, but preserved manual assertion
-; Previous content length: 124, new: 164
 (source_file
+  (comment_line)
+  (directive
+    (account)
+    (comment))
+  (comment_line)
+  (directive
+    (account)
+    (comment))
+  (comment_line)
+  (directive
+    (account)
+    (comment))
   (transaction
     (date)
-    (description)
     (posting
       (account)
       (amount))
     (posting
-      (account)))
-  (transaction
-    (date)
-    (description)
-    (posting
       (account)
       (amount))
     (posting
       (account)
-      (comment))))
+      (amount))))
 
 ==================
 4__it_ignores_subdirectives_
-:skip
 ==================
 
 account Expenses:Food
@@ -8972,7 +9748,6 @@ account Expenses:Food
 
 ==================
 5__it_does_not_allow_parentheses_in_names_
-:skip
 ==================
 
 account (a)
@@ -8983,7 +9758,6 @@ account (a)
 
 ==================
 6__it_does_not_allow_brackets_in_names_
-:skip
 ==================
 
 account [a]
@@ -8994,7 +9768,6 @@ account [a]
 
 ==================
 1__requires_an_argument
-:skip
 ==================
 
 commodity
@@ -9005,7 +9778,6 @@ commodity
 
 ==================
 2__should_require_an_amount__not_just_a_symbol__but_doesn_t__todo_
-:skip
 ==================
 
 commodity A
@@ -9018,7 +9790,6 @@ commodity A
 
 ==================
 3__when_there_is_an_amount__a_decimal_mark_is_required
-:skip
 ==================
 
 commodity A 1
@@ -9029,7 +9800,6 @@ commodity A 1
 
 ==================
 4_
-:skip
 ==================
 
 commodity A 1.
@@ -9040,7 +9810,6 @@ commodity A 1.
 
 ==================
 5_
-:skip
 ==================
 
 commodity A 1,00
@@ -9051,7 +9820,6 @@ commodity A 1,00
 
 ==================
 6__accepts_a_format_subdirective
-:skip
 ==================
 
 commodity A
@@ -9063,7 +9831,6 @@ commodity A
 
 ==================
 7__which_also_requires_an_amount_argument
-:skip
 ==================
 
 commodity A
@@ -9075,7 +9842,6 @@ commodity A
 
 ==================
 8__which_must_have_the_same_commodity_symbol
-:skip
 ==================
 
 commodity A
@@ -9087,7 +9853,6 @@ commodity A
 
 ==================
 test_11
-:skip
 ==================
 
 commodity A 1.
@@ -9099,7 +9864,6 @@ commodity A 1.
 
 ==================
 10__it_ignores_unrecognised_subdirectives
-:skip
 ==================
 
 commodity USD
@@ -9115,7 +9879,6 @@ commodity USD
 
 ==================
 2__include_file_with_different_decimal_mark
-:skip
 ==================
 
 commodity 1000.00 RUB
@@ -9130,7 +9893,6 @@ include commas.journal
 
 ==================
 1__no_default_commodity
-:skip
 ==================
 
 2010/1/1
@@ -9150,7 +9912,6 @@ include commas.journal
 
 ==================
 2__pound__two_decimal_places__no_digit_group_separator
-:skip
 ==================
 
 D £1000.00
@@ -9164,7 +9925,6 @@ D £1000.00
 
 ==================
 3__dollar__comma_decimal_point__three_decimal_places__no_digit_group_separator
-:skip
 ==================
 
 D $1,000
@@ -9178,7 +9938,6 @@ D $1,000
 
 ==================
 4__dollar__three_digit_group_separator__one_decimal_place
-:skip
 ==================
 
 D $1,000.0
@@ -9191,7 +9950,6 @@ D $1,000.0
 
 ==================
 test_11
-:skip
 ==================
 
 D 1,000.0 A
@@ -9204,7 +9962,6 @@ D 1,000.0 A
 
 ==================
 test_13
-:skip
 ==================
 
 D $1000.
@@ -9219,7 +9976,6 @@ D $1000.
 
 ==================
 1__payee_ignores_subdirectives
-:skip
 ==================
 
 payee KFC
@@ -9232,7 +9988,6 @@ payee KFC
 
 ==================
 test_2
-:skip
 ==================
 
 apply account a
@@ -9248,8 +10003,6 @@ end apply account
 
 ---
 
-; NOTICE: Content updated from hledger, but preserved manual assertion
-; Previous content length: 171, new: 128
 (source_file
   (directive
     (account)
@@ -9281,7 +10034,6 @@ end apply account
 
 ==================
 test_3
-:skip
 ==================
 
 Y 1111
@@ -9293,8 +10045,6 @@ apply year 3333
 
 ---
 
-; NOTICE: Content updated from hledger, but preserved manual assertion
-; Previous content length: 167, new: 44
 (source_file
   (transaction
     (date)
@@ -9318,7 +10068,6 @@ apply year 3333
 
 ==================
 test_4
-:skip
 ==================
 
 !Y 1111
@@ -9332,7 +10081,6 @@ test_4
 
 ==================
 test_1
-:skip
 ==================
 
 P 1999/12/01 stock  1 A
@@ -9353,22 +10101,64 @@ P 2000/02/01 B      6 A
 
 ---
 
-; NOTICE: Content updated from hledger, but preserved manual assertion
-; Previous content length: 26, new: 354
 (source_file
+  (directive
+    (date)
+    (commodity)
+    (amount))
+  (directive
+    (date)
+    (commodity)
+    (amount))
+  (directive
+    (date)
+    (commodity)
+    (amount))
+  (directive
+    (date)
+    (commodity)
+    (amount))
+  (directive
+    (date)
+    (commodity)
+    (amount))
+  (directive
+    (date)
+    (commodity)
+    (amount))
   (transaction
     (date)
-    (description)
     (posting
       (account)
       (amount))
     (posting
       (account)
-      (amount))))
+      (amount))
+    (posting
+      (account)
+      (amount)))
+  (transaction
+    (date)
+    (posting
+      (account)
+      (amount)
+      (cost_spec
+        (amount))))
+  (transaction
+    (date)
+    (posting
+      (account)
+      (amount)
+      (cost_spec
+        (amount)))
+    (posting
+      (account)
+      (amount)
+      (cost_spec
+        (amount)))))
 
 ==================
 2__including_other_formats_
-:skip
 ==================
 
 2016/1/1
@@ -9389,7 +10179,6 @@ include b.timedot
 
 ==================
 3__include_glob_patterns
-:skip
 ==================
 
 include *b.journal
@@ -9402,7 +10191,6 @@ include *b.journal
 
 ==================
 4__include_invalid_glob_patterns
-:skip
 ==================
 
 include [.journal
@@ -9415,7 +10203,6 @@ include [.journal
 
 ==================
 5__include_nonexistent_file
-:skip
 ==================
 
 include doesnotexist.journal
@@ -9428,7 +10215,6 @@ include doesnotexist.journal
 
 ==================
 6__trailing_whitespace_after_the_filename_is_ignored
-:skip
 ==================
 
 include a.timeclock
@@ -9441,7 +10227,6 @@ include a.timeclock
 
 ==================
 7__a_same_line_or_multi_line_following_comment_is_ignored
-:skip
 ==================
 
 include a.timeclock  ; comment
@@ -9459,7 +10244,6 @@ include a.timeclock  ; comment
 
 ==================
 8__include_relative_to_home
-:skip
 ==================
 
 include ~/included.journal
@@ -9472,7 +10256,6 @@ include ~/included.journal
 
 ==================
 11__include_using_old__include_directive
-:skip
 ==================
 
 !include f.journal
@@ -9483,7 +10266,6 @@ include ~/included.journal
 
 ==================
 1__simple_case
-:skip
 ==================
 
 2017/1/1
@@ -9504,7 +10286,6 @@ include ~/included.journal
 
 ==================
 2__no_digits_before_decimal_sep
-:skip
 ==================
 
 2017/1/1
@@ -9524,7 +10305,6 @@ include ~/included.journal
 
 ==================
 3__no_digits_after_decimal_sep
-:skip
 ==================
 
 2017/1/1
@@ -9537,7 +10317,6 @@ include ~/included.journal
 
 ==================
 4__no_digits_at_all
-:skip
 ==================
 
 2017/1/1
@@ -9550,7 +10329,6 @@ include ~/included.journal
 
 ==================
 5__spaces_between_digit_groups__any_of_the_8_unicode_space_characters_we_support_
-:skip
 ==================
 
 2000-01-01
@@ -9569,7 +10347,6 @@ include ~/included.journal
 
 ==================
 6__space_between_digits_groups_in_commodity_directive
-:skip
 ==================
 
 commodity 1 000.00 EUR
@@ -9583,7 +10360,6 @@ commodity 1 000.00 EUR
 
 ==================
 7__default_commodity
-:skip
 ==================
 
 D 1,000.00 EUR
@@ -9597,7 +10373,6 @@ D 1,000.00 EUR
 
 ==================
 8__omitted_decimals
-:skip
 ==================
 
 2017/1/1
@@ -9618,7 +10393,6 @@ D 1,000.00 EUR
 
 ==================
 9__omitted_decimals_with_commodity_hint
-:skip
 ==================
 
 commodity 1,000.00 EUR
@@ -9632,7 +10406,6 @@ commodity 1,000.00 EUR
 
 ==================
 10__omitted_decimals_with_commodity_hint_and_symbol_on_left
-:skip
 ==================
 
 commodity €1,000.00
@@ -9646,7 +10419,6 @@ commodity €1,000.00
 
 ==================
 11__commodity_directive_requires_a_decimal_separator
-:skip
 ==================
 
 commodity 1000 EUR
@@ -9657,7 +10429,6 @@ commodity 1000 EUR
 
 ==================
 12__commodity_directive_with_zero_precision
-:skip
 ==================
 
 commodity 100. EUR
@@ -9671,7 +10442,6 @@ commodity 100. EUR
 
 ==================
 13__big_prices
-:skip
 ==================
 
 2017/1/1
@@ -9694,7 +10464,6 @@ commodity 100. EUR
 
 ==================
 14__big_prices_with_commodity_hint
-:skip
 ==================
 
 commodity ₴1,000.00
@@ -9708,7 +10477,6 @@ commodity ₴1,000.00
 
 ==================
 15__adjacent_punctuation_chars
-:skip
 ==================
 
 2017/1/1
@@ -9721,7 +10489,6 @@ commodity ₴1,000.00
 
 ==================
 16__adjacent_punctuation_chars_of_different_types
-:skip
 ==================
 
 2017/1/1
@@ -9734,7 +10501,6 @@ commodity ₴1,000.00
 
 ==================
 17__separator_chars_vary
-:skip
 ==================
 
 2017/1/1
@@ -9747,7 +10513,6 @@ commodity ₴1,000.00
 
 ==================
 18__number_begins_with_a_decimal_char
-:skip
 ==================
 
 2017/1/1
@@ -9768,7 +10533,6 @@ commodity ₴1,000.00
 
 ==================
 19__number_begins_with_a_separator_char
-:skip
 ==================
 
 2017/1/1
@@ -9781,7 +10545,6 @@ commodity ₴1,000.00
 
 ==================
 20__long_numbers_in_multi_balance_reports
-:skip
 ==================
 
 2021-01-01
@@ -9798,7 +10561,6 @@ commodity ₴1,000.00
 
 ==================
 21__when_spaces_are_used_inconsistently__what_happens___the_usual__first_one_seen_sets_commodity_style_
-:skip
 ==================
 
 2000-01-01
@@ -9812,7 +10574,6 @@ commodity ₴1,000.00
 
 ==================
 22__and_a_commodity_directive_can_enforce_consistency_as_usual_
-:skip
 ==================
 
 commodity 1 000. A  ; narrow no-break space
@@ -9827,7 +10588,6 @@ commodity 1 000. A  ; narrow no-break space
 
 ==================
 1__parentheses_in_the_middle_of_an_account_name_are_ignored_
-:skip
 ==================
 
 2009-01-01 x
@@ -9841,7 +10601,6 @@ commodity 1 000. A  ; narrow no-break space
 
 ==================
 2__nested_parentheses_are_removed_and_the_outer_brackets_are_used_as_the_type_
-:skip
 ==================
 
 2023-01-01
@@ -9855,15 +10614,12 @@ commodity 1 000. A  ; narrow no-break space
 
 ==================
 test_3
-:skip
 ==================
 
 2018
 
 ---
 
-; NOTICE: Content updated from hledger, but preserved manual assertion
-; Previous content length: 167, new: 4
 (source_file
   (transaction
     (date)
@@ -9887,7 +10643,6 @@ test_3
 
 ==================
 test_5
-:skip
 ==================
 
 2009/1/1
@@ -9895,30 +10650,15 @@ test_5
 
 ---
 
-; NOTICE: Content updated from hledger, but preserved manual assertion
-; Previous content length: 124, new: 16
 (source_file
   (transaction
     (date)
-    (description)
     (posting
       (account)
-      (amount))
-    (posting
-      (account)))
-  (transaction
-    (date)
-    (description)
-    (posting
-      (account)
-      (amount))
-    (posting
-      (account)
-      (comment))))
+      (amount))))
 
 ==================
 test_11
-:skip
 ==================
 
 2018/1/1
@@ -9926,11 +10666,15 @@ test_11
 
 ---
 
-(source_file)
+(source_file
+  (transaction
+    (date)
+    (posting
+      (account)
+      (amount))))
 
 ==================
 5__two__or_more__postings_with_implicit_amount_cannot_be_balanced_
-:skip
 ==================
 
 2018/1/1
@@ -9953,7 +10697,6 @@ test_11
 
 ==================
 test_16
-:skip
 ==================
 
 2018/1/1
@@ -9963,11 +10706,19 @@ test_16
 
 ---
 
-(source_file)
+(source_file
+  (transaction
+    (date)
+    (posting
+      (account)
+      (amount))
+    (posting
+      (account))
+    (posting
+      (account))))
 
 ==================
 7__balancing_error_messages_show_the_recorded_precision__not_the_display_precision_
-:skip
 ==================
 
 2010/1/1
@@ -9976,11 +10727,20 @@ test_16
 
 ---
 
-(source_file)
+(source_file
+  (transaction
+    (date)
+    (posting
+      (account)
+      (amount)
+      (cost_spec
+        (amount)))
+    (posting
+      (account)
+      (amount))))
 
 ==================
 8__multiple_postings_all_with_the_same_sign_gets_a_distinct_error_message_
-:skip
 ==================
 
 2020-01-01
@@ -9989,11 +10749,18 @@ test_16
 
 ---
 
-(source_file)
+(source_file
+  (transaction
+    (date)
+    (posting
+      (account)
+      (amount))
+    (posting
+      (account)
+      (amount))))
 
 ==================
 9__zeros_don_t_trigger_the_same_sign_error_
-:skip
 ==================
 
 2020-01-01
@@ -10014,7 +10781,6 @@ test_16
 
 ==================
 10__an_inferred_multicommodity_amount_doesn_t_trigger_the_same_sign_error_
-:skip
 ==================
 
 2020-01-01
@@ -10038,7 +10804,6 @@ test_16
 
 ==================
 test_22
-:skip
 ==================
 
 2020-01-01
@@ -10047,11 +10812,18 @@ test_22
 
 ---
 
-(source_file)
+(source_file
+  (transaction
+    (date)
+    (posting
+      (account)
+      (amount))
+    (posting
+      (account)
+      (amount))))
 
 ==================
 12__typical__hledger_equity___close__transaction_does_not_trigger_sign_error_
-:skip
 ==================
 
 2019-01-01 opening balances
@@ -10069,7 +10841,6 @@ test_22
 
 ==================
 13__adding_a_multiplier_in_a_normal_posting_gives_a_parse_error_
-:skip
 ==================
 
 2020-01-01
@@ -10077,11 +10848,15 @@ test_22
 
 ---
 
-(source_file)
+(source_file
+  (transaction
+    (date)
+    (posting
+      (account)
+      (amount))))
 
 ==================
 test_1
-:skip
 ==================
 
 ; -*- ledger -*-
@@ -10128,8 +10903,6 @@ end tag
 
 ---
 
-; NOTICE: Content updated from hledger, but preserved manual assertion
-; Previous content length: 26, new: 1419
 (source_file
   (transaction
     (date)
@@ -10143,7 +10916,6 @@ end tag
 
 ==================
 test_4
-:skip
 ==================
 
 2000/1/2
@@ -10151,11 +10923,16 @@ test_4
 
 ---
 
-(source_file)
+(source_file
+  (transaction
+    (date)
+    (posting
+      (account)
+      (amount)
+      (comment))))
 
 ==================
 test_6
-:skip
 ==================
 
 comment
@@ -10173,7 +10950,6 @@ end comment
 
 ==================
 test_9
-:skip
 ==================
 
 2000/1/2
@@ -10181,29 +10957,16 @@ test_9
 
 ---
 
-; NOTICE: Content updated from hledger, but preserved manual assertion
-; Previous content length: 116, new: 27
 (source_file
   (transaction
     (date)
-    (description)
     (posting
       (account)
-      (amount))
-    (posting
-      (account)))
-  (transaction
-    (date)
-    (description)
-    (posting
-      (account))
-    (posting
-      (account)
-      (amount))))
+      (amount)
+      (comment))))
 
 ==================
 test_11
-:skip
 ==================
 
 comment
@@ -10220,7 +10983,6 @@ end comment
 
 ==================
 test_13
-:skip
 ==================
 
 2023-01-01
@@ -10230,11 +10992,23 @@ test_13
 
 ---
 
-(source_file)
+(source_file
+  (transaction
+    (date)
+    (posting
+      (account)
+      (amount))
+    (posting
+      (account)
+      (amount)
+      (comment))
+    (posting
+      (account)
+      (balance_assertion
+        (amount)))))
 
 ==================
 test_4
-:skip
 ==================
 
 2010/1/1 x
@@ -10243,11 +11017,21 @@ test_4
 
 ---
 
-(source_file)
+(source_file
+  (transaction
+    (date)
+    (description)
+    (posting
+      (account)
+      (amount)
+      (cost_spec
+        (amount)))
+    (posting
+      (account)
+      (amount))))
 
 ==================
 test_7
-:skip
 ==================
 
 2010/1/1
@@ -10257,28 +11041,22 @@ test_7
 
 ---
 
-; NOTICE: Content updated from hledger, but preserved manual assertion
-; Previous content length: 96, new: 44
 (source_file
-  (directive
-    (date)
-    (commodity)
-    (amount))
-  (directive
-    (date)
-    (commodity)
-    (amount))
   (transaction
     (date)
     (posting
       (account)
+      (amount))
+    (posting
+      (account)
       (amount)
       (cost_spec
-        (amount)))))
+        (amount)))
+    (posting
+      (account))))
 
 ==================
 test_9
-:skip
 ==================
 
 2010/1/1
@@ -10287,29 +11065,20 @@ test_9
 
 ---
 
-; NOTICE: Content updated from hledger, but preserved manual assertion
-; Previous content length: 116, new: 41
 (source_file
   (transaction
     (date)
-    (description)
     (posting
       (account)
-      (amount))
-    (posting
-      (account)))
-  (transaction
-    (date)
-    (description)
-    (posting
-      (account))
+      (amount)
+      (cost_spec
+        (amount)))
     (posting
       (account)
       (amount))))
 
 ==================
 4__with___s_display_precision_at_2_or_less__this_txn_should_balance
-:skip
 ==================
 
 2010/1/1
@@ -10318,11 +11087,20 @@ test_9
 
 ---
 
-(source_file)
+(source_file
+  (transaction
+    (date)
+    (posting
+      (account)
+      (amount)
+      (cost_spec
+        (amount)))
+    (posting
+      (account)
+      (amount))))
 
 ==================
 5__avamk_s_2011_1_19_example
-:skip
 ==================
 
 2001/01/01 * ACME fund
@@ -10335,7 +11113,6 @@ test_9
 
 ==================
 test_22
-:skip
 ==================
 
 D $1000.0
@@ -10349,7 +11126,6 @@ D $1000.0
 
 ==================
 test_28
-:skip
 ==================
 
 2015/1/1
@@ -10359,26 +11135,21 @@ test_28
 
 ---
 
-; NOTICE: Content updated from hledger, but preserved manual assertion
-; Previous content length: 65, new: 59
 (source_file
-  (directive
-    (date)
-    (commodity)
-    (amount))
-  (directive
-    (date)
-    (commodity)
-    (amount))
   (transaction
     (date)
+    (posting
+      (account)
+      (amount))
+    (posting
+      (account)
+      (amount))
     (posting
       (account)
       (amount))))
 
 ==================
 test_30
-:skip
 ==================
 
 2015/1/1
@@ -10403,7 +11174,6 @@ test_30
 
 ==================
 9__posting_amounts_inferred_from_balance_assignments_also_affect_commodity_styles____2091_
-:skip
 ==================
 
 2023-01-01
@@ -10428,7 +11198,6 @@ test_30
 
 ==================
 10__print_like_reports_add_a_trailing_decimal_mark__when_amounts_have_digit_group_marks_but_no_decimal_digits_
-:skip
 ==================
 
 commodity 1.000, JPY
@@ -10445,7 +11214,6 @@ commodity 1.000, JPY
 
 ==================
 1__just_check
-:skip
 ==================
 
 D $1,000.00
@@ -10458,7 +11226,6 @@ D $1,000.00
 
 ==================
 2__some_basic_cases_with_commodity
-:skip
 ==================
 
 commodity $1,000.00000000
@@ -10474,7 +11241,6 @@ commodity $1,000.00000000
 
 ==================
 3__some_basic_cases_with_commodity
-:skip
 ==================
 
 commodity $1,000.00000000
@@ -10490,7 +11256,6 @@ commodity $1,000.00000000
 
 ==================
 4__some_basic_cases
-:skip
 ==================
 
 2018/1/1
@@ -10518,7 +11283,6 @@ commodity $1,000.00000000
 
 ==================
 5__we_still_should_recognize_commodities_with_e
-:skip
 ==================
 
 2018/1/1
@@ -10527,11 +11291,18 @@ commodity $1,000.00000000
 
 ---
 
-(source_file)
+(source_file
+  (transaction
+    (date)
+    (posting
+      (account)
+      (amount))
+    (posting
+      (account)
+      (amount))))
 
 ==================
 6_
-:skip
 ==================
 
 2018/1/1
@@ -10548,7 +11319,6 @@ commodity $1,000.00000000
 
 ==================
 2__other_characters_will_be_considered_part_of_the_description
-:skip
 ==================
 
 2017/01/01 %
@@ -10562,7 +11332,6 @@ commodity $1,000.00000000
 
 ==================
 1__market_prices_are_ignored_by__b_
-:skip
 ==================
 
 P 2011/01/01 € $1.35
@@ -10587,7 +11356,6 @@ P 2011/01/01 € $1.35
 
 ==================
 test_7
-:skip
 ==================
 
 P 2011/01/01 € $1.35
@@ -10616,7 +11384,6 @@ P 2011/01/01 GBP $1.35
 
 ==================
 test_9
-:skip
 ==================
 
 3000/01/01
@@ -10628,29 +11395,28 @@ P 2000/1/1 $ €1.30
 
 ---
 
-; NOTICE: Content updated from hledger, but preserved manual assertion
-; Previous content length: 116, new: 87
 (source_file
   (transaction
     (date)
-    (description)
     (posting
       (account)
-      (amount))
-    (posting
-      (account)))
+      (amount)))
+  (directive
+    (date)
+    (commodity)
+    (amount))
   (transaction
     (date)
-    (description)
-    (posting
-      (account))
     (posting
       (account)
-      (amount))))
+      (amount)))
+  (directive
+    (date)
+    (commodity)
+    (amount)))
 
 ==================
 test_11
-:skip
 ==================
 
 P 2000/1/1 $ €1.20
@@ -10660,11 +11426,23 @@ P 3000/1/1 $ €1.30
 
 ---
 
-(source_file)
+(source_file
+  (directive
+    (date)
+    (commodity)
+    (amount))
+  (directive
+    (date)
+    (commodity)
+    (amount))
+  (transaction
+    (date)
+    (posting
+      (account)
+      (amount))))
 
 ==================
 test_14
-:skip
 ==================
 
 P 3000/1/1 $ €1.10
@@ -10673,11 +11451,19 @@ P 3000/1/1 $ €1.10
 
 ---
 
-(source_file)
+(source_file
+  (directive
+    (date)
+    (commodity)
+    (amount))
+  (transaction
+    (date)
+    (posting
+      (account)
+      (amount))))
 
 ==================
 6__market_prices_interact_with_d_directives_and_with_amount_style_canonicalisation___131
-:skip
 ==================
 
 D 1000.00 H                ; declare a default commodity named H
@@ -10696,7 +11482,6 @@ P 2015/08/15 GGGG  32.39
 
 ==================
 7__register__v_affects_posting_amounts_and_total_
-:skip
 ==================
 
 P 2000/1/1 $ €1.20
@@ -10718,7 +11503,6 @@ P 2000/1/1 $ €1.20
 
 ==================
 test_18
-:skip
 ==================
 
 P 2000/1/1 $ €1.20
@@ -10742,7 +11526,6 @@ P 2000/1/1 $ €1.20
 
 ==================
 __value_tests
-:skip
 ==================
 
 P 2000/01/01 A  1 B
@@ -10804,7 +11587,6 @@ P 2000/04/01 A  4 B
 
 ==================
 test_49
-:skip
 ==================
 
 P 2000/01/01 A  1 B
@@ -10875,7 +11657,6 @@ P 2000/04/01 A  4 B
 
 ==================
 test_50
-:skip
 ==================
 
 P 2000/01/01 A  1 B
@@ -10942,7 +11723,6 @@ P 2000/04/01 B  1 C
 
 ==================
 44__multicolumn_balance_report_with__h__valuing_each_period_s_carried_over_balances_at_cost_
-:skip
 ==================
 
 P 2000/01/01 A  1 B
@@ -10986,7 +11766,6 @@ P 2000/04/01 A  4 B
 
 ==================
 test_85
-:skip
 ==================
 
 P 2000/01/01 A  1 B
@@ -11057,7 +11836,6 @@ P 2000/04/01 A  4 B
 
 ==================
 51____value_then_with___historical__the_starting_total_is_valued_individually_for_each_posting_at_its_posting_time_
-:skip
 ==================
 
 P 2020-01-01 A 1 B
@@ -11115,7 +11893,6 @@ P 2020-04-01 A 4 B
 
 ==================
 test_92
-:skip
 ==================
 
 P 2020-01-01 A 1 B
@@ -11173,7 +11950,6 @@ P 2020-04-01 A 4 B
 
 ==================
 53__print___value_should_affect_all_postings__including_when_there_s_an_implicit_transaction_price
-:skip
 ==================
 
 P 2020-01-01 A 1 C
@@ -11204,7 +11980,6 @@ P 2020-01-01 B 1 C
 
 ==================
 valuation_tests__part_2_
-:skip
 ==================
 
 ; some market prices
@@ -11226,7 +12001,6 @@ comment
 
 ==================
 9__normal_print_output_
-:skip
 ==================
 
 2000/01/01
@@ -11235,11 +12009,20 @@ comment
 
 ---
 
-(source_file)
+(source_file
+  (transaction
+    (date)
+    (posting
+      (account)
+      (amount)
+      (cost_spec
+        (amount)))
+    (posting
+      (account)
+      (amount))))
 
 ==================
 test_23
-:skip
 ==================
 
 P 2000/1/1 A 1B
@@ -11249,11 +12032,24 @@ P 2000/1/1 A 1B
 
 ---
 
-(source_file)
+(source_file
+  (directive
+    (date)
+    (commodity)
+    (amount))
+  (transaction
+    (date)
+    (posting
+      (account)
+      (amount)
+      (cost_spec
+        (amount)))
+    (posting
+      (account)
+      (amount))))
 
 ==================
 test_28
-:skip
 ==================
 
 P 2000/01/01 A  2 B
@@ -11280,7 +12076,6 @@ P 2002/01/01 A  3 B
 
 ==================
 20_
-:skip
 ==================
 
 P 2001/01/01 A  1 B
@@ -11290,14 +12085,15 @@ P 2002/01/01 A  2 B
 
 ---
 
-; NOTICE: Content updated from hledger, but preserved manual assertion
-; Previous content length: 59, new: 61
 (source_file
   (directive
-    (account)
-    (comment))
+    (date)
+    (commodity)
+    (amount))
   (directive
-    (account))
+    (date)
+    (commodity)
+    (amount))
   (transaction
     (date)
     (posting
@@ -11306,7 +12102,6 @@ P 2002/01/01 A  2 B
 
 ==================
 22__market_price_is_not_inferred_from_transactions_by_default_
-:skip
 ==================
 
 2020-01-01
@@ -11325,7 +12120,6 @@ P 2002/01/01 A  2 B
 
 ==================
 24__a_p_declared_market_price_on_the_same_date_as_a_transaction_price_has_precedence_
-:skip
 ==================
 
 P 2020-01-01 A  1 B
@@ -11349,7 +12143,6 @@ P 2020-01-01 A  1 B
 
 ==================
 25__a_transaction_inferred_price_newer_than_a_p_declared_price_has_precedence_
-:skip
 ==================
 
 P 2020-01-01 A  1 B
@@ -11373,7 +12166,6 @@ P 2020-01-01 A  1 B
 
 ==================
 26__a_later_dated_p_directive_sets_the_valuation_commodity_even_if_parsed_out_of_order_
-:skip
 ==================
 
 P 2020-02-01 A  1 C
@@ -11402,7 +12194,6 @@ P 2020-01-01 A  1 B
 
 ==================
 27__a_later_dated_transaction_price_sets_the_valuation_commodity_even_if_parsed_out_of_order_
-:skip
 ==================
 
 2020-01-01
@@ -11435,7 +12226,6 @@ P 2020-01-01 A  1 B
 
 ==================
 test_46
-:skip
 ==================
 
 2020-11-10 
@@ -11445,8 +12235,6 @@ P 2020-11-02 A B 0.40
 
 ---
 
-; NOTICE: Content updated from hledger, but preserved manual assertion
-; Previous content length: 63, new: 71
 (source_file
   (transaction
     (date)
@@ -11465,7 +12253,6 @@ P 2020-11-02 A B 0.40
 
 ==================
 29___1402_it_should_pick_the_direct_b__a_price_here__not_the_indirect_b__c__a_price_
-:skip
 ==================
 
 2020-11-10
@@ -11497,7 +12284,6 @@ P 2020-11-03 B A 5
 
 ==================
 30___1439_lots_of_price_edges_like_the_below_should_not_cause_any_slowdown_
-:skip
 ==================
 
 2020-01-01
@@ -11519,11 +12305,71 @@ P 2020-01-01 M 140Y
 
 ---
 
-(source_file)
+(source_file
+  (transaction
+    (date)
+    (posting
+      (account)
+      (amount)))
+  (directive
+    (date)
+    (commodity)
+    (amount))
+  (directive
+    (date)
+    (commodity)
+    (amount))
+  (directive
+    (date)
+    (commodity)
+    (amount))
+  (directive
+    (date)
+    (commodity)
+    (amount))
+  (directive
+    (date)
+    (commodity)
+    (amount))
+  (directive
+    (date)
+    (commodity)
+    (amount))
+  (directive
+    (date)
+    (commodity)
+    (amount))
+  (directive
+    (date)
+    (commodity)
+    (amount))
+  (directive
+    (date)
+    (commodity)
+    (amount))
+  (directive
+    (date)
+    (commodity)
+    (amount))
+  (directive
+    (date)
+    (commodity)
+    (amount))
+  (directive
+    (date)
+    (commodity)
+    (amount))
+  (directive
+    (date)
+    (commodity)
+    (amount))
+  (directive
+    (date)
+    (commodity)
+    (amount)))
 
 ==================
 31___1443_it_should_always_pick_the_shortest_price_path__a_p_z_here_
-:skip
 ==================
 
 2020-01-01
@@ -11537,11 +12383,39 @@ P 2020-01-01 P 100Z
 
 ---
 
-(source_file)
+(source_file
+  (transaction
+    (date)
+    (posting
+      (account)
+      (amount)))
+  (directive
+    (date)
+    (commodity)
+    (amount))
+  (directive
+    (date)
+    (commodity)
+    (amount))
+  (directive
+    (date)
+    (commodity)
+    (amount))
+  (directive
+    (date)
+    (commodity)
+    (amount))
+  (directive
+    (date)
+    (commodity)
+    (amount))
+  (directive
+    (date)
+    (commodity)
+    (amount)))
 
 ==================
 32___1851_it_should_use_posting_date_2_if_requested_
-:skip
 ==================
 
 2019-12-31 FOO
@@ -11573,7 +12447,6 @@ P 2020-01-01 P 100Z
 
 ==================
 100___10_5___100_5___105525
-:skip
 ==================
 
 P 2000-01-01 A   10.5 B
@@ -11600,7 +12473,6 @@ P 2000-01-01 B  100.5 C
 
 ==================
 balance___valuechange_report
-:skip
 ==================
 
 P 1999/01/01 A  10 B
@@ -11676,7 +12548,6 @@ P 2000/04/01 A  4 B
 
 ==================
 1__virtual_posting_shouldn_t_affect_balance
-:skip
 ==================
 
 2009/1/1 x
@@ -11701,7 +12572,6 @@ P 2000/04/01 A  4 B
 
 ==================
 2__balanced_virtual_postings_should_be_required_to_balance__themselves_
-:skip
 ==================
 
 2010/1/1 x
@@ -11715,7 +12585,6 @@ P 2000/04/01 A  4 B
 
 ==================
 3__balanced_virtual_postings_should_be_required_to_balance__themselves_
-:skip
 ==================
 
 2010/1/1 x
@@ -11730,7 +12599,6 @@ P 2000/04/01 A  4 B
 
 ==================
 4__a_virtual_posting_with_implicit_amount_should_be_handled_correctly
-:skip
 ==================
 
 2010/1/1 x
@@ -11751,7 +12619,6 @@ P 2000/04/01 A  4 B
 
 ==================
 5__real_and_balanced_virtual_postings_are_balanced_separately__and_multiple_amountless_virtuals_are_ok
-:skip
 ==================
 
 2010/1/1 x
@@ -11779,7 +12646,6 @@ P 2000/04/01 A  4 B
 
 ==================
 6__amountless_unbalanced_postings_are_always_inferred_as_zero_
-:skip
 ==================
 
 2023-01-01
@@ -11801,7 +12667,6 @@ P 2000/04/01 A  4 B
 
 ==================
 json_output
-:skip
 ==================
 
 2019-1-1
@@ -11818,7 +12683,6 @@ json_output
 
 ==================
 1___apply_account__set_a_default_parent_account
-:skip
 ==================
 
 apply account per
@@ -11833,7 +12697,6 @@ end apply account
 
 ==================
 2___d_amt__set_a_default_commodity_and_its_format
-:skip
 ==================
 
 D $0.0
@@ -11844,7 +12707,6 @@ D $0.0
 
 ==================
 3__star_comment_line
-:skip
 ==================
 
 *
@@ -11855,7 +12717,6 @@ D $0.0
 
 ==================
 4______an_automated_transaction
-:skip
 ==================
 
 = expenses:food
@@ -11863,11 +12724,15 @@ D $0.0
 
 ---
 
-(source_file)
+(source_file
+  (auto_posting_rule
+    (query)
+    (posting
+      (account)
+      (amount))))
 
 ==================
 5___y___year__set_the_year_for_year_less_dates
-:skip
 ==================
 
 Y 1111
@@ -11883,7 +12748,6 @@ apply year 3333
 
 ==================
 6__ignored_directives
-:skip
 ==================
 
 apply fixed CAD $0.90
@@ -11920,7 +12784,6 @@ eval foo
 
 ==================
 7__amount_valuation__ignored
-:skip
 ==================
 
 ;; Lastly, you can specify the valuation function/value for any specific
@@ -11935,7 +12798,6 @@ eval foo
 
 ==================
 test_25
-:skip
 ==================
 
 2022-01-01 sell 5 AAPL acquired at $50 for $375, for a $125 gain
@@ -11949,7 +12811,6 @@ test_25
 
 ==================
 1______and_____comment_lines
-:skip
 ==================
 
 %
@@ -11961,7 +12822,6 @@ test_25
 
 ==================
 2___end__or__end_apply__as_shorthand_for_closing_the_most_recent__apply_foo__
-:skip
 ==================
 
 apply account a
@@ -11975,7 +12835,6 @@ end
 
 ==================
 3___test___a_synonym_for__comment_
-:skip
 ==================
 
 test
@@ -11986,7 +12845,6 @@ test
 
 ==================
 4___i__i__o__o__b__h__embedded_timeclock_entries
-:skip
 ==================
 
 i 2013/04/05 12:00:00 Personal:Lunch
@@ -11998,7 +12856,6 @@ o 2013/04/05 13:30:00
 
 ==================
 5__amount_expressions
-:skip
 ==================
 
 2022-01-01
@@ -12010,7 +12867,6 @@ o 2013/04/05 13:30:00
 
 ==================
 test_2
-:skip
 ==================
 
 2018/1/1 foo  ; foo:
@@ -12020,40 +12876,21 @@ test_2
 
 ---
 
-; NOTICE: Content updated from hledger, but preserved manual assertion
-; Previous content length: 171, new: 47
 (source_file
-  (directive
-    (account)
-    (comment))
-  (directive
-    (account)
-    (comment))
-  (directive
-    (account)
-    (comment))
-  (directive
-    (account)
-    (comment))
-  (directive
-    (account))
   (transaction
     (date)
+    (description)
+    (comment)
     (posting
-      (account)
-      (amount)))
+      (account)))
   (transaction
     (date)
+    (description)
     (posting
-      (account)
-      (amount))
-    (posting
-      (account)
-      (amount))))
+      (account))))
 
 ==================
 test_2
-:skip
 ==================
 
 payee qux
@@ -12066,40 +12903,26 @@ payee qux
 
 ---
 
-; NOTICE: Content updated from hledger, but preserved manual assertion
-; Previous content length: 171, new: 66
 (source_file
-  (directive
-    (account)
-    (comment))
-  (directive
-    (account)
-    (comment))
-  (directive
-    (account)
-    (comment))
-  (directive
-    (account)
-    (comment))
-  (directive
-    (account))
+  (directive)
   (transaction
     (date)
+    (description)
     (posting
-      (account)
-      (amount)))
+      (account)))
   (transaction
     (date)
+    (description)
     (posting
-      (account)
-      (amount))
+      (account)))
+  (transaction
+    (date)
+    (description)
     (posting
-      (account)
-      (amount))))
+      (account))))
 
 ==================
 1__check_pivot_with_print
-:skip
 ==================
 
 2016/02/16 Test Transaction
@@ -12123,7 +12946,6 @@ payee qux
 
 ==================
 2__check_pivot_with_bal
-:skip
 ==================
 
 2016/02/16 Member Fee Payment John Doe
@@ -12137,7 +12959,6 @@ payee qux
 
 ==================
 3__check_with_another_example
-:skip
 ==================
 
 2016/02/16 Donation Freifunk
@@ -12151,7 +12972,6 @@ payee qux
 
 ==================
 4__query_on_account_will_find_either_effective_name_or_original_one
-:skip
 ==================
 
 2016/02/16 Test Transaction
@@ -12168,7 +12988,6 @@ payee qux
 
 ==================
 5__we_should_be_able_to_query_on_original_account_names
-:skip
 ==================
 
 2017/1/1 prepay
@@ -12201,7 +13020,6 @@ payee qux
 
 ==================
 6__pivot_for_implicit_tag_desc__technical_sample_
-:skip
 ==================
 
 2016/02/16 Freifunk
@@ -12214,7 +13032,6 @@ payee qux
 
 ==================
 7__pivot_for_implicit_tag_code__technical_sample_
-:skip
 ==================
 
 2016/02/16 (Freifunk) Donation Freifunk
@@ -12227,7 +13044,6 @@ payee qux
 
 ==================
 8__use_of_pivot_with_code_based_budgeting
-:skip
 ==================
 
 2016/02/16 (Freifunk) Donation Freifunk
@@ -12240,7 +13056,6 @@ payee qux
 
 ==================
 9__get_expenses_balance_by_payee
-:skip
 ==================
 
 2016/02/16 (1138) Auchan | buy a food for tomorrow morning
@@ -12257,7 +13072,6 @@ payee qux
 
 ==================
 10__get_daily_expenses_by_payee
-:skip
 ==================
 
 2016/02/16 (1138) Auchan
@@ -12277,7 +13091,6 @@ payee qux
 
 ==================
 11__pivot_on_multiple_tags
-:skip
 ==================
 
 2023-01-01 compound purchase
@@ -12309,7 +13122,6 @@ payee qux
 
 ==================
 12__pivot_on_the_commodity_symbol_with__comm__
-:skip
 ==================
 
 2025-01-01
@@ -12333,7 +13145,6 @@ payee qux
 
 ==================
 14__when_commodities_are_being_converted__the_original_commodity_is_shown_
-:skip
 ==================
 
 2025-01-01
@@ -12361,7 +13172,6 @@ payee qux
 
 ==================
 test_4
-:skip
 ==================
 
 P 2023-01-01 B A10
@@ -12387,11 +13197,76 @@ P 2023-01-07 B A70
 
 ---
 
-(source_file)
+(source_file
+  (directive
+    (date)
+    (commodity)
+    (amount))
+  (directive
+    (date)
+    (commodity)
+    (amount))
+  (directive
+    (date)
+    (commodity)
+    (amount))
+  (transaction
+    (date)
+    (posting
+      (account)
+      (amount)
+      (cost_spec
+        (amount))))
+  (transaction
+    (date)
+    (posting
+      (account)
+      (amount)
+      (cost_spec
+        (amount))))
+  (transaction
+    (date)
+    (posting
+      (account)
+      (amount))
+    (posting
+      (account)
+      (amount)))
+  (transaction
+    (date)
+    (posting
+      (account)
+      (amount)
+      (cost_spec
+        (amount))))
+  (transaction
+    (date)
+    (posting
+      (account)
+      (amount)
+      (cost_spec
+        (amount))))
+  (transaction
+    (date)
+    (posting
+      (account)
+      (amount))
+    (posting
+      (account)))
+  (transaction
+    (date)
+    (posting
+      (account)
+      (amount)
+      (cost_spec
+        (amount))))
+  (directive
+    (date)
+    (commodity)
+    (amount)))
 
 ==================
 8__zero_prices__which_can_t_be_reversed__are_not_reversed_
-:skip
 ==================
 
 P 2021-10-16 B 0.0 A
@@ -12406,7 +13281,6 @@ P 2021-10-16 B 0.0 A
 
 ==================
 9__zero_postings__which_can_t_determine_a_price__are_ignored_
-:skip
 ==================
 
 2021-10-16
@@ -12425,7 +13299,6 @@ P 2021-10-16 B 0.0 A
 
 ==================
 10__inferring_prices_should_play_well_with_balance_assertions_mixing_prices_and_no_prices____1736_
-:skip
 ==================
 
 ;; Total asset value should be 400 USD + 1000 USD = 1400 USD
@@ -12442,7 +13315,6 @@ P 2021-10-16 B 0.0 A
 
 ==================
 11__commodity_styles_are_applied_to_all_price_amounts__but_their_precision_is_left_unchanged_
-:skip
 ==================
 
 commodity 1.000,00 A
@@ -12461,7 +13333,6 @@ P 2019-01-02 X A1000,1
 
 ==================
 12__reverse_market_prices_are_shown_with_all_decimal_digits__up_to_a_maximum_of_8_
-:skip
 ==================
 
 P 2023-01-01 B 3A
@@ -12471,11 +13342,21 @@ P 2023-01-01 B 3A
 
 ---
 
-(source_file)
+(source_file
+  (directive
+    (date)
+    (commodity)
+    (amount))
+  (transaction
+    (date)
+    (posting
+      (account)
+      (amount))
+    (posting
+      (account))))
 
 ==================
 1__unrecognised_top_level_account_names_are_rejected_
-:skip
 ==================
 
 2000-01-01
@@ -12492,7 +13373,6 @@ P 2023-01-01 B 3A
 
 ==================
 2__otherwise__accounts_are_modified_encoded_to_suit_beancount__and_open_directives_are_added_
-:skip
 ==================
 
 2000-01-01
@@ -12505,7 +13385,6 @@ P 2023-01-01 B 3A
 
 ==================
 3__commodity_symbols_are_converted_to_iso_4217_codes__or_encoded__to_suit_beancount_
-:skip
 ==================
 
 2000-01-01
@@ -12520,7 +13399,6 @@ P 2023-01-01 B 3A
 
 ==================
 4__virtual_postings_are_dropped_
-:skip
 ==================
 
 2000-01-01
@@ -12548,7 +13426,6 @@ P 2023-01-01 B 3A
 
 ==================
 test_9
-:skip
 ==================
 
 2000-01-01
@@ -12559,8 +13436,6 @@ test_9
 
 ---
 
-; NOTICE: Content updated from hledger, but preserved manual assertion
-; Previous content length: 116, new: 150
 (source_file
   (transaction
     (date)
@@ -12581,7 +13456,6 @@ test_9
 
 ==================
 test_11
-:skip
 ==================
 
 2000-01-01
@@ -12596,7 +13470,6 @@ test_11
 
 ==================
 test_13
-:skip
 ==================
 
 2000-01-01
@@ -12616,7 +13489,6 @@ test_13
 
 ==================
 test_19
-:skip
 ==================
 
 account assets       ; type:A
@@ -12633,11 +13505,33 @@ account assets:cash  ; type:C
 
 ---
 
-(source_file)
+(source_file
+  (directive
+    (account)
+    (comment))
+  (directive
+    (account)
+    (comment))
+  (transaction
+    (date)
+    (description))
+  (comment_line)
+  (comment_line)
+  (comment_line)
+  (comment_line)
+  (comment_line)
+  (comment_line)
+  (transaction
+    (date)
+    (description)
+    (comment)
+    (posting
+      (account)
+      (amount)
+      (comment))))
 
 ==================
 test_0
-:skip
 ==================
 
 2009/1/1
@@ -12646,8 +13540,6 @@ test_0
 
 ---
 
-; NOTICE: Content updated from hledger, but preserved manual assertion
-; Previous content length: 55, new: 42
 (source_file
   (transaction
     (date)
@@ -12667,7 +13559,6 @@ test_0
 
 ==================
 1__print_shows_both_primary_and_secondary_dates__the_second_s_year_defaults_to_the_first_s_
-:skip
 ==================
 
 2000/1/1=3/3
@@ -12693,7 +13584,6 @@ test_0
 
 ==================
 2__with___date2__the_secondary_date_is_used_for_sorting_
-:skip
 ==================
 
 2000/1/1=3/3
@@ -12719,7 +13609,6 @@ test_0
 
 ==================
 1__implicit_transaction_balance_w_o___explict
-:skip
 ==================
 
 2017/1/1
@@ -12739,7 +13628,6 @@ test_0
 
 ==================
 2__implicit_transaction_balance_w____explict
-:skip
 ==================
 
 2017/1/1
@@ -12759,7 +13647,6 @@ test_0
 
 ==================
 3__implicit_commodity_price_w_o___explict
-:skip
 ==================
 
 2017/1/1
@@ -12780,7 +13667,6 @@ test_0
 
 ==================
 4__implicit_commodity_price_w____explict
-:skip
 ==================
 
 2017/1/1
@@ -12801,7 +13687,6 @@ test_0
 
 ==================
 5__implicit_account_balance_w_o___explict
-:skip
 ==================
 
 2017/1/1
@@ -12822,7 +13707,6 @@ test_0
 
 ==================
 6__implicit_account_balance_w____explict
-:skip
 ==================
 
 2017/1/1
@@ -12843,7 +13727,6 @@ test_0
 
 ==================
 7__default_commodity_always_applied_because_print_do_not_issue_appropriate_directive
-:skip
 ==================
 
 D 1000.00 EUR
@@ -12857,7 +13740,6 @@ D 1000.00 EUR
 
 ==================
 8__option___explicit_implies_effect_of___empty
-:skip
 ==================
 
 2017/1/1
@@ -12877,7 +13759,6 @@ D 1000.00 EUR
 
 ==================
 9__auto_postings_are_always_given_explicit_amounts_
-:skip
 ==================
 
 = a
@@ -12889,11 +13770,24 @@ D 1000.00 EUR
 
 ---
 
-(source_file)
+(source_file
+  (auto_posting_rule
+    (query)
+    (posting
+      (account)
+      (amount))
+    (posting
+      (account)))
+  (transaction
+    (date)
+    (posting
+      (account)
+      (amount))
+    (posting
+      (account))))
 
 ==================
 test_0
-:skip
 ==================
 
 2009/1/1 x
@@ -12902,28 +13796,18 @@ test_0
 
 ---
 
-; NOTICE: Content updated from hledger, but preserved manual assertion
-; Previous content length: 55, new: 59
 (source_file
   (transaction
     (date)
+    (description)
     (posting
       (account)
-      (amount)))
-  (transaction
-    (date)
+      (amount))
     (posting
-      (account)
-      (amount)))
-  (transaction
-    (date)
-    (posting
-      (account)
-      (amount))))
+      (account))))
 
 ==================
 test_33
-:skip
 ==================
 
 ; A and B styles
@@ -12943,7 +13827,6 @@ commodity B1000.00
 
 ==================
 test_42
-:skip
 ==================
 
 commodity A 1000.
@@ -12954,8 +13837,6 @@ commodity A 1000.
 
 ---
 
-; NOTICE: Content updated from hledger, but preserved manual assertion
-; Previous content length: 215, new: 80
 (source_file
   (transaction
     (date)
@@ -12990,7 +13871,6 @@ commodity A 1000.
 
 ==================
 test_44
-:skip
 ==================
 
 decimal-mark .
@@ -13009,7 +13889,6 @@ decimal-mark .
 
 ==================
 test_46
-:skip
 ==================
 
 2023-01-01
@@ -13039,7 +13918,6 @@ test_46
 
 ==================
 test_64
-:skip
 ==================
 
 2023-01-01
@@ -13061,7 +13939,6 @@ test_64
 
 ==================
 test_86
-:skip
 ==================
 
 2023-01-01
@@ -13083,7 +13960,6 @@ test_86
 
 ==================
 test_88
-:skip
 ==================
 
 2023-01-01
@@ -13105,7 +13981,6 @@ test_88
 
 ==================
 test_93
-:skip
 ==================
 
 P 2023-01-01 B 2A
@@ -13115,11 +13990,21 @@ P 2023-01-01 B 2A
 
 ---
 
-(source_file)
+(source_file
+  (directive
+    (date)
+    (commodity)
+    (amount))
+  (transaction
+    (date)
+    (posting
+      (account)
+      (amount))
+    (posting
+      (account))))
 
 ==================
 12__what_if_the_inferred_reverse_market_price_has_infinite_decimal_digits__
-:skip
 ==================
 
 P 2023-01-01 B 3.00A
@@ -13129,11 +14014,21 @@ P 2023-01-01 B 3.00A
 
 ---
 
-(source_file)
+(source_file
+  (directive
+    (date)
+    (commodity)
+    (amount))
+  (transaction
+    (date)
+    (posting
+      (account)
+      (amount))
+    (posting
+      (account))))
 
 ==================
 test_104
-:skip
 ==================
 
 P 2023-01-01 A 0.0123456789012345678901234567890123456789012345678901234567890123456789012345678901234567890123456789B
@@ -13142,11 +14037,19 @@ P 2023-01-01 A 0.012345678901234567890123456789012345678901234567890123456789012
 
 ---
 
-(source_file)
+(source_file
+  (directive
+    (date)
+    (commodity)
+    (amount))
+  (transaction
+    (date)
+    (posting
+      (account)
+      (amount))))
 
 ==================
 1__print_preserves_the_commodity_symbol_of_zero_amounts_
-:skip
 ==================
 
 2023-01-01
@@ -13158,7 +14061,6 @@ P 2023-01-01 A 0.012345678901234567890123456789012345678901234567890123456789012
 
 ==================
 test_4
-:skip
 ==================
 
 2023-01-01
@@ -13168,11 +14070,20 @@ test_4
 
 ---
 
-(source_file)
+(source_file
+  (transaction
+    (date)
+    (posting
+      (account)
+      (amount))
+    (posting
+      (account)
+      (amount))
+    (posting
+      (account))))
 
 ==================
 3____depth_does_not_affect_print_
-:skip
 ==================
 
 2023-01-01
@@ -13189,7 +14100,6 @@ test_4
 
 ==================
 4__print___invert_flips_signs_in_postings__main_and_assertion_assignment_amounts_
-:skip
 ==================
 
 2025-01-01
@@ -13203,7 +14113,6 @@ test_4
 
 ==================
 test_1
-:skip
 ==================
 
 2010/1/1 x
@@ -13225,7 +14134,6 @@ test_1
 
 ==================
 test_0
-:skip
 ==================
 
 2009/1/1 x
@@ -13237,28 +14145,26 @@ test_0
 
 ---
 
-; NOTICE: Content updated from hledger, but preserved manual assertion
-; Previous content length: 55, new: 51
 (source_file
   (transaction
     (date)
+    (description)
     (posting
       (account)
-      (amount)))
+      (amount))
+    (posting
+      (account)))
   (transaction
     (date)
+    (description)
     (posting
       (account)
-      (amount)))
-  (transaction
-    (date)
+      (amount))
     (posting
-      (account)
-      (amount))))
+      (account))))
 
 ==================
 expr___boolean__queries
-:skip
 ==================
 
 2022-01-01 Transaction 1       ; transactiontag:A
@@ -13278,11 +14184,56 @@ expr___boolean__queries
 
 ---
 
-(source_file)
+(source_file
+  (transaction
+    (date)
+    (description)
+    (comment)
+    (posting
+      (account)
+      (amount)
+      (comment))
+    (posting
+      (account)))
+  (transaction
+    (date)
+    (description)
+    (comment)
+    (posting
+      (account)
+      (amount))
+    (posting
+      (account)
+      (amount)
+      (comment))
+    (posting
+      (account)))
+  (transaction
+    (date)
+    (description)
+    (comment)
+    (posting
+      (account)
+      (amount)
+      (comment))
+    (posting
+      (account)))
+  (transaction
+    (date)
+    (description)
+    (comment)
+    (posting
+      (account)
+      (amount)
+      (comment))
+    (posting
+      (account)
+      (amount))
+    (posting
+      (account))))
 
 ==================
 test_4
-:skip
 ==================
 
 2010/01/01  ; txntag1: txn val 1
@@ -13300,7 +14251,6 @@ test_4
 
 ==================
 2__reports_can_filter_by_tag_existence
-:skip
 ==================
 
 2010/01/01  ; foo:bar
@@ -13315,11 +14265,36 @@ test_4
 
 ---
 
-(source_file)
+(source_file
+  (transaction
+    (date)
+    (comment)
+    (posting
+      (account)
+      (amount))
+    (posting
+      (account)
+      (amount)))
+  (transaction
+    (date)
+    (comment)
+    (posting
+      (account)
+      (amount))
+    (posting
+      (account)
+      (amount)))
+  (transaction
+    (date)
+    (posting
+      (account)
+      (amount))
+    (posting
+      (account)
+      (amount))))
 
 ==================
 3__or_tag_value
-:skip
 ==================
 
 2010/01/01  ; foo:bar
@@ -13339,7 +14314,6 @@ test_4
 
 ==================
 4__postings_inherit_their_transaction_s_tags
-:skip
 ==================
 
 2010/01/01
@@ -13354,11 +14328,37 @@ test_4
 
 ---
 
-(source_file)
+(source_file
+  (transaction
+    (date)
+    (posting
+      (account)
+      (amount)
+      (comment))
+    (posting
+      (account)
+      (amount)))
+  (transaction
+    (date)
+    (comment)
+    (posting
+      (account)
+      (amount))
+    (posting
+      (account)
+      (amount)))
+  (transaction
+    (date)
+    (comment)
+    (posting
+      (account)
+      (amount))
+    (posting
+      (account)
+      (amount))))
 
 ==================
 5__look_for_transactions_without_tags
-:skip
 ==================
 
 2010/01/01 desc
@@ -13381,7 +14381,6 @@ test_4
 
 ==================
 test_10
-:skip
 ==================
 
 account a   ; type:A
@@ -13397,11 +14396,37 @@ account u
 
 ---
 
-(source_file)
+(source_file
+  (directive
+    (account)
+    (comment))
+  (directive
+    (account)
+    (comment))
+  (directive
+    (account)
+    (comment))
+  (directive
+    (account)
+    (comment))
+  (directive
+    (account))
+  (transaction
+    (date)
+    (posting
+      (account)
+      (amount)))
+  (transaction
+    (date)
+    (posting
+      (account)
+      (amount))
+    (posting
+      (account)
+      (amount))))
 
 ==================
 19__accounts_inherit_the_tags_of_their_parents_
-:skip
 ==================
 
 account a    ; type:A
@@ -13418,7 +14443,6 @@ account a:aa
 
 ==================
 20_
-:skip
 ==================
 
 account a    ; type:A
@@ -13442,7 +14466,6 @@ account a:aa
 
 ==================
 test_2
-:skip
 ==================
 
 account a   ; type:A
@@ -13489,7 +14512,6 @@ account u
 
 ==================
 8__postingless_declared_accounts_in_balance_reports_are_also_filtered_
-:skip
 ==================
 
 account a  ; type:A
@@ -13507,7 +14529,6 @@ account l  ; type:L
 
 ==================
 9__type__is_aware_of_account_type_inheritance_
-:skip
 ==================
 
 account a    ; type:A
@@ -13524,7 +14545,6 @@ account a:aa
 
 ==================
 10__type__is_aware_of_inferred_account_types_
-:skip
 ==================
 
 account assets
@@ -13543,7 +14563,6 @@ account liabilities
 
 ==================
 11__type__can_identify_cash_accounts_in_the_default_case
-:skip
 ==================
 
 account assets
@@ -13562,7 +14581,6 @@ account liabilities
 
 ==================
 12__type__can_identify_conversion_accounts_in_the_default_case
-:skip
 ==================
 
 account equity
@@ -13584,7 +14602,6 @@ account equity:trade
 
 ==================
 13__type__can_be_used_in_and_can_match_auto_postings
-:skip
 ==================
 
 account assets  ; type:a
@@ -13595,11 +14612,24 @@ account assets  ; type:a
 
 ---
 
-(source_file)
+(source_file
+  (directive
+    (account)
+    (comment))
+  (auto_posting_rule
+    (query)
+    (posting
+      (account)
+      (amount)))
+  (transaction
+    (date)
+    (description)
+    (posting
+      (account)
+      (amount))))
 
 ==================
 14__type__can_be_used_in_and_can_match_auto_postings_with_no_known_parents
-:skip
 ==================
 
 = type:a
@@ -13609,11 +14639,21 @@ account assets  ; type:a
 
 ---
 
-(source_file)
+(source_file
+  (auto_posting_rule
+    (query)
+    (posting
+      (account)
+      (amount)))
+  (transaction
+    (date)
+    (description)
+    (posting
+      (account)
+      (amount))))
 
 ==================
 15__type_a_matches_cash_accounts_and_type_e_matches_conversion_accounts
-:skip
 ==================
 
 2022-02-02 Test
@@ -13639,7 +14679,6 @@ account assets  ; type:a
 
 ==================
 1____date2_causes_the_secondary_date_to_be_displayed
-:skip
 ==================
 
 2009/1/1=2010/1/1 x
@@ -13660,7 +14699,6 @@ account assets  ; type:a
 
 ==================
 2____date2_causes__b__e__p_to_match_the_secondary_date
-:skip
 ==================
 
 2014/1/1=1/2
@@ -13685,7 +14723,6 @@ account assets  ; type:a
 
 ==================
 3____date2_causes_date__to_match_the_secondary_date__or_the_primary_date__if_there_is_no_secondary_
-:skip
 ==================
 
 2014/1/1=1/2
@@ -13718,7 +14755,6 @@ account assets  ; type:a
 
 ==================
 4__date2__matches_the_secondary_date__but_does_not_necessarily_display_it_
-:skip
 ==================
 
 2014/1/1=1/2
@@ -13743,7 +14779,6 @@ account assets  ; type:a
 
 ==================
 5__date2__plus___date2_both_matches_and_displays_the_secondary_date
-:skip
 ==================
 
 2014/1/1=1/2
@@ -13768,7 +14803,6 @@ account assets  ; type:a
 
 ==================
 6__date2__matching_is_not_affected_by___date2
-:skip
 ==================
 
 2014/1/1=1/2
@@ -13793,7 +14827,6 @@ account assets  ; type:a
 
 ==================
 7__with___date2__the_secondary_date_is_used_for_sorting
-:skip
 ==================
 
 2014/1/1=2/2
@@ -13819,7 +14852,6 @@ account assets  ; type:a
 
 ==================
 1__register___depth_n_matches_postings_as_usual_but_clips_account_names_to_n
-:skip
 ==================
 
 2010/1/1 x
@@ -13840,7 +14872,6 @@ account assets  ; type:a
 
 ==================
 2__separate_postings_remain_separate
-:skip
 ==================
 
 2010/1/1 x
@@ -13883,7 +14914,6 @@ account assets  ; type:a
 
 ==================
 3__with_a_reporting_interval__all_postings_are_aggregated_under_each__clipped__account
-:skip
 ==================
 
 2010/1/1 x
@@ -13926,7 +14956,6 @@ account assets  ; type:a
 
 ==================
 4__with___cleared
-:skip
 ==================
 
 2012/1/1 *
@@ -13944,7 +14973,6 @@ account assets  ; type:a
 
 ==================
 5__depth_0_aggregates_everything_into_a_single_line
-:skip
 ==================
 
 2010/1/1 x
@@ -13999,7 +15027,6 @@ account assets  ; type:a
 
 ==================
 1__monthly_reporting_interval__no_end_dates__shows_just_the_intervals_with_data_
-:skip
 ==================
 
 2011/2/1
@@ -14020,7 +15047,6 @@ account assets  ; type:a
 
 ==================
 2__or_with_a_query_pattern__just_the_intervals_with_matched_data_
-:skip
 ==================
 
 2011/1/1
@@ -14044,7 +15070,6 @@ account assets  ; type:a
 
 ==================
 5____date2_should_work_with_intervals
-:skip
 ==================
 
 2014/1/1
@@ -14069,7 +15094,6 @@ account assets  ; type:a
 
 ==================
 test_24
-:skip
 ==================
 
 2019-01-01
@@ -14093,7 +15117,6 @@ test_24
 
 ==================
 13__every_nth_day_of_month_from_date_
-:skip
 ==================
 
 2024-01-02
@@ -14131,7 +15154,6 @@ test_24
 
 ==================
 14__every_nth_day_of_month_from_date__periodic_transactions___2218__fixed_in_1_40_
-:skip
 ==================
 
 ~ every 31st day from 2024-07 to 2024-09
@@ -14143,7 +15165,6 @@ test_24
 
 ==================
 15__every_m_d_from_date__fixed_in_1_40_
-:skip
 ==================
 
 2023-01-10
@@ -14181,7 +15202,6 @@ test_24
 
 ==================
 16__every_m_d_from_date__periodic_transactions__fixed_in_1_40_
-:skip
 ==================
 
 ~ every 14th February from 2024 to 2026
@@ -14193,7 +15213,6 @@ test_24
 
 ==================
 test_42
-:skip
 ==================
 
 2024-01-01
@@ -14245,7 +15264,6 @@ test_42
 
 ==================
 19__every_nth_weekday_from_date__periodic_transactions_
-:skip
 ==================
 
 ~ every 2nd monday from 2024/1/5 to 2024/3
@@ -14257,7 +15275,6 @@ test_42
 
 ==================
 1____sort_with_non_date_sorts_by_the_correct_account
-:skip
 ==================
 
 2024-01-01 Demo
@@ -14273,7 +15290,6 @@ test_42
 
 ==================
 2____sort_with_two_expressions_sorts_correctly
-:skip
 ==================
 
 2024-01-01 Demo
@@ -14289,7 +15305,6 @@ test_42
 
 ==================
 3____sort_with_negation_reverses
-:skip
 ==================
 
 2024-01-01 Demo
@@ -14305,7 +15320,6 @@ test_42
 
 ==================
 4____sort_with_negation_and_multiple_accounts
-:skip
 ==================
 
 2024-01-01 Demo
@@ -14321,7 +15335,6 @@ test_42
 
 ==================
 5____sort_with_date__reversed
-:skip
 ==================
 
 2024-01-01 Demo
@@ -14337,7 +15350,6 @@ test_42
 
 ==================
 6____sort_with_description
-:skip
 ==================
 
 2024-01-01 Other
@@ -14353,7 +15365,6 @@ test_42
 
 ==================
 7____sort_with_absamount
-:skip
 ==================
 
 2024-01-01 Demo
@@ -14395,7 +15406,6 @@ test_42
 
 ==================
 test_0
-:skip
 ==================
 
 2014/3/30
@@ -14426,7 +15436,6 @@ test_0
 
 ==================
 3__for_register__related_postings_will_only_display_each_posting_once
-:skip
 ==================
 
 P 2021-01-01 A  10 B
@@ -14456,7 +15465,6 @@ P 2021-01-01 A  10 B
 
 ==================
 test_3
-:skip
 ==================
 
 2016/1/1 paycheck
@@ -14492,7 +15500,6 @@ test_3
 
 ==================
 test_5
-:skip
 ==================
 
 2016/1/1 withdraw
@@ -14525,7 +15532,6 @@ test_5
 
 ==================
 3__add_postings_in_another_commodity
-:skip
 ==================
 
 2017/04/24 * 09:00-09:25
@@ -14546,7 +15552,6 @@ test_5
 
 ==================
 4__add_postings_with_prices
-:skip
 ==================
 
 2017/04/24 * 09:00-09:25
@@ -14569,7 +15574,6 @@ test_5
 
 ==================
 test_9
-:skip
 ==================
 
 2016/1/1 withdraw
@@ -14601,7 +15605,6 @@ test_9
 
 ==================
 6__rewrite_rule_within_journal
-:skip
 ==================
 
 = ^assets:bank$ date:2017/1 amt:<0
@@ -14632,11 +15635,70 @@ test_9
 
 ---
 
-(source_file)
+(source_file
+  (auto_posting_rule
+    (query)
+    (posting
+      (account)
+      (amount))
+    (posting
+      (account)
+      (amount)
+      (comment)))
+  (auto_posting_rule
+    (query)
+    (posting
+      (account)
+      (amount)))
+  (auto_posting_rule
+    (query)
+    (posting
+      (account)
+      (amount)))
+  (transaction
+    (date)
+    (posting
+      (account)
+      (amount))
+    (posting
+      (account)))
+  (transaction
+    (date)
+    (posting
+      (account)
+      (amount))
+    (posting
+      (account)
+      (amount))
+    (posting
+      (account)
+      (amount))
+    (posting
+      (account)))
+  (transaction
+    (date)
+    (posting
+      (account)
+      (amount))
+    (posting
+      (account)))
+  (transaction
+    (date)
+    (posting
+      (account)
+      (amount))
+    (posting
+      (account)))
+  (comment_line)
+  (comment_line)
+  (auto_posting_rule
+    (query)
+    (posting
+      (account)
+      (amount))))
 
 ==================
 7__rewrite_using_diff_output
-:skip
 ==================
 
 2016/01/01 withdraw
@@ -14668,7 +15730,6 @@ test_9
 
 ==================
 1__investment_that_does_not_grow_has_no_return
-:skip
 ==================
 
 2017-01-01 investment
@@ -14700,7 +15761,6 @@ test_9
 
 ==================
 2__growth_by_12__from_single_investment_transaction_should_show_12__irr_and_12__twr
-:skip
 ==================
 
 2017-01-01 investment
@@ -14733,7 +15793,6 @@ test_9
 
 ==================
 3__same_as__2___but_grow_by_1__per_month
-:skip
 ==================
 
 2017-01-01 investment
@@ -14898,7 +15957,6 @@ test_9
 
 ==================
 4__when__100_invested_over_12_month____100_invested_over_6_month_yield__220__that_s_10__twr__but_12_73__irr
-:skip
 ==================
 
 2017-01-01 investment
@@ -14942,7 +16000,6 @@ test_9
 
 ==================
 5__when__100_invested_over_12_month____100_invested_over_6_month_yield__20__that_s__90__twr__but__95_73__irr
-:skip
 ==================
 
 2017-01-01 investment
@@ -14986,7 +16043,6 @@ test_9
 
 ==================
 6__check_that_deposits_withdrawals_and_profit_loss_are_reflected_in_the_right_periods
-:skip
 ==================
 
 2017-01-01 investment
@@ -15053,7 +16109,6 @@ test_9
 
 ==================
 7__check_that_reporting_for_the_part_of_the_total_history_of_investment_works
-:skip
 ==================
 
 2017-01-01 investment
@@ -15120,7 +16175,6 @@ test_9
 
 ==================
 8__dont_fail_where_there_is_no_rate_of_return
-:skip
 ==================
 
 2019/11/01 Example
@@ -15142,7 +16196,6 @@ test_9
 
 ==================
 9__fail_with_a_nice_error_message_when_commodity_can_t_be_valued
-:skip
 ==================
 
 2019/11/01 Example
@@ -15162,7 +16215,6 @@ test_9
 
 ==================
 10__forcing_valuation_via___value
-:skip
 ==================
 
 2019/11/01 Example
@@ -15179,7 +16231,6 @@ test_9
 
 ==================
 test_14
-:skip
 ==================
 
 P 2020-12-01 $ 76.20
@@ -15193,11 +16244,35 @@ P 2021-01-01 $ 73.88
 
 ---
 
-(source_file)
+(source_file
+  (directive
+    (date)
+    (commodity)
+    (amount))
+  (directive
+    (date)
+    (commodity)
+    (amount))
+  (transaction
+    (date)
+    (description)
+    (posting
+      (account)
+      (amount))
+    (posting
+      (account)))
+  (transaction
+    (date)
+    (description)
+    (posting
+      (account)
+      (balance_assertion
+        (amount)))
+    (posting
+      (account))))
 
 ==================
 test_16
-:skip
 ==================
 
 commodity $1000.00
@@ -15216,7 +16291,6 @@ P 2021-01-01 $ 73.88
 
 ==================
 13__several_pnl_transactions_on_a_single_date_are_aggregated_together
-:skip
 ==================
 
 2010-01-01   A1
@@ -15236,7 +16310,6 @@ P 2021-01-01 $ 73.88
 
 ==================
 14__should_support_begin_date_before_first_transaction_where_first_transaction_has_pnl
-:skip
 ==================
 
 P 2022-07-31 A € 1
@@ -15274,7 +16347,6 @@ P 2022-08-02 A € 2
 
 ==================
 15__correctly_work_with___value_and_complex_valuation_chains
-:skip
 ==================
 
 P 2023-01-01 B 20A
@@ -15287,11 +16359,36 @@ P 2023-12-31 C 2B
 
 ---
 
-(source_file)
+(source_file
+  (directive
+    (date)
+    (commodity)
+    (amount))
+  (directive
+    (date)
+    (commodity)
+    (amount))
+  (transaction
+    (date)
+    (posting
+      (account)
+      (amount)
+      (cost_spec
+        (amount)))
+    (posting
+      (account)
+      (amount)
+      (cost_spec
+        (amount)))
+    (posting
+      (account)))
+  (directive
+    (date)
+    (commodity)
+    (amount)))
 
 ==================
 16__correcly_process_dates_with_just_pricing_changes
-:skip
 ==================
 
 D 1,000.00 EUR 
@@ -15311,7 +16408,6 @@ P 2019-12-30 "IE00B4L5Y983" 56.59000000 "EUR"
 
 ==================
 17__avoids_fencepost_problem_when_allocating_pnl_to_periods
-:skip
 ==================
 
 commodity 1,000.00 CHF 
@@ -15331,7 +16427,6 @@ P 2024-12-31 B 1.0018 CHF
 
 ==================
 1__run_requires____before_first_command
-:skip
 ==================
 
 2017-01-01 groceries
@@ -15352,7 +16447,6 @@ P 2024-12-31 B 1.0018 CHF
 
 ==================
 3__run_one_command_from_command_line
-:skip
 ==================
 
 2017-01-01 groceries
@@ -15373,7 +16467,6 @@ P 2024-12-31 B 1.0018 CHF
 
 ==================
 4__run_two_commands_from_command_line
-:skip
 ==================
 
 2017-01-01 groceries
@@ -15394,7 +16487,6 @@ P 2024-12-31 B 1.0018 CHF
 
 ==================
 5__run_two_commands_from_command_line_with_different_input_options
-:skip
 ==================
 
 2017-01-01 investment
@@ -15427,7 +16519,6 @@ P 2024-12-31 B 1.0018 CHF
 
 ==================
 6__run_commands_from_file
-:skip
 ==================
 
 2017-01-01 groceries
@@ -15448,7 +16539,6 @@ P 2024-12-31 B 1.0018 CHF
 
 ==================
 7__run_commands_from_command_line__and_use_nested__run__to_run_commands_from_file
-:skip
 ==================
 
 2017-01-01 groceries
@@ -15469,7 +16559,6 @@ P 2024-12-31 B 1.0018 CHF
 
 ==================
 8__run_commands_from_stdin
-:skip
 ==================
 
 echo 'Accounts:'
@@ -15484,7 +16573,6 @@ balance assets
 
 ==================
 9__run_commands_accept_numeric_options
-:skip
 ==================
 
 echo 'Assets, depth 1:'
@@ -15499,7 +16587,6 @@ balance assets -2
 
 ==================
 10__run_commands_accept__argfiles
-:skip
 ==================
 
 echo 'Assets, depth 1:'
@@ -15514,7 +16601,6 @@ balance assets -2
 
 ==================
 11__run_caches_input_files__and_re_parses_files_when_inputoptions_change
-:skip
 ==================
 
 2017-01-01 groceries
@@ -15535,7 +16621,6 @@ balance assets -2
 
 ==================
 12__run_commands_with_forecast_properly_honor_reporting_interval
-:skip
 ==================
 
 2025-01-01  Buy beans
@@ -15551,7 +16636,6 @@ balance assets -2
 
 ==================
 2__included_files_should_be_listed_in_parse_order
-:skip
 ==================
 
 include a.j
@@ -15565,7 +16649,6 @@ include b.j
 
 ==================
 6__show_account_tags_even_when_there_are_no_transactions___1857_
-:skip
 ==================
 
 account a   ; t1:
@@ -15579,7 +16662,6 @@ account a   ; t1:
 
 ==================
 1__a_timeclock_session_is_parsed_as_a_similarly_named_transaction_with_one_virtual_posting_
-:skip
 ==================
 
 i 2009/1/1 08:00:00
@@ -15595,7 +16677,6 @@ o 2009/1/3 09:00:00
 
 ==================
 3__for_a_missing_clock_out__now_is_implied
-:skip
 ==================
 
 i 2020/1/1 08:00
@@ -15606,7 +16687,6 @@ i 2020/1/1 08:00
 
 ==================
 4__for_a_log_not_starting_with_clock_in__print_error
-:skip
 ==================
 
 o 2020/1/1 08:00
@@ -15617,7 +16697,6 @@ o 2020/1/1 08:00
 
 ==================
 5__for_two_consecutive_anonymous_clock_ins__print_error
-:skip
 ==================
 
 i 2020/1/1 08:00
@@ -15629,7 +16708,6 @@ i 2020/1/1 09:00
 
 ==================
 test_8
-:skip
 ==================
 
 i 2020-01-30 08:38:35 acct
@@ -15641,7 +16719,6 @@ o 2020-01-30 09:03:35
 
 ==================
 test_10
-:skip
 ==================
 
 i 2023-05-01 08:00:00 acct 1  description ; a comment with tag:
@@ -15655,7 +16732,6 @@ o 2023-05-02 09:00:00
 
 ==================
 9__support_multiple_sessions_simultaneously_clocked_in_
-:skip
 ==================
 
 i 2025-03-10 08:00:00 multi:1  description 1
@@ -15669,7 +16745,6 @@ o 2025-03-10 15:00:00 multi:2
 
 ==================
 test_14
-:skip
 ==================
 
 i 2025-03-10 08:00:00 multi:1  description 1
@@ -15685,7 +16760,6 @@ o 2025-03-10 15:00:00
 
 ==================
 11__multiple_active_sessions_can_span_multiple_days_
-:skip
 ==================
 
 i 2025-03-11 19:00:00 multi:1
@@ -15699,7 +16773,6 @@ o 2025-03-12 09:00:00
 
 ==================
 12__the___timeclock_old_flag_reverts_to_the_old_behavior_
-:skip
 ==================
 
 i 2009/1/1 08:00:00
@@ -15715,7 +16788,6 @@ o 2009/1/3 09:00:00
 
 ==================
 4__each_of_these_formats_is_parsed_as_exactly_0_25_
-:skip
 ==================
 
 2023-01-01
@@ -15733,7 +16805,6 @@ g  0.25h
 
 ==================
 5__lines_can_be_commented_by_a_leading___or____indented_or_not_
-:skip
 ==================
 
 2024-01-01
@@ -15749,7 +16820,6 @@ e
 
 ==================
 sample
-:skip
 ==================
 
 ; A sample journal file.
@@ -15885,7 +16955,6 @@ sample
 
 ==================
 sample2
-:skip
 ==================
 
 2025-01-01 starting balances

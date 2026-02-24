@@ -10,7 +10,7 @@ module.exports = grammar({
 
   rules: {
     source_file: ($) =>
-      repeat(choice($.transaction, $.directive, $.comment_line, $._newline)),
+      repeat(choice($.transaction, $.auto_posting_rule, $.directive, $.comment_line, $._newline)),
 
     transaction: ($) =>
       seq(
@@ -21,9 +21,24 @@ module.exports = grammar({
         optional(seq($._whitespace, $.status)),
         optional(seq(optional($._whitespace), $.code)),
         optional(seq(optional($._whitespace), $.description)),
+        optional($.comment),
         $._newline,
         repeat($.posting),
       ),
+
+    // Auto-posting rules: = QUERY followed by postings
+    auto_posting_rule: ($) =>
+      seq(
+        "=",
+        optional($._whitespace),
+        $.query,
+        optional($.comment),
+        $._newline,
+        repeat($.posting),
+      ),
+
+    // Query pattern for auto-posting rules
+    query: () => token(/[^\r\n;]+/),
 
     interval: ($) =>
       choice(
@@ -74,6 +89,7 @@ module.exports = grammar({
             $._whitespace,
             choice(
               seq(
+                optional("*"), // multiplier modifier for auto-posting rules
                 $.amount,
                 optional($.cost_spec),
                 optional($.balance_assertion),
@@ -101,8 +117,10 @@ module.exports = grammar({
         seq("-", $._commodity_prefix, $._number),
         // Commodity before number: $100, €50, £25, EUR6024
         seq($._commodity_prefix, $._number),
-        // Number before commodity: 100 USD, -50.25 EUR, 100 VTI2
+        // Number before commodity with space: 100 USD, -50.25 EUR
         prec(1, seq($._number, /[ \t]+/, $._commodity)),
+        // Number before commodity no space: 1A, 100USD
+        seq($._number, $._commodity_suffix),
         // Number only (assumes default commodity)
         $._number,
       ),
@@ -158,14 +176,25 @@ module.exports = grammar({
         token(seq('"', /[^"]+/, '"')),
       ),
 
-    // Commodity when separated by space (100 VTI2) - allows digits
+    // Commodity when separated by space (100 VTI2, 0.5 h) - allows digits and lowercase
     _commodity: () =>
       choice(
-        // Unicode letter commodities (USD, EUR, VTI2, etc.)
-        token(seq(/[\p{Lu}\p{Lt}]/u, /[\p{L}\p{N}]*/u)),
+        // Unicode letter commodities (USD, EUR, VTI2, h, etc.)
+        token(seq(/[\p{L}]/u, /[\p{L}\p{N}]*/u)),
         // Currency symbols
         /\$|€|£|¥|₹|₿|元|руб/,
         // Quoted commodities like "Chocolate Frogs"
+        token(seq('"', /[^"]+/, '"')),
+      ),
+
+    // Commodity immediately after number (1A, 100USD, 0.5h) - no leading digit
+    _commodity_suffix: () =>
+      choice(
+        // Letter commodities (A, USD, EUR, h)
+        token(seq(/[\p{L}]/u, /[\p{L}]*/u)),
+        // Currency symbols
+        /\$|€|£|¥|₹|₿|元|руб/,
+        // Quoted commodities
         token(seq('"', /[^"]+/, '"')),
       ),
 
