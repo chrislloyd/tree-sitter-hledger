@@ -29,7 +29,7 @@ function parseExistingCorpus(corpusFile) {
 // Extract journal content from hledger test files and convert to tree-sitter corpus format
 function extractTestCases() {
   const testDir = './hledger/hledger/test';
-  const corpusDir = './corpus';
+  const corpusDir = './test/corpus';
   const corpusFile = path.join(corpusDir, 'extracted_from_hledger.txt');
   
   // Ensure corpus directory exists
