@@ -93,8 +93,8 @@ function extractTestCases() {
           continue;
         }
         
-        // End of journal content
-        if (inJournal && (line.startsWith('$ ') || line.startsWith('> ') || line.startsWith('>='))) {
+        // End of journal content (shelltestrunner markers)
+        if (inJournal && (line.startsWith('$ ') || line.startsWith('> ') || line.startsWith('>=') || line.startsWith('>>>'))) {
           inJournal = false;
           break;
         }

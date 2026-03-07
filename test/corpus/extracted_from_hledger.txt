@@ -1075,17 +1075,21 @@ D 1000,00€
     (date)
     (description)
     (posting
-      (account)
+      (account
+        (account_name))
       (amount))
     (posting
-      (account)))
+      (account
+        (account_name))))
   (transaction
     (date)
     (description)
     (posting
-      (account))
+      (account
+        (account_name)))
     (posting
-      (account)
+      (account
+        (account_name))
       (amount))))
 
 ==================
@@ -1266,10 +1270,12 @@ commodity A1,000.0
     (date)
     (description)
     (posting
-      (account)
+      (account
+        (account_name))
       (amount))
     (posting
-      (account)
+      (account
+        (account_name))
       (amount))))
 
 ==================
@@ -1344,13 +1350,123 @@ test_3
     a  -170.721 X @@ 990.18
     a  1910.117 X @@ 10742.52
     b
->>>
-             -969.81  b
->>>= 0
 
 ---
 
-(source_file)
+(source_file
+  (transaction
+    (date)
+    (posting
+      (account
+        (account_name))
+      (amount)
+      (cost_spec
+        (amount)))
+    (posting
+      (account
+        (account_name))
+      (amount)
+      (cost_spec
+        (amount)))
+    (posting
+      (account
+        (account_name))
+      (amount)
+      (cost_spec
+        (amount)))
+    (posting
+      (account
+        (account_name))
+      (amount)
+      (cost_spec
+        (amount)))
+    (posting
+      (account
+        (account_name))
+      (amount)
+      (cost_spec
+        (amount)))
+    (posting
+      (account
+        (account_name))
+      (amount)
+      (cost_spec
+        (amount)))
+    (posting
+      (account
+        (account_name))
+      (amount)
+      (cost_spec
+        (amount)))
+    (posting
+      (account
+        (account_name))
+      (amount)
+      (cost_spec
+        (amount)))
+    (posting
+      (account
+        (account_name))
+      (amount)
+      (cost_spec
+        (amount)))
+    (posting
+      (account
+        (account_name))
+      (amount)
+      (cost_spec
+        (amount)))
+    (posting
+      (account
+        (account_name))
+      (amount)
+      (cost_spec
+        (amount)))
+    (posting
+      (account
+        (account_name))
+      (amount)
+      (cost_spec
+        (amount)))
+    (posting
+      (account
+        (account_name))
+      (amount)
+      (cost_spec
+        (amount)))
+    (posting
+      (account
+        (account_name))
+      (amount)
+      (cost_spec
+        (amount)))
+    (posting
+      (account
+        (account_name))
+      (amount)
+      (cost_spec
+        (amount)))
+    (posting
+      (account
+        (account_name))
+      (amount)
+      (cost_spec
+        (amount)))
+    (posting
+      (account
+        (account_name))
+      (amount)
+      (cost_spec
+        (amount)))
+    (posting
+      (account
+        (account_name))
+      (amount)
+      (cost_spec
+        (amount)))
+    (posting
+      (account
+        (account_name)))))
 
 ==================
 2__as_above__but_the_prices_have_a_commodity___should_work_the_same_
@@ -1376,13 +1492,123 @@ test_3
     a  -170.721 X @@ 990.18 Y
     a  1910.117 X @@ 10742.52 Y
     b
->>>
-           -969.81 Y  b
->>>= 0
 
 ---
 
-(source_file)
+(source_file
+  (transaction
+    (date)
+    (posting
+      (account
+        (account_name))
+      (amount)
+      (cost_spec
+        (amount)))
+    (posting
+      (account
+        (account_name))
+      (amount)
+      (cost_spec
+        (amount)))
+    (posting
+      (account
+        (account_name))
+      (amount)
+      (cost_spec
+        (amount)))
+    (posting
+      (account
+        (account_name))
+      (amount)
+      (cost_spec
+        (amount)))
+    (posting
+      (account
+        (account_name))
+      (amount)
+      (cost_spec
+        (amount)))
+    (posting
+      (account
+        (account_name))
+      (amount)
+      (cost_spec
+        (amount)))
+    (posting
+      (account
+        (account_name))
+      (amount)
+      (cost_spec
+        (amount)))
+    (posting
+      (account
+        (account_name))
+      (amount)
+      (cost_spec
+        (amount)))
+    (posting
+      (account
+        (account_name))
+      (amount)
+      (cost_spec
+        (amount)))
+    (posting
+      (account
+        (account_name))
+      (amount)
+      (cost_spec
+        (amount)))
+    (posting
+      (account
+        (account_name))
+      (amount)
+      (cost_spec
+        (amount)))
+    (posting
+      (account
+        (account_name))
+      (amount)
+      (cost_spec
+        (amount)))
+    (posting
+      (account
+        (account_name))
+      (amount)
+      (cost_spec
+        (amount)))
+    (posting
+      (account
+        (account_name))
+      (amount)
+      (cost_spec
+        (amount)))
+    (posting
+      (account
+        (account_name))
+      (amount)
+      (cost_spec
+        (amount)))
+    (posting
+      (account
+        (account_name))
+      (amount)
+      (cost_spec
+        (amount)))
+    (posting
+      (account
+        (account_name))
+      (amount)
+      (cost_spec
+        (amount)))
+    (posting
+      (account
+        (account_name))
+      (amount)
+      (cost_spec
+        (amount)))
+    (posting
+      (account
+        (account_name)))))
 
 ==================
 3__period_reporting_works_for_a_specific_year
@@ -5853,16 +6079,19 @@ fields date, amount,
   (auto_posting_rule
     (query)
     (posting
-      (account)
+      (account
+        (account_name))
       (amount)))
   (transaction
     (date)
     (posting
-      (account)
+      (account
+        (account_name))
       (amount)
       (comment))
     (posting
-      (account)
+      (account
+        (account_name))
       (amount))))
 
 ==================
@@ -5880,7 +6109,8 @@ fields date, amount, account1
     (interval)
     (description)
     (posting
-      (account)
+      (account
+        (account_name))
       (amount))))
 
 ==================
@@ -6895,10 +7125,12 @@ test_0
     (date)
     (description)
     (posting
-      (account)
+      (account
+        (account_name))
       (amount))
     (posting
-      (account))))
+      (account
+        (account_name)))))
 
 ==================
 test_0
@@ -6915,10 +7147,12 @@ test_0
     (date)
     (description)
     (posting
-      (account)
+      (account
+        (account_name))
       (amount))
     (posting
-      (account))))
+      (account
+        (account_name)))))
 
 ==================
 test_0
@@ -6970,10 +7204,12 @@ test_0
     (date)
     (description)
     (posting
-      (account)
+      (account
+        (account_name))
       (amount))
     (posting
-      (account)
+      (account
+        (account_name))
       (amount))))
 
 ==================
@@ -6991,10 +7227,12 @@ test_0
     (date)
     (description)
     (posting
-      (account)
+      (account
+        (account_name))
       (amount))
     (posting
-      (account))))
+      (account
+        (account_name)))))
 
 ==================
 test_0
@@ -7011,10 +7249,12 @@ test_0
     (date)
     (description)
     (posting
-      (account)
+      (account
+        (account_name))
       (amount))
     (posting
-      (account))))
+      (account
+        (account_name)))))
 
 ==================
 1_
@@ -7698,21 +7938,26 @@ test_29
   (auto_posting_rule
     (query)
     (posting
-      (account)
+      (account
+        (account_name))
       (amount))
     (posting
-      (account)
+      (account
+        (account_name))
       (amount))
     (posting
-      (account)
+      (account
+        (account_name))
       (amount)))
   (transaction
     (date)
     (posting
-      (account)
+      (account
+        (account_name))
       (amount))
     (posting
-      (account)
+      (account
+        (account_name))
       (amount))))
 
 ==================
@@ -11303,31 +11548,39 @@ end apply account
 
 (source_file
   (directive
-    (account)
+    (account
+      (account_name))
     (comment))
   (directive
-    (account)
+    (account
+      (account_name))
     (comment))
   (directive
-    (account)
+    (account
+      (account_name))
     (comment))
   (directive
-    (account)
+    (account
+      (account_name))
     (comment))
   (directive
-    (account))
+    (account
+      (account_name)))
   (transaction
     (date)
     (posting
-      (account)
+      (account
+        (account_name))
       (amount)))
   (transaction
     (date)
     (posting
-      (account)
+      (account
+        (account_name))
       (amount))
     (posting
-      (account)
+      (account
+        (account_name))
       (amount))))
 
 ==================
@@ -11348,21 +11601,26 @@ apply year 3333
     (date)
     (description)
     (posting
-      (account)
+      (account
+        (account_name))
       (amount))
     (posting
-      (account)
+      (account
+        (account_name))
       (amount))
     (posting
-      (account)))
+      (account
+        (account_name))))
   (transaction
     (date)
     (description)
     (posting
-      (account)
+      (account
+        (account_name))
       (amount))
     (posting
-      (account))))
+      (account
+        (account_name)))))
 
 ==================
 test_4
@@ -11941,21 +12199,26 @@ test_3
     (date)
     (description)
     (posting
-      (account)
+      (account
+        (account_name))
       (amount))
     (posting
-      (account)
+      (account
+        (account_name))
       (amount))
     (posting
-      (account)))
+      (account
+        (account_name))))
   (transaction
     (date)
     (description)
     (posting
-      (account)
+      (account
+        (account_name))
       (amount))
     (posting
-      (account))))
+      (account
+        (account_name)))))
 
 ==================
 test_5
@@ -12276,10 +12539,12 @@ end tag
     (date)
     (description)
     (posting
-      (account)
+      (account
+        (account_name))
       (amount))
     (posting
-      (account)
+      (account
+        (account_name))
       (amount))))
 
 ==================
@@ -13696,17 +13961,21 @@ P 2020-11-02 A B 0.40
   (transaction
     (date)
     (posting
-      (account)
+      (account
+        (account_name))
       (amount))
     (posting
-      (account)
+      (account
+        (account_name))
       (amount))
     (posting
-      (account)))
+      (account
+        (account_name))))
   (transaction
     (date)
     (posting
-      (account))))
+      (account
+        (account_name)))))
 
 ==================
 29___1402_it_should_pick_the_direct_b__a_price_here__not_the_indirect_b__c__a_price_
@@ -15116,17 +15385,21 @@ test_9
     (date)
     (description)
     (posting
-      (account)
+      (account
+        (account_name))
       (amount))
     (posting
-      (account)))
+      (account
+        (account_name))))
   (transaction
     (date)
     (description)
     (posting
-      (account))
+      (account
+        (account_name)))
     (posting
-      (account)
+      (account
+        (account_name))
       (amount))))
 
 ==================
@@ -15222,17 +15495,20 @@ test_0
   (transaction
     (date)
     (posting
-      (account)
+      (account
+        (account_name))
       (amount)))
   (transaction
     (date)
     (posting
-      (account)
+      (account
+        (account_name))
       (amount)))
   (transaction
     (date)
     (posting
-      (account)
+      (account
+        (account_name))
       (amount))))
 
 ==================
@@ -15543,32 +15819,38 @@ commodity A 1000.
   (transaction
     (date)
     (posting
-      (account)
+      (account
+        (account_name))
       (amount)))
   (transaction
     (date)
     (posting
-      (account)
+      (account
+        (account_name))
       (amount)))
   (transaction
     (date)
     (posting
-      (account)
+      (account
+        (account_name))
       (amount)))
   (transaction
     (date)
     (posting
-      (account)
+      (account
+        (account_name))
       (amount)))
   (transaction
     (date)
     (posting
-      (account)
+      (account
+        (account_name))
       (amount)))
   (transaction
     (date)
     (posting
-      (account)
+      (account
+        (account_name))
       (amount))))
 
 ==================

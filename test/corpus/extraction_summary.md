@@ -1,9 +1,9 @@
-# Extraction Summary - 2026-02-24T06:42:01.521Z
+# Extraction Summary - 2026-03-07T20:52:06.803Z
 
 Total tests: 674
-Preserved assertions: 567
+Preserved assertions: 565
 New tests: 0
-Updated content (preserved assertions): 107
+Updated content (preserved assertions): 109
 
 ## Test Sources:
 1. simple alias directive (from account-aliases)

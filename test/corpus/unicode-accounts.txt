@@ -13,10 +13,12 @@ Unicode account names - Chinese
     (date)
     (description)
     (posting
-      (account)
+      (account
+        (account_name))
       (amount))
     (posting
-      (account))))
+      (account
+        (account_name)))))
 
 ================================================================================
 Unicode account names - Japanese
@@ -33,10 +35,12 @@ Unicode account names - Japanese
     (date)
     (description)
     (posting
-      (account)
+      (account
+        (account_name))
       (amount))
     (posting
-      (account))))
+      (account
+        (account_name)))))
 
 ================================================================================
 Unicode account names - Arabic
@@ -53,10 +57,12 @@ Unicode account names - Arabic
     (date)
     (description)
     (posting
-      (account)
+      (account
+        (account_name))
       (amount))
     (posting
-      (account))))
+      (account
+        (account_name)))))
 
 ================================================================================
 Unicode account names - Russian
@@ -73,10 +79,12 @@ Unicode account names - Russian
     (date)
     (description)
     (posting
-      (account)
+      (account
+        (account_name))
       (amount))
     (posting
-      (account))))
+      (account
+        (account_name)))))
 
 ================================================================================
 Unicode account names - Greek
@@ -93,10 +101,12 @@ Unicode account names - Greek
     (date)
     (description)
     (posting
-      (account)
+      (account
+        (account_name))
       (amount))
     (posting
-      (account))))
+      (account
+        (account_name)))))
 
 ================================================================================
 Mixed Unicode and ASCII
@@ -114,13 +124,16 @@ Mixed Unicode and ASCII
     (date)
     (description)
     (posting
-      (account)
+      (account
+        (account_name))
       (amount))
     (posting
-      (account)
+      (account
+        (account_name))
       (amount))
     (posting
-      (account))))
+      (account
+        (account_name)))))
 
 ================================================================================
 Unicode with numbers and symbols
@@ -137,8 +150,10 @@ Unicode with numbers and symbols
     (date)
     (description)
     (posting
-      (account)
+      (account
+        (account_name))
       (amount))
     (posting
-      (account)
+      (account
+        (account_name))
       (amount))))

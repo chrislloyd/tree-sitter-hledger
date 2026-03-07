@@ -1,25 +1,43 @@
 #include "tree_sitter/parser.h"
-#include <wctype.h>
 
 enum TokenType {
   ACCOUNT_NAME,
 };
 
-// Check if character is valid within an account name (excluding space)
-static bool is_account_char(int32_t c) {
-  // Letters (Unicode aware), numbers, underscore, colon, slash, hyphen
-  return iswalnum(c) || c == '_' || c == ':' || c == '/' || c == '-';
+// Check if character definitely ends the account name
+static bool is_terminator(int32_t c) {
+  return c == 0 || c == '\n' || c == '\r' ||  // end of line/input
+         c == ';' || c == '#' ||               // comment
+         c == '=' || c == '@' ||               // balance assertion / cost spec
+         c == ')' || c == ']' ||               // virtual account brackets
+         c == '\t';                            // tab separator
 }
 
-// Check if character is a letter (can start a word in account name)
+// Check if character is a letter (ASCII or Unicode)
+// More permissive: anything that's not whitespace, digit, or punctuation
 static bool is_letter(int32_t c) {
-  return iswalpha(c);
+  // ASCII letters
+  if ((c >= 'a' && c <= 'z') || (c >= 'A' && c <= 'Z')) return true;
+  // Unicode letters (anything above ASCII that's not a space)
+  if (c > 127) return true;
+  return false;
 }
 
-// Check if character is valid as first character of account name
+// Check if character can be part of an account name (not first char)
+// Allows: letters, digits, underscore, colon, slash, hyphen, and Unicode
+static bool is_account_char(int32_t c) {
+  if (is_letter(c)) return true;
+  if (c >= '0' && c <= '9') return true;
+  if (c == '_' || c == ':' || c == '/' || c == '-') return true;
+  return false;
+}
+
+// Check if character can start an account name
 static bool is_account_start_char(int32_t c) {
-  // Letters (Unicode aware), numbers, or underscore
-  return iswalnum(c) || c == '_';
+  if (is_letter(c)) return true;
+  if (c >= '0' && c <= '9') return true;
+  if (c == '_') return true;
+  return false;
 }
 
 void *tree_sitter_hledger_external_scanner_create(void) {
@@ -34,15 +52,6 @@ unsigned tree_sitter_hledger_external_scanner_serialize(void *payload, char *buf
 }
 
 void tree_sitter_hledger_external_scanner_deserialize(void *payload, const char *buffer, unsigned length) {
-}
-
-// Check if character definitely ends the account name
-static bool is_terminator(int32_t c) {
-  return c == 0 || c == '\n' || c == '\r' ||  // end of line/input
-         c == ';' || c == '#' ||               // comment
-         c == '=' || c == '@' ||               // balance assertion / cost spec
-         c == ')' || c == ']' ||               // virtual account brackets
-         c == '\t';                            // tab separator
 }
 
 bool tree_sitter_hledger_external_scanner_scan(
@@ -70,7 +79,7 @@ bool tree_sitter_hledger_external_scanner_scan(
     }
 
     // Handle spaces - this is the tricky part
-    // A single space followed by a LETTER continues the account name (e.g., "food and drink")
+    // A single space followed by a LETTER continues the account name
     // Otherwise, the space ends the account name
     if (c == ' ') {
       // Mark end before consuming the space
