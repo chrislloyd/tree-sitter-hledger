@@ -21,7 +21,19 @@ commodity USD
 
 (source_file
   (directive
-    (commodity)))
+    (commodity_in_directive)))
+
+================================================================================
+Commodity directive with amount
+================================================================================
+
+commodity 1,000.00 USD
+
+--------------------------------------------------------------------------------
+
+(source_file
+  (directive
+    (commodity_in_directive)))
 
 ================================================================================
 Price directive
@@ -148,7 +160,7 @@ alias cash = assets:wallet:cash
     (account
       (account_name)))
   (directive
-    (commodity))
+    (commodity_in_directive))
   (directive
     (date)
     (commodity)
@@ -159,4 +171,5 @@ alias cash = assets:wallet:cash
     (account
       (account_name)))
   (directive
-    (filepath)))
+    (filepath))
+  (directive))

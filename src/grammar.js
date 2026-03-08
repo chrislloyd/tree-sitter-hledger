@@ -124,6 +124,19 @@ module.exports = grammar({
 
     commodity: ($) => $._commodity,
 
+    commodity_in_directive: ($) =>
+      choice(
+        // Negative commodity before number: -$100, -€50
+        seq("-", $._commodity, $._number),
+        // Commodity before number: $100, €50, £25
+        seq($._commodity, $._number),
+        // Number before commodity: 100 USD, -50.25 EUR
+        prec(1, seq($._number, /[ \t]+/, $._commodity)),
+        // Number only (assumes default commodity)
+        $._number,
+        $._commodity,
+      ),
+
     cost_spec: ($) =>
       seq(
         token(seq(/[ \t]*/, choice("@@", "@"))),
@@ -136,7 +149,7 @@ module.exports = grammar({
       seq(
         choice(
           seq("account", $.account),
-          seq("commodity", $.commodity),
+          seq("commodity", $.commodity_in_directive),
           seq("P", $.date, $.commodity, $.amount),
           seq("decimal-mark", field("mark", choice(".", ","))),
           seq("payee", field("payee", $._rest_of_line)),
@@ -155,7 +168,7 @@ module.exports = grammar({
       token(
         seq(
           /[^\r\n;#\s]+/, // first path segment (required)
-          /(\s+[^\r\n;#\s]+)*/, // additional segments with spaces
+          /([ \t]+[^\r\n;#\s]+)*/, // additional segments with spaces
         ),
       ),
 
