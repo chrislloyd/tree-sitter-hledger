@@ -1071,22 +1071,24 @@ D 1000,00€
 ---
 
 (source_file
+  (directive
+    (amount))
   (transaction
     (date)
-    (description)
+    (posting
+      (account
+        (account_name))
+      (amount)))
+  (transaction
+    (date)
     (posting
       (account
         (account_name))
       (amount))
     (posting
       (account
-        (account_name))))
-  (transaction
-    (date)
-    (description)
-    (posting
-      (account
-        (account_name)))
+        (account_name))
+      (amount))
     (posting
       (account
         (account_name))
@@ -1266,13 +1268,9 @@ commodity A1,000.0
 ---
 
 (source_file
+  (directive)
   (transaction
     (date)
-    (description)
-    (posting
-      (account
-        (account_name))
-      (amount))
     (posting
       (account
         (account_name))
@@ -4507,8 +4505,7 @@ account a
 ---
 
 (source_file
-  (directive
-    (commodity))
+  (directive)
   (directive
     (account
       (account_name)))
@@ -4538,8 +4535,7 @@ account a
 ---
 
 (source_file
-  (directive
-    (commodity))
+  (directive)
   (directive
     (account
       (account_name)))
@@ -4591,7 +4587,14 @@ commodity $1.
 
 ---
 
-(source_file)
+(source_file
+  (directive)
+  (transaction
+    (date)
+    (posting
+      (account
+        (account_name))
+      (amount))))
 
 ==================
 2__and_otherwise_fails
@@ -5515,7 +5518,35 @@ commodity AAA 0.00000000
 
 ---
 
-(source_file)
+(source_file
+  (directive)
+  (directive)
+  (transaction
+    (date)
+    (description)
+    (posting
+      (account
+        (account_name))
+      (amount)))
+  (transaction
+    (date)
+    (description)
+    (posting
+      (account
+        (account_name))
+      (amount))
+    (posting
+      (account
+        (account_name))
+      (amount))
+    (posting
+      (account
+        (account_name))
+      (amount))
+    (posting
+      (account
+        (account_name))
+      (amount))))
 
 ==================
 15___the_default_closing_date_is_yesterday__or_the_journal_s_end_date__whichever_is_later__
@@ -5538,7 +5569,16 @@ commodity $1,000.00
 
 ---
 
-(source_file)
+(source_file
+  (directive)
+  (transaction
+    (date)
+    (posting
+      (account
+        (account_name))
+      (amount)
+      (cost_spec
+        (amount)))))
 
 ==================
 codes_command
@@ -6869,7 +6909,16 @@ Y 2000
 
 ---
 
-(source_file)
+(source_file
+  (directive)
+  (transaction
+    (interval
+      (date))
+    (description))
+  (comment_line)
+  (transaction
+    (date)
+    (description)))
 
 ==================
 test_11
@@ -6943,7 +6992,20 @@ commodity 1,000.00 USD
 
 ---
 
-(source_file)
+(source_file
+  (directive)
+  (transaction
+    (date)
+    (posting
+      (account
+        (account_name))
+      (amount)))
+  (transaction
+    (interval)
+    (posting
+      (account
+        (account_name))
+      (amount))))
 
 ==================
 10__amount_display_style_is_applied_to_forecasted_transactions_
@@ -7956,7 +8018,24 @@ P 2015/1/1 A 1.0001 B
 
 ---
 
-(source_file)
+(source_file
+  (comment_line)
+  (comment_line)
+  (directive)
+  (directive
+    (date)
+    (commodity)
+    (amount))
+  (transaction
+    (date)
+    (posting
+      (account
+        (account_name))
+      (amount))
+    (posting
+      (account
+        (account_name))
+      (amount))))
 
 ==================
 7__a_multi_line_commodity_directive_also_works_
@@ -8094,7 +8173,20 @@ commodity A 1.
 
 ---
 
-(source_file)
+(source_file
+  (directive)
+  (transaction
+    (date)
+    (posting
+      (account
+        (account_name))
+      (amount))
+    (posting
+      (account
+        (account_name))
+      (amount)
+      (balance_assertion
+        (amount)))))
 
 ==================
 15__unquoted_commodity_symbol_on_the_left__gives_this_long_error_message_
@@ -9188,7 +9280,19 @@ test_5
 
 ---
 
-(source_file)
+(source_file
+  (transaction
+    (date)
+    (posting
+      (account
+        (account_name))
+      (amount)
+      (cost_spec
+        (amount))
+      (balance_assertion
+        (amount)
+        (cost_spec
+          (amount))))))
 
 ==================
 21__a_cost_does_not_disrupt_highlighting_in_the_balance_assertion_error_message_
@@ -9220,7 +9324,16 @@ test_5
 
 ---
 
-(source_file)
+(source_file
+  (transaction
+    (date)
+    (posting
+      (account
+        (account_name))
+      (balance_assertion
+        (amount)
+        (cost_spec
+          (amount))))))
 
 ==================
 23__the_exact_amounts_are_compared__display_precision_does_not_affect_assertions_
@@ -9234,7 +9347,22 @@ commodity $1000.00
 
 ---
 
-(source_file)
+(source_file
+  (directive)
+  (transaction
+    (date)
+    (posting
+      (account
+        (account_name))
+      (amount)))
+  (transaction
+    (date)
+    (posting
+      (account
+        (account_name))
+      (amount)
+      (balance_assertion
+        (amount)))))
 
 ==================
 24__this_fails
@@ -9248,7 +9376,22 @@ commodity $1000.00
 
 ---
 
-(source_file)
+(source_file
+  (directive)
+  (transaction
+    (date)
+    (posting
+      (account
+        (account_name))
+      (amount)))
+  (transaction
+    (date)
+    (posting
+      (account
+        (account_name))
+      (amount)
+      (balance_assertion
+        (amount)))))
 
 ==================
 25__this_fails
@@ -9262,7 +9405,22 @@ commodity $1000.00
 
 ---
 
-(source_file)
+(source_file
+  (directive)
+  (transaction
+    (date)
+    (posting
+      (account
+        (account_name))
+      (amount)))
+  (transaction
+    (date)
+    (posting
+      (account
+        (account_name))
+      (amount)
+      (balance_assertion
+        (amount)))))
 
 ==================
 26__inclusive_assertions_include_balances_from_subaccounts_
@@ -9279,7 +9437,45 @@ commodity $1000.00
 
 ---
 
-(source_file)
+(source_file
+  (transaction
+    (date)
+    (posting
+      (account
+        (account_name))
+      (amount))
+    (posting
+      (account
+        (account_name))
+      (amount))
+    (posting
+      (account
+        (account_name))
+      (amount))
+    (posting
+      (account
+        (account_name))
+      (amount)
+      (balance_assertion
+        (amount)))
+    (posting
+      (account
+        (account_name))
+      (amount)
+      (balance_assertion
+        (amount)))
+    (posting
+      (account
+        (account_name))
+      (amount)
+      (balance_assertion
+        (amount)))
+    (posting
+      (account
+        (account_name))
+      (amount)
+      (balance_assertion
+        (amount)))))
 
 ==================
 27__inclusive_balance_assignments_also_work___1207__
@@ -9296,7 +9492,32 @@ commodity $1000.00
 
 ---
 
-(source_file)
+(source_file
+  (transaction
+    (date)
+    (posting
+      (account
+        (account_name))
+      (amount)))
+  (transaction
+    (date)
+    (posting
+      (account
+        (account_name))
+      (amount)))
+  (transaction
+    (date)
+    (posting
+      (account
+        (account_name))
+      (amount)))
+  (transaction
+    (date)
+    (posting
+      (account
+        (account_name))
+      (balance_assertion
+        (amount)))))
 
 ==================
 test_47
@@ -9311,7 +9532,28 @@ test_47
 
 ---
 
-(source_file)
+(source_file
+  (transaction
+    (date)
+    (posting
+      (account
+        (account_name))
+      (amount))
+    (posting
+      (account
+        (account_name))))
+  (transaction
+    (date)
+    (posting
+      (account
+        (account_name))
+      (balance_assertion
+        (amount)
+        (cost_spec
+          (amount))))
+    (posting
+      (account
+        (account_name)))))
 
 ==================
 test_50
@@ -11268,7 +11510,12 @@ account a
 
 ---
 
-(source_file)
+(source_file
+  (directive)
+  (directive)
+  (directive
+    (account
+      (account_name))))
 
 ==================
 test_5
@@ -11374,8 +11621,7 @@ commodity A
 ---
 
 (source_file
-  (directive
-    (commodity)))
+  (directive))
 
 ==================
 3__when_there_is_an_amount__a_decimal_mark_is_required
@@ -11385,7 +11631,8 @@ commodity A 1
 
 ---
 
-(source_file)
+(source_file
+  (directive))
 
 ==================
 4_
@@ -11395,7 +11642,8 @@ commodity A 1.
 
 ---
 
-(source_file)
+(source_file
+  (directive))
 
 ==================
 5_
@@ -11405,7 +11653,8 @@ commodity A 1,00
 
 ---
 
-(source_file)
+(source_file
+  (directive))
 
 ==================
 6__accepts_a_format_subdirective
@@ -11478,7 +11727,10 @@ include commas.journal
 
 ---
 
-(source_file)
+(source_file
+  (directive)
+  (directive
+    (filepath)))
 
 ==================
 1__no_default_commodity
@@ -11512,7 +11764,18 @@ D £1000.00
 
 ---
 
-(source_file)
+(source_file
+  (directive
+    (amount))
+  (transaction
+    (date)
+    (posting
+      (account
+        (account_name))
+      (amount))
+    (posting
+      (account
+        (account_name)))))
 
 ==================
 3__dollar__comma_decimal_point__three_decimal_places__no_digit_group_separator
@@ -11525,7 +11788,18 @@ D $1,000
 
 ---
 
-(source_file)
+(source_file
+  (directive
+    (amount))
+  (transaction
+    (date)
+    (posting
+      (account
+        (account_name))
+      (amount))
+    (posting
+      (account
+        (account_name)))))
 
 ==================
 4__dollar__three_digit_group_separator__one_decimal_place
@@ -11537,7 +11811,15 @@ D $1,000.0
 
 ---
 
-(source_file)
+(source_file
+  (directive
+    (amount))
+  (transaction
+    (date)
+    (posting
+      (account
+        (account_name))
+      (amount))))
 
 ==================
 test_11
@@ -11549,7 +11831,15 @@ D 1,000.0 A
 
 ---
 
-(source_file)
+(source_file
+  (directive
+    (amount))
+  (transaction
+    (date)
+    (posting
+      (account
+        (account_name))
+      (amount))))
 
 ==================
 test_13
@@ -11645,30 +11935,15 @@ apply year 3333
 ---
 
 (source_file
+  (directive)
   (transaction
-    (date)
-    (description)
-    (posting
-      (account
-        (account_name))
-      (amount))
-    (posting
-      (account
-        (account_name))
-      (amount))
-    (posting
-      (account
-        (account_name))))
+    (date))
+  (directive)
   (transaction
-    (date)
-    (description)
-    (posting
-      (account
-        (account_name))
-      (amount))
-    (posting
-      (account
-        (account_name)))))
+    (date))
+  (directive)
+  (transaction
+    (date)))
 
 ==================
 test_4
@@ -11971,7 +12246,18 @@ commodity 1 000.00 EUR
 
 ---
 
-(source_file)
+(source_file
+  (directive)
+  (transaction
+    (date)
+    (posting
+      (account
+        (account_name))
+      (amount))
+    (posting
+      (account
+        (account_name))
+      (amount))))
 
 ==================
 7__default_commodity
@@ -11984,7 +12270,19 @@ D 1,000.00 EUR
 
 ---
 
-(source_file)
+(source_file
+  (directive
+    (amount))
+  (transaction
+    (date)
+    (posting
+      (account
+        (account_name))
+      (amount))
+    (posting
+      (account
+        (account_name))
+      (amount))))
 
 ==================
 8__omitted_decimals
@@ -12019,7 +12317,18 @@ commodity 1,000.00 EUR
 
 ---
 
-(source_file)
+(source_file
+  (directive)
+  (transaction
+    (date)
+    (posting
+      (account
+        (account_name))
+      (amount))
+    (posting
+      (account
+        (account_name))
+      (amount))))
 
 ==================
 10__omitted_decimals_with_commodity_hint_and_symbol_on_left
@@ -12032,7 +12341,18 @@ commodity €1,000.00
 
 ---
 
-(source_file)
+(source_file
+  (directive)
+  (transaction
+    (date)
+    (posting
+      (account
+        (account_name))
+      (amount))
+    (posting
+      (account
+        (account_name))
+      (amount))))
 
 ==================
 11__commodity_directive_requires_a_decimal_separator
@@ -12042,7 +12362,8 @@ commodity 1000 EUR
 
 ---
 
-(source_file)
+(source_file
+  (directive))
 
 ==================
 12__commodity_directive_with_zero_precision
@@ -12055,7 +12376,18 @@ commodity 100. EUR
 
 ---
 
-(source_file)
+(source_file
+  (directive)
+  (transaction
+    (date)
+    (posting
+      (account
+        (account_name))
+      (amount))
+    (posting
+      (account
+        (account_name))
+      (amount))))
 
 ==================
 13__big_prices
@@ -12628,7 +12960,22 @@ end comment
 
 ---
 
-(source_file)
+(source_file
+  (comment_block)
+  (transaction
+    (date)
+    (posting
+      (account
+        (account_name))
+      (amount)
+      (comment)))
+  (transaction
+    (date)
+    (posting
+      (account
+        (account_name))
+      (amount)))
+  (comment_line))
 
 ==================
 test_9
@@ -12662,7 +13009,22 @@ end comment
 
 ---
 
-(source_file)
+(source_file
+  (comment_block)
+  (transaction
+    (date)
+    (posting
+      (account
+        (account_name))
+      (amount)
+      (comment)))
+  (transaction
+    (date)
+    (posting
+      (account
+        (account_name))
+      (amount)
+      (comment))))
 
 ==================
 test_13
@@ -12830,7 +13192,22 @@ D $1000.0
 
 ---
 
-(source_file)
+(source_file
+  (directive
+    (amount))
+  (transaction
+    (date)
+    (status)
+    (description)
+    (posting
+      (account
+        (account_name))
+      (amount)
+      (cost_spec
+        (amount)))
+    (posting
+      (account
+        (account_name)))))
 
 ==================
 test_28
@@ -12926,7 +13303,26 @@ commodity 1.000, JPY
 
 ---
 
-(source_file)
+(source_file
+  (directive)
+  (transaction
+    (date)
+    (posting
+      (account
+        (account_name))
+      (amount)))
+  (transaction
+    (date)
+    (posting
+      (account
+        (account_name))
+      (amount)))
+  (transaction
+    (date)
+    (posting
+      (account
+        (account_name))
+      (amount))))
 
 ==================
 1__just_check
@@ -12938,7 +13334,15 @@ D $1,000.00
 
 ---
 
-(source_file)
+(source_file
+  (directive
+    (amount))
+  (transaction
+    (date)
+    (posting
+      (account
+        (account_name))
+      (amount))))
 
 ==================
 2__some_basic_cases_with_commodity
@@ -12953,7 +13357,25 @@ commodity $1,000.00000000
 
 ---
 
-(source_file)
+(source_file
+  (directive)
+  (transaction
+    (date)
+    (posting
+      (account
+        (account_name))
+      (amount))
+    (posting
+      (account
+        (account_name))
+      (amount))
+    (posting
+      (account
+        (account_name))
+      (amount))
+    (posting
+      (account
+        (account_name)))))
 
 ==================
 3__some_basic_cases_with_commodity
@@ -12968,7 +13390,25 @@ commodity $1,000.00000000
 
 ---
 
-(source_file)
+(source_file
+  (directive)
+  (transaction
+    (date)
+    (posting
+      (account
+        (account_name))
+      (amount))
+    (posting
+      (account
+        (account_name))
+      (amount))
+    (posting
+      (account
+        (account_name))
+      (amount))
+    (posting
+      (account
+        (account_name)))))
 
 ==================
 4__some_basic_cases
@@ -13208,7 +13648,48 @@ P 2015/08/15 GGGG  32.39
 
 ---
 
-(source_file)
+(source_file
+  (directive
+    (amount)
+    (comment))
+  (directive
+    (date)
+    (commodity)
+    (amount)
+    (comment))
+  (directive
+    (date)
+    (commodity)
+    (amount))
+  (directive
+    (date)
+    (commodity)
+    (amount))
+  (transaction
+    (date)
+    (posting
+      (account
+        (account_name))
+      (amount)
+      (cost_spec
+        (amount))
+      (comment))
+    (posting
+      (account
+        (account_name))
+      (amount)
+      (cost_spec
+        (amount)))
+    (posting
+      (account
+        (account_name))
+      (amount)
+      (cost_spec
+        (amount)))
+    (posting
+      (account
+        (account_name))
+      (comment))))
 
 ==================
 7__register__v_affects_posting_amounts_and_total_
@@ -14534,7 +15015,9 @@ D $0.0
 
 ---
 
-(source_file)
+(source_file
+  (directive
+    (amount)))
 
 ==================
 3__star_comment_line
@@ -14576,7 +15059,16 @@ apply year 3333
 
 ---
 
-(source_file)
+(source_file
+  (directive)
+  (transaction
+    (date))
+  (directive)
+  (transaction
+    (date))
+  (directive)
+  (transaction
+    (date)))
 
 ==================
 6__ignored_directives
@@ -15296,7 +15788,32 @@ P 2021-10-16 B 0.0 A
 
 ---
 
-(source_file)
+(source_file
+  (comment_line)
+  (transaction
+    (date)
+    (description)
+    (posting
+      (account
+        (account_name))
+      (balance_assertion
+        (amount)
+        (cost_spec
+          (amount))))
+    (posting
+      (account
+        (account_name))))
+  (transaction
+    (date)
+    (description)
+    (posting
+      (account
+        (account_name))
+      (balance_assertion
+        (amount)))
+    (posting
+      (account
+        (account_name)))))
 
 ==================
 11__commodity_styles_are_applied_to_all_price_amounts__but_their_precision_is_left_unchanged_
@@ -15314,7 +15831,40 @@ P 2019-01-02 X A1000,1
 
 ---
 
-(source_file)
+(source_file
+  (directive)
+  (directive
+    (date)
+    (commodity)
+    (amount))
+  (directive
+    (date)
+    (commodity)
+    (amount))
+  (transaction
+    (date)
+    (posting
+      (account
+        (account_name))
+      (amount)
+      (cost_spec
+        (amount))))
+  (transaction
+    (date)
+    (posting
+      (account
+        (account_name))
+      (amount)
+      (cost_spec
+        (amount))))
+  (transaction
+    (date)
+    (posting
+      (account
+        (account_name))
+      (amount)
+      (cost_spec
+        (amount)))))
 
 ==================
 12__reverse_market_prices_are_shown_with_all_decimal_digits__up_to_a_maximum_of_8_
@@ -15754,7 +16304,18 @@ D 1000.00 EUR
 
 ---
 
-(source_file)
+(source_file
+  (directive
+    (amount))
+  (transaction
+    (date)
+    (posting
+      (account
+        (account_name))
+      (amount))
+    (posting
+      (account
+        (account_name)))))
 
 ==================
 8__option___explicit_implies_effect_of___empty
@@ -15849,7 +16410,45 @@ commodity B1000.00
 
 ---
 
-(source_file)
+(source_file
+  (comment_line)
+  (directive)
+  (directive)
+  (comment_line)
+  (comment_line)
+  (comment_line)
+  (transaction
+    (date)
+    (posting
+      (account
+        (account_name))
+      (amount)
+      (cost_spec
+        (amount))
+      (balance_assertion
+        (amount)
+        (cost_spec
+          (amount))))
+    (posting
+      (account
+        (account_name))
+      (amount)
+      (cost_spec
+        (amount))
+      (balance_assertion
+        (amount)
+        (cost_spec
+          (amount))))
+    (posting
+      (account
+        (account_name))
+      (amount)
+      (cost_spec
+        (amount))
+      (balance_assertion
+        (amount)
+        (cost_spec
+          (amount))))))
 
 ==================
 test_42
@@ -15864,38 +16463,17 @@ commodity A 1000.
 ---
 
 (source_file
+  (directive)
   (transaction
     (date)
     (posting
       (account
         (account_name))
-      (amount)))
-  (transaction
-    (date)
+      (amount))
     (posting
       (account
         (account_name))
-      (amount)))
-  (transaction
-    (date)
-    (posting
-      (account
-        (account_name))
-      (amount)))
-  (transaction
-    (date)
-    (posting
-      (account
-        (account_name))
-      (amount)))
-  (transaction
-    (date)
-    (posting
-      (account
-        (account_name))
-      (amount)))
-  (transaction
-    (date)
+      (amount))
     (posting
       (account
         (account_name))
@@ -16105,7 +16683,19 @@ P 2023-01-01 A 0.012345678901234567890123456789012345678901234567890123456789012
 
 ---
 
-(source_file)
+(source_file
+  (transaction
+    (date)
+    (posting
+      (account
+        (account_name))
+      (amount)
+      (cost_spec
+        (amount))
+      (balance_assertion
+        (amount)
+        (cost_spec
+          (amount))))))
 
 ==================
 test_4
@@ -16161,7 +16751,30 @@ test_4
 
 ---
 
-(source_file)
+(source_file
+  (transaction
+    (date)
+    (posting
+      (account
+        (account_name))
+      (amount)
+      (cost_spec
+        (amount))
+      (balance_assertion
+        (amount)
+        (cost_spec
+          (amount))))
+    (posting
+      (account
+        (account_name))
+      (balance_assertion
+        (amount)))
+    (posting
+      (account
+        (account_name))
+      (amount)
+      (balance_assertion
+        (amount)))))
 
 ==================
 test_1
@@ -18748,7 +19361,37 @@ P 2021-01-01 $ 73.88
 
 ---
 
-(source_file)
+(source_file
+  (directive)
+  (directive
+    (date)
+    (commodity)
+    (amount))
+  (directive
+    (date)
+    (commodity)
+    (amount))
+  (transaction
+    (date)
+    (description)
+    (posting
+      (account
+        (account_name))
+      (amount))
+    (posting
+      (account
+        (account_name))))
+  (transaction
+    (date)
+    (description)
+    (posting
+      (account
+        (account_name))
+      (balance_assertion
+        (amount)))
+    (posting
+      (account
+        (account_name)))))
 
 ==================
 13__several_pnl_transactions_on_a_single_date_are_aggregated_together
@@ -19501,4 +20144,90 @@ sample2
 
 ---
 
-(source_file)
+(source_file
+  (transaction
+    (date)
+    (description)
+    (posting
+      (account
+        (account_name))
+      (amount)
+      (balance_assertion
+        (amount)))
+    (posting
+      (account
+        (account_name))
+      (amount)
+      (balance_assertion
+        (amount)))
+    (posting
+      (account
+        (account_name))
+      (amount)
+      (balance_assertion
+        (amount)))
+    (posting
+      (account
+        (account_name))
+      (amount)
+      (cost_spec
+        (amount))
+      (balance_assertion
+        (amount)
+        (cost_spec
+          (amount))))
+    (posting
+      (account
+        (account_name))
+      (amount)
+      (balance_assertion
+        (amount)))
+    (posting
+      (account
+        (account_name))))
+  (transaction
+    (date)
+    (description)
+    (posting
+      (account
+        (account_name)))
+    (posting
+      (account
+        (account_name))
+      (amount)))
+  (transaction
+    (date)
+    (description)
+    (posting
+      (account
+        (account_name)))
+    (posting
+      (account
+        (account_name))
+      (amount)))
+  (transaction
+    (date)
+    (description)
+    (posting
+      (account
+        (account_name)))
+    (posting
+      (account
+        (account_name))
+      (amount)
+      (balance_assertion
+        (amount))))
+  (transaction
+    (date)
+    (description)
+    (posting
+      (account
+        (account_name)))
+    (posting
+      (account
+        (account_name))
+      (amount))
+    (posting
+      (account
+        (account_name))
+      (amount))))

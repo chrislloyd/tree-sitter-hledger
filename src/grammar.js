@@ -12,7 +12,7 @@ module.exports = grammar({
 
   rules: {
     source_file: ($) =>
-      repeat(choice($.transaction, $.auto_posting_rule, $.directive, $.comment_line, $._newline)),
+      repeat(choice($.transaction, $.auto_posting_rule, $.directive, $.comment_block, $.comment_line, $._newline)),
 
     transaction: ($) =>
       seq(
@@ -160,21 +160,46 @@ module.exports = grammar({
         $.amount,
       ),
 
-    balance_assertion: ($) => seq(token(seq(/[ \t]*/, choice("==", "="))), $.amount),
+    balance_assertion: ($) =>
+      seq(
+        token(seq(/[ \t]*/, choice("==*", "=*", "==", "="))),
+        $.amount,
+        optional($.cost_spec),
+      ),
 
     directive: ($) =>
       seq(
         choice(
           seq("account", $.account),
-          seq("commodity", $.commodity),
+          seq("commodity", $._rest_of_line),
           seq("P", $.date, $.commodity, $.amount),
           seq("decimal-mark", field("mark", choice(".", ","))),
           seq("payee", field("payee", $._rest_of_line)),
           seq("tag", $.account),
           seq("include", $.filepath),
+          seq("D", $.amount),
+          seq("Y", $._rest_of_line),
+          seq("year", $._rest_of_line),
+          seq("apply", choice(
+            seq("year", $._rest_of_line),
+            seq("account", $._rest_of_line),
+          )),
+          seq("end", optional(choice(
+            seq("apply", optional("account")),
+            "comment",
+          ))),
           seq("alias", $._rest_of_line),
         ),
         optional($.comment),
+        $._newline,
+      ),
+
+    comment_block: ($) =>
+      seq(
+        choice("comment", "test"),
+        $._newline,
+        repeat(seq(/[^\r\n]*/, $._newline)),
+        "end comment",
         $._newline,
       ),
 

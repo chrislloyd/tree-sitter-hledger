@@ -21,6 +21,10 @@
           },
           {
             "type": "SYMBOL",
+            "name": "comment_block"
+          },
+          {
+            "type": "SYMBOL",
             "name": "comment_line"
           },
           {
@@ -836,6 +840,14 @@
                 "members": [
                   {
                     "type": "STRING",
+                    "value": "==*"
+                  },
+                  {
+                    "type": "STRING",
+                    "value": "=*"
+                  },
+                  {
+                    "type": "STRING",
                     "value": "=="
                   },
                   {
@@ -850,6 +862,18 @@
         {
           "type": "SYMBOL",
           "name": "amount"
+        },
+        {
+          "type": "CHOICE",
+          "members": [
+            {
+              "type": "SYMBOL",
+              "name": "cost_spec"
+            },
+            {
+              "type": "BLANK"
+            }
+          ]
         }
       ]
     },
@@ -881,7 +905,7 @@
                 },
                 {
                   "type": "SYMBOL",
-                  "name": "commodity"
+                  "name": "_rest_of_line"
                 }
               ]
             },
@@ -980,6 +1004,132 @@
               "members": [
                 {
                   "type": "STRING",
+                  "value": "D"
+                },
+                {
+                  "type": "SYMBOL",
+                  "name": "amount"
+                }
+              ]
+            },
+            {
+              "type": "SEQ",
+              "members": [
+                {
+                  "type": "STRING",
+                  "value": "Y"
+                },
+                {
+                  "type": "SYMBOL",
+                  "name": "_rest_of_line"
+                }
+              ]
+            },
+            {
+              "type": "SEQ",
+              "members": [
+                {
+                  "type": "STRING",
+                  "value": "year"
+                },
+                {
+                  "type": "SYMBOL",
+                  "name": "_rest_of_line"
+                }
+              ]
+            },
+            {
+              "type": "SEQ",
+              "members": [
+                {
+                  "type": "STRING",
+                  "value": "apply"
+                },
+                {
+                  "type": "CHOICE",
+                  "members": [
+                    {
+                      "type": "SEQ",
+                      "members": [
+                        {
+                          "type": "STRING",
+                          "value": "year"
+                        },
+                        {
+                          "type": "SYMBOL",
+                          "name": "_rest_of_line"
+                        }
+                      ]
+                    },
+                    {
+                      "type": "SEQ",
+                      "members": [
+                        {
+                          "type": "STRING",
+                          "value": "account"
+                        },
+                        {
+                          "type": "SYMBOL",
+                          "name": "_rest_of_line"
+                        }
+                      ]
+                    }
+                  ]
+                }
+              ]
+            },
+            {
+              "type": "SEQ",
+              "members": [
+                {
+                  "type": "STRING",
+                  "value": "end"
+                },
+                {
+                  "type": "CHOICE",
+                  "members": [
+                    {
+                      "type": "CHOICE",
+                      "members": [
+                        {
+                          "type": "SEQ",
+                          "members": [
+                            {
+                              "type": "STRING",
+                              "value": "apply"
+                            },
+                            {
+                              "type": "CHOICE",
+                              "members": [
+                                {
+                                  "type": "STRING",
+                                  "value": "account"
+                                },
+                                {
+                                  "type": "BLANK"
+                                }
+                              ]
+                            }
+                          ]
+                        },
+                        {
+                          "type": "STRING",
+                          "value": "comment"
+                        }
+                      ]
+                    },
+                    {
+                      "type": "BLANK"
+                    }
+                  ]
+                }
+              ]
+            },
+            {
+              "type": "SEQ",
+              "members": [
+                {
+                  "type": "STRING",
                   "value": "alias"
                 },
                 {
@@ -1001,6 +1151,52 @@
               "type": "BLANK"
             }
           ]
+        },
+        {
+          "type": "SYMBOL",
+          "name": "_newline"
+        }
+      ]
+    },
+    "comment_block": {
+      "type": "SEQ",
+      "members": [
+        {
+          "type": "CHOICE",
+          "members": [
+            {
+              "type": "STRING",
+              "value": "comment"
+            },
+            {
+              "type": "STRING",
+              "value": "test"
+            }
+          ]
+        },
+        {
+          "type": "SYMBOL",
+          "name": "_newline"
+        },
+        {
+          "type": "REPEAT",
+          "content": {
+            "type": "SEQ",
+            "members": [
+              {
+                "type": "PATTERN",
+                "value": "[^\\r\\n]*"
+              },
+              {
+                "type": "SYMBOL",
+                "name": "_newline"
+              }
+            ]
+          }
+        },
+        {
+          "type": "STRING",
+          "value": "end comment"
         },
         {
           "type": "SYMBOL",

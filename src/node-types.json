@@ -47,11 +47,15 @@
     "named": true,
     "fields": {},
     "children": {
-      "multiple": false,
+      "multiple": true,
       "required": true,
       "types": [
         {
           "type": "amount",
+          "named": true
+        },
+        {
+          "type": "cost_spec",
           "named": true
         }
       ]
@@ -59,6 +63,11 @@
   },
   {
     "type": "comment",
+    "named": true,
+    "fields": {}
+  },
+  {
+    "type": "comment_block",
     "named": true,
     "fields": {}
   },
@@ -202,6 +211,10 @@
           "named": true
         },
         {
+          "type": "comment_block",
+          "named": true
+        },
+        {
           "type": "comment_line",
           "named": true
         },
@@ -297,7 +310,15 @@
     "named": false
   },
   {
+    "type": "D",
+    "named": false
+  },
+  {
     "type": "P",
+    "named": false
+  },
+  {
+    "type": "Y",
     "named": false
   },
   {
@@ -321,8 +342,16 @@
     "named": false
   },
   {
+    "type": "apply",
+    "named": false
+  },
+  {
     "type": "code",
     "named": true
+  },
+  {
+    "type": "comment",
+    "named": false
   },
   {
     "type": "commodity",
@@ -339,6 +368,14 @@
   {
     "type": "description",
     "named": true
+  },
+  {
+    "type": "end",
+    "named": false
+  },
+  {
+    "type": "end comment",
+    "named": false
   },
   {
     "type": "filepath",
@@ -369,7 +406,15 @@
     "named": false
   },
   {
+    "type": "test",
+    "named": false
+  },
+  {
     "type": "weekly",
+    "named": false
+  },
+  {
+    "type": "year",
     "named": false
   },
   {
