@@ -210,7 +210,7 @@ module.exports = grammar({
       token(
         seq(
           /[^\r\n;#\s]+/, // first path segment (required)
-          /(\s+[^\r\n;#\s]+)*/, // additional segments with spaces
+          /([ \t]+[^\r\n;#\s]+)*/, // additional segments with spaces (not newlines)
         ),
       ),
 
