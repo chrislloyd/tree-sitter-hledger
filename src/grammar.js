@@ -44,23 +44,53 @@ module.exports = grammar({
 
     interval: ($) =>
       choice(
+        // Simple intervals
         "daily",
         "weekly",
         "monthly",
         "quarterly",
         "yearly",
-        // "every N days/weeks/months/quarters/years"
-        token(
-          seq(
-            "every", // keyword
-            / +/, // required space(s)
-            /\d+/, // number
-            / +/, // required space(s)
-            /(days?|weeks?|months?|quarters?|years?)/, // time unit with optional plural
+        // Complex "every ..." patterns (tokenized to capture full pattern)
+        $._every_interval,
+        // Specific dates
+        $.date,
+      ),
+
+    // Match entire "every ..." pattern as a token including optional date bounds
+    _every_interval: () =>
+      token(
+        seq(
+          "every",
+          / +/,
+          choice(
+            // "every N days/weeks/months/quarters/years"
+            seq(/\d+/, / +/, /(days?|weeks?|months?|quarters?|years?)/),
+            // "every Nth day [of month]"
+            seq(/\d+(st|nd|rd|th)/, / +/, "day", optional(seq(/ +/, "of", / +/, "month"))),
+            // "every Nth weekday"
+            seq(/\d+(st|nd|rd|th)/, / +/, /(monday|tuesday|wednesday|thursday|friday|saturday|sunday|mon|tue|wed|thu|fri|sat|sun)/),
+            // "every month Nth" or "every Nth month"
+            seq(/(january|february|march|april|may|june|july|august|september|october|november|december|jan|feb|mar|apr|jun|jul|aug|sep|oct|nov|dec)/, / +/, /\d+(st|nd|rd|th)/),
+            seq(/\d+(st|nd|rd|th)/, / +/, /(january|february|march|april|may|june|july|august|september|october|november|december|jan|feb|mar|apr|jun|jul|aug|sep|oct|nov|dec)/),
+            // Special weekday patterns
+            "weekday",
+            "weekendday",
+            // Just a weekday
+            /(monday|tuesday|wednesday|thursday|friday|saturday|sunday|mon|tue|wed|thu|fri|sat|sun)/,
+          ),
+          // Optional date bounds
+          optional(
+            seq(
+              / +/,
+              choice(
+                seq("from", / +/, /\d+[-/.]\d+([-/.]\d+)?/, / +/, "to", / +/, /\d+[-/.]\d+([-/.]\d+)?/),
+                seq("from", / +/, /\d+[-/.]\d+([-/.]\d+)?/),
+                seq("from", / +/, /\d{4}/),  // year only
+                seq("to", / +/, /\d+[-/.]\d+([-/.]\d+)?/),
+              ),
+            ),
           ),
         ),
-        // specific dates
-        $.date,
       ),
 
     status: () => choice("*", "!"),

@@ -3001,7 +3001,13 @@ test_49
 
 ---
 
-(source_file)
+(source_file
+  (transaction
+    (interval)
+    (posting
+      (account
+        (account_name))
+      (amount))))
 
 ==================
 38__budget_report_applies_command_line_commodity_styles_to_goal_amounts___1905__
@@ -5182,7 +5188,13 @@ test_2
 
 ---
 
-(source_file)
+(source_file
+  (transaction
+    (interval)
+    (posting
+      (account
+        (account_name))
+      (amount))))
 
 ==================
 1__account_pattern_with_space
@@ -6999,7 +7011,22 @@ commodity 1,000.00 USD
 
 ---
 
-(source_file)
+(source_file
+  (transaction
+    (date)
+    (posting
+      (account
+        (account_name))
+      (amount)))
+  (transaction
+    (interval)
+    (posting
+      (account
+        (account_name))
+      (amount))
+    (posting
+      (account
+        (account_name)))))
 
 ==================
 12__generated_forecast_for_weekday_transactions
@@ -7013,7 +7040,22 @@ commodity 1,000.00 USD
 
 ---
 
-(source_file)
+(source_file
+  (transaction
+    (date)
+    (posting
+      (account
+        (account_name))
+      (amount)))
+  (transaction
+    (interval)
+    (posting
+      (account
+        (account_name))
+      (amount))
+    (posting
+      (account
+        (account_name)))))
 
 ==================
 13__generated_forecast_for_weekend_transactions
@@ -7108,7 +7150,13 @@ test_55
 
 ---
 
-(source_file)
+(source_file
+  (transaction
+    (interval)
+    (posting
+      (account
+        (account_name))
+      (amount))))
 
 ==================
 test_0
@@ -17287,7 +17335,13 @@ test_24
 
 ---
 
-(source_file)
+(source_file
+  (transaction
+    (interval)
+    (posting
+      (account
+        (account_name))
+      (amount))))
 
 ==================
 15__every_m_d_from_date__fixed_in_1_40_
@@ -17407,7 +17461,13 @@ test_42
 
 ---
 
-(source_file)
+(source_file
+  (transaction
+    (interval)
+    (posting
+      (account
+        (account_name))
+      (amount))))
 
 ==================
 1____sort_with_non_date_sorts_by_the_correct_account
