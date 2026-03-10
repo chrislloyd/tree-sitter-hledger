@@ -1,0 +1,1482 @@
+==================
+1__read_csv_to_hledger_journal_format
+==================
+
+10/2009/09,Flubber Co,50
+RULES
+fields date, description, amount
+date-format %d/%Y/%m
+currency $
+account1 assets:myacct
+
+---
+
+(source_file
+  (csv_line)
+  (rules_marker)
+  (directive)
+  (directive)
+  (directive)
+  (directive))
+
+==================
+2__reading_csv_with_in_field_and_out_field
+==================
+
+10/2009/09,Flubber Co🎅,50,
+11/2009/09,Flubber Co🎅,,50
+RULES
+account1 Assets:MyAccount
+date %1
+date-format %d/%Y/%m
+description %2
+amount-in %3
+amount-out %4
+currency $
+
+---
+
+(source_file
+  (csv_line)
+  (csv_line)
+  (rules_marker)
+  (directive)
+  (directive)
+  (directive)
+  (directive)
+  (directive)
+  (directive)
+  (directive))
+
+==================
+3__handle_conditions_assigning_multiple_fields
+==================
+
+10/2009/09,Flubber Co,50
+RULES
+fields date, description, amount
+date-format %d/%Y/%m
+currency $
+account1 assets:myacct
+if Flubber
+  account2 acct
+  comment cmt
+
+---
+
+(source_file
+  (csv_line)
+  (rules_marker)
+  (directive)
+  (directive)
+  (directive)
+  (directive)
+  (conditional_block
+    (indented_line)
+    (indented_line)))
+
+==================
+4__read_csv_with_balance_field
+==================
+
+10/2009/09,Flubber Co,50,123
+RULES
+fields date, description, amount, balance
+date-format %d/%Y/%m
+currency $
+account1 assets:myacct
+
+---
+
+(source_file
+  (csv_line)
+  (rules_marker)
+  (directive)
+  (directive)
+  (directive)
+  (directive))
+
+==================
+5__read_csv_with_empty_balance_field
+==================
+
+10/2009/09,Flubber Co,50,123
+11/2009/09,Blubber Co,60,
+RULES
+fields date, description, amount, balance
+date-format %d/%Y/%m
+currency $
+account1 assets:myacct
+
+---
+
+(source_file
+  (csv_line)
+  (csv_line)
+  (rules_marker)
+  (directive)
+  (directive)
+  (directive)
+  (directive))
+
+==================
+6__read_csv_with_only_whitespace_in_balance_field
+==================
+
+10/2009/09,Flubber Co,50,123
+11/2009/09,Blubber Co,60,   
+RULES
+fields date, description, amount, balance
+date-format %d/%Y/%m
+currency $
+account1 assets:myacct
+
+---
+
+(source_file
+  (csv_line)
+  (csv_line)
+  (rules_marker)
+  (directive)
+  (directive)
+  (directive)
+  (directive))
+
+==================
+7__read_csv_with_rule_double_negating_column
+==================
+
+date,payee,amount
+2009/10/9,Flubber Co,50
+2009/11/09,Merchant Credit,-60
+RULES
+skip 1
+currency $
+fields date, payee, payment
+amount -%payment
+account1 liabilities:bank
+account2 expense:other
+
+---
+
+(source_file
+  (directive)
+  (csv_line)
+  (csv_line)
+  (rules_marker)
+  (directive)
+  (directive)
+  (directive)
+  (directive)
+  (directive)
+  (directive))
+
+==================
+8__reading_with_custom_separator__ssv__semicolon_separated_
+==================
+
+10/2009/09;Flubber Co🎅;50;
+11/2009/09;Flubber Co🎅;;50
+RULES
+account1 Assets:MyAccount
+date %1
+separator ;
+date-format %d/%Y/%m
+description %2
+amount-in %3
+amount-out %4
+currency $
+
+---
+
+(source_file
+  (csv_line)
+  (csv_line)
+  (rules_marker)
+  (directive)
+  (directive)
+  (directive)
+  (directive)
+  (directive)
+  (directive)
+  (directive)
+  (directive))
+
+==================
+9__read_csv_with_balance2_field
+==================
+
+10/2009/09,Flubber Co,50,123
+RULES
+fields date, description, amount, balance2
+date-format %d/%Y/%m
+currency $
+account1 assets:myacct
+
+---
+
+(source_file
+  (csv_line)
+  (rules_marker)
+  (directive)
+  (directive)
+  (directive)
+  (directive))
+
+==================
+10__read_csv_with_balance1_and_balance2_fields
+==================
+
+10/2009/09,Flubber Co,50,321,123
+RULES
+fields date, description, amount, balance1, balance2
+date-format %d/%Y/%m
+currency $
+account1 assets:myacct
+
+---
+
+(source_file
+  (csv_line)
+  (rules_marker)
+  (directive)
+  (directive)
+  (directive)
+  (directive))
+
+==================
+11__more_than_two_postings
+==================
+
+10/2009/09,Flubber Co,50,321,123,0.234,VAT
+RULES
+fields date, description, amount, balance1, balance2, amount3,comment3
+date-format %d/%Y/%m
+currency $
+account1 assets:myacct
+account3 expenses:tax
+account4 the:remainder
+
+---
+
+(source_file
+  (csv_line)
+  (rules_marker)
+  (directive)
+  (directive)
+  (directive)
+  (directive)
+  (csv_line)
+  (csv_line))
+
+==================
+12__more_than_two_postings_and_different_currencies
+==================
+
+10/2009/09,Flubber Co,50,321,123,£,0.234,VAT
+RULES
+fields date, description, amount, balance1, balance2, currency3, amount3,comment3
+date-format %d/%Y/%m
+currency $
+account1 assets:myacct
+account3 expenses:tax
+account4 the:remainder
+
+---
+
+(source_file
+  (csv_line)
+  (rules_marker)
+  (directive)
+  (directive)
+  (directive)
+  (directive)
+  (csv_line)
+  (csv_line))
+
+==================
+13__reading_csv_with_in_field_and_out_field__where_one_could_be_zero
+==================
+
+10/2009/09,Flubber Co🎅,50,0
+11/2009/09,Flubber Co🎅,0.00,50
+RULES
+account1 Assets:MyAccount
+date %1
+date-format %d/%Y/%m
+description %2
+amount-in %3
+amount-out %4
+currency $
+
+---
+
+(source_file
+  (csv_line)
+  (csv_line)
+  (rules_marker)
+  (directive)
+  (directive)
+  (directive)
+  (directive)
+  (directive)
+  (directive)
+  (directive))
+
+==================
+14__multiline_descriptions
+==================
+
+10/2009/09,"Flubber Co
+Co
+Co
+",50
+RULES
+fields date, description, amount
+date-format %d/%Y/%m
+currency $
+account1 assets:myacct
+
+---
+
+(source_file
+  (csv_line)
+  (csv_line)
+  (csv_line)
+  (csv_line)
+  (rules_marker)
+  (directive)
+  (directive)
+  (directive)
+  (directive))
+
+==================
+15__recursive_interpolation
+==================
+
+myacct,10/2009/09,Flubber Co,50,
+RULES
+fields account1, date, description, amount-in, amount-out
+date-format %d/%Y/%m
+currency $
+if Flubber
+   account1  assets:%account1
+   amount-in  (%amount-in)
+
+---
+
+(source_file
+  (csv_line)
+  (rules_marker)
+  (directive)
+  (directive)
+  (directive)
+  (conditional_block
+    (indented_line)
+    (indented_line)))
+
+==================
+16__real_life_ish_paypal_parsing_example
+==================
+
+"12/22/2018","06:22:50","PST","Someone","Subscription Payment","Completed","USD","10.00","-0.59","9.41","someone@some.where","simon@joyful.com","123456789","Joyful Systems","","9KCXINCOME:UNKNOWNZXXAX","","57.60",""
+RULES
+fields date, time, timezone, description, type, status_, currency, grossamount, feeamount, netamount, fromemail, toemail, code, itemtitle, itemid, referencetxnid, receiptid, balance, note
+account1 sm:assets:online:paypal
+amount1 %netamount
+account2 sm:expenses:unknown
+account3 JS:expenses:banking:paypal
+amount3 %feeamount
+balance %18
+code %13
+currency $
+date %1
+date-format %m/%d/%Y
+description %description for %itemtitle
+
+---
+
+(source_file
+  (csv_line)
+  (rules_marker)
+  (directive)
+  (directive)
+  (directive)
+  (directive)
+  (csv_line)
+  (directive)
+  (directive)
+  (directive)
+  (directive)
+  (directive)
+  (directive)
+  (directive))
+
+==================
+17__show_that__415_is_fixed
+==================
+
+"2016/01/01","$1"
+"2016/02/02","$1,000.00"
+RULES
+account1 unknown
+amount %2
+date %1
+date-format %Y/%m/%d
+
+---
+
+(source_file
+  (csv_line)
+  (csv_line)
+  (rules_marker)
+  (directive)
+  (directive)
+  (directive)
+  (directive))
+
+==================
+18__conditional_skips
+==================
+
+HEADER
+10/2009/09,Flubber Co,50
+MIDDLE SKIP THIS LINE
+AND THIS
+AND THIS ONE
+10/2009/09,Flubber Co,50
+*** END OF FILE ***
+More lines of the trailer here
+They all should be ignored
+RULES
+fields date, description, amount
+date-format %d/%Y/%m
+currency $
+account1 assets:myacct
+if HEADER
+  skip
+if
+END OF FILE
+  end
+if MIDDLE
+  skip 3
+
+---
+
+(source_file
+  (csv_line)
+  (csv_line)
+  (csv_line)
+  (csv_line)
+  (csv_line)
+  (csv_line)
+  (csv_line)
+  (csv_line)
+  (csv_line)
+  (rules_marker)
+  (directive)
+  (directive)
+  (directive)
+  (directive)
+  (conditional_block
+    (indented_line))
+  (conditional_block)
+  (csv_line)
+  (directive)
+  (conditional_block
+    (indented_line)))
+
+==================
+19__lines_with_just_balance__no_amount___1000_
+==================
+
+2018-10-15,100
+2018-10-16,200
+2018-10-17,300
+RULES
+fields date,bal
+balance EUR %bal
+date-format %Y-%m-%d
+description Assets Update
+account1 assets
+account2 income
+
+---
+
+(source_file
+  (csv_line)
+  (csv_line)
+  (csv_line)
+  (rules_marker)
+  (directive)
+  (directive)
+  (directive)
+  (directive)
+  (directive)
+  (directive))
+
+==================
+20__test_for__1001___empty_assignment_to_amount_show_not_eat_next_line
+==================
+
+2018-10-15,1
+RULES
+fields date,amount
+amount
+comment x
+
+---
+
+(source_file)
+
+==================
+21__amountless_postings_and_conditional_third_posting
+==================
+
+"12/22/2018","06:22:50","PST","Someone","Subscription Payment","Completed","USD","10.00","-0.59","9.41","someone@some.where","simon@joyful.com","123456789","Joyful Systems","","9KCXINCOME:UNKNOWNZXXAX","","57.60",""
+"12/22/2018","06:22:50","PST","Someone","Empty fee","Completed","USD","10.00","","6.66","someone@some.where","simon@joyful.com","987654321","Joyful Systems","","9KCXINCOME:UNKNOWNZXXAX","","99.60",""
+"12/22/2018","06:22:50","PST","Someone","Conditional Empty fee","Completed","USD","10.00","-1.23","7.77","someone@some.where","simon@joyful.com","10101010101","Joyful Systems","","9KCXINCOME:UNKNOWNZXXAX","","88.66",""
+RULES
+fields date, time, timezone, description, type, status_, currency, grossamount, feeamount, netamount, fromemail, toemail, code, itemtitle, itemid, referencetxnid, receiptid, balance, note
+account1 sm:assets:online:paypal
+amount1 %netamount
+account2 sm:expenses:unknown
+account3 JS:expenses:banking:paypal
+amount3 %feeamount
+balance %18
+code %13
+currency $
+date %1
+date-format %m/%d/%Y
+description %description for %itemtitle
+if Conditional Empty Fee
+    account3
+
+---
+
+(source_file
+  (csv_line)
+  (csv_line)
+  (csv_line)
+  (rules_marker)
+  (directive)
+  (directive)
+  (directive)
+  (directive)
+  (csv_line)
+  (directive)
+  (directive)
+  (directive)
+  (directive)
+  (directive)
+  (directive)
+  (directive)
+  (conditional_block
+    (indented_line)))
+
+==================
+22__read_csv_with_balance_type_directive
+==================
+
+10/2009/09,Flubber Co,50,123
+RULES
+fields date, description, amount, balance
+date-format %d/%Y/%m
+balance-type ==*
+currency $
+account1 assets:myacct
+
+---
+
+(source_file
+  (csv_line)
+  (rules_marker)
+  (directive)
+  (directive)
+  (directive)
+  (directive)
+  (directive))
+
+==================
+23__create_unbalanced_virtual_posting
+==================
+
+10/2009/09,Flubber Co,50,123
+RULES
+fields date, description, amount, balance
+date-format %d/%Y/%m
+currency $
+account1 (assets:myacct)
+
+---
+
+(source_file
+  (csv_line)
+  (rules_marker)
+  (directive)
+  (directive)
+  (directive)
+  (directive))
+
+==================
+24__create_balanced_virtual_posting
+==================
+
+10/2009/09,Flubber Co,50,-50
+RULES
+fields date, description, amount1, amount2
+date-format %d/%Y/%m
+currency $
+account1 [assets:myacct]
+account2 [assets:another-acct]
+
+---
+
+(source_file
+  (csv_line)
+  (rules_marker)
+  (directive)
+  (directive)
+  (directive)
+  (directive)
+  (directive))
+
+==================
+25__specify_reserved_word_whitespace_separator_in_rules
+==================
+
+2009/10/01	Flubber Co	50	123
+RULES
+fields date, description, amount, balance
+currency $
+account1 (assets:myacct)
+separator TAB
+
+---
+
+(source_file
+  (csv_line)
+  (rules_marker)
+  (directive)
+  (directive)
+  (directive)
+  (directive))
+
+==================
+26__manually_setting_hledger_s_default__expenses_unknown___income_unknown__names_works___1192_
+==================
+
+2020-01-01,5
+RULES
+fields date, amount
+account1 a
+account2 expenses:unknown
+
+---
+
+(source_file
+  (csv_line)
+  (rules_marker)
+  (directive)
+  (directive)
+  (directive))
+
+==================
+27__query_by_description
+==================
+
+2020-01-01, 1
+2020-01-01, 2
+RULES
+fields date, desc
+if %desc 1
+ description one
+
+---
+
+(source_file
+  (csv_line)
+  (csv_line)
+  (rules_marker)
+  (directive)
+  (conditional_block
+    (indented_line)))
+
+==================
+test_35
+==================
+
+2020-01-01, 1,
+RULES
+fields date, amount,
+
+---
+
+(source_file
+  (csv_line)
+  (rules_marker)
+  (directive))
+
+==================
+test_37
+==================
+
+2020-01-01, 1, a
+RULES
+fields date, amount, account1
+
+---
+
+(source_file
+  (csv_line)
+  (rules_marker)
+  (directive))
+
+==================
+30__leave_unknown_account_name_as_is_when_explicitly_set_by_user___1192__
+==================
+
+2020-01-01, 1, a
+RULES
+fields date, amount, account1
+account2 expenses:unknown
+
+---
+
+(source_file
+  (csv_line)
+  (rules_marker)
+  (directive)
+  (directive))
+
+==================
+31__can_generate_a_transaction_with_amount_on_the_first_posting_only_
+==================
+
+2020-01-01, 1
+RULES
+fields date, amount1
+account2 b
+
+---
+
+(source_file
+  (csv_line)
+  (rules_marker)
+  (directive)
+  (directive))
+
+==================
+32__can_generate_a_transaction_with_an_amount_on_the_second_posting_only_
+==================
+
+2020-01-01, 1
+RULES
+fields date, amount2
+account1 a
+
+---
+
+(source_file
+  (csv_line)
+  (rules_marker)
+  (directive)
+  (directive))
+
+==================
+33__the_unnumbered_amount_rule_converts_posting_2_s_amount_to_cost_
+==================
+
+2020-01-01, 1
+RULES
+fields date, amt
+amount  %amt @@ 1 EUR
+
+---
+
+(source_file
+  (csv_line)
+  (rules_marker)
+  (directive)
+  (directive))
+
+==================
+test_43
+==================
+
+2020-01-01,1,1
+RULES
+fields date, amount-out, amount2
+
+---
+
+(source_file
+  (csv_line)
+  (rules_marker)
+  (directive))
+
+==================
+35__tabular_rules_assigning_multiple_fields
+==================
+
+10/2009/09,Flubber Co,50
+RULES
+fields date, description, amount
+date-format %d/%Y/%m
+currency $
+account1 assets:myacct
+if,account2,comment
+Flubber,acct,cmt
+
+---
+
+(source_file
+  (csv_line)
+  (rules_marker)
+  (directive)
+  (directive)
+  (directive)
+  (directive)
+  (conditional_block)
+  (csv_line))
+
+==================
+36__tabular_rules_assigning_multiple_fields_followed_by_regular_rules
+==================
+
+10/2009/09,Flubber Co,50
+10/2009/09,Blubber Co,150
+RULES
+fields date, description, amount
+date-format %d/%Y/%m
+currency $
+account1 assets:myacct
+if,account2,comment
+Flubber,acct,cmt
+if
+Blubber
+  account2   acct2
+  comment     cmt2
+
+---
+
+(source_file
+  (csv_line)
+  (csv_line)
+  (rules_marker)
+  (directive)
+  (directive)
+  (directive)
+  (directive)
+  (conditional_block)
+  (csv_line)
+  (conditional_block)
+  (csv_line)
+  (directive)
+  (directive))
+
+==================
+37__tabular_rules_with_empty_values
+==================
+
+10/2009/09,Flubber Co,50
+10/2009/09,Blubber Co,150
+RULES
+fields date, description, amount
+date-format %d/%Y/%m
+currency $
+account1 assets:myacct
+if,account2,comment
+Flubber,acct,
+Blubber,acct2,
+
+---
+
+(source_file
+  (csv_line)
+  (csv_line)
+  (rules_marker)
+  (directive)
+  (directive)
+  (directive)
+  (directive)
+  (conditional_block)
+  (csv_line)
+  (csv_line))
+
+==================
+38__tabular_rules_with_field_matchers_and_____separator
+==================
+
+10/2009/09,Flubber Co,50
+10/2009/09,Blubber Co,150
+RULES
+fields date, description, amount
+date-format %d/%Y/%m
+currency $
+account1 assets:myacct
+if|account2|comment
+%description Flubber|acct|
+%amount 150|acct2|cmt2
+
+---
+
+(source_file
+  (csv_line)
+  (csv_line)
+  (rules_marker)
+  (directive)
+  (directive)
+  (directive)
+  (directive)
+  (conditional_block)
+  (csv_line)
+  (csv_line))
+
+==================
+39__insufficient_number_of_values_in_tabular_rules_error
+==================
+
+10/2009/09,Flubber Co,50
+10/2009/09,Blubber Co,150
+RULES
+fields date, description, amount
+date-format %d/%Y/%m
+currency $
+account1 assets:myacct
+if|account2|comment
+%amount 150|acct2
+%description Flubber|acct|
+
+---
+
+(source_file
+  (csv_line)
+  (csv_line)
+  (rules_marker)
+  (directive)
+  (directive)
+  (directive)
+  (directive)
+  (conditional_block)
+  (csv_line)
+  (csv_line))
+
+==================
+40__unindented_condition_block_error
+==================
+
+10/2009/09,Flubber Co,50
+RULES
+fields date, description, amount
+date-format %d/%Y/%m
+currency $
+account1 assets:myacct
+if Flubber
+account2 acct
+comment cmt
+
+---
+
+(source_file
+  (csv_line)
+  (rules_marker)
+  (directive)
+  (directive)
+  (directive)
+  (directive)
+  (conditional_block)
+  (directive)
+  (directive))
+
+==================
+41__assignment_to_custom_field___1264____spaces_after_the_if___1120_
+==================
+
+10/2009/09,Flubber Co,50
+RULES
+fields date, description, amount
+date-format %d/%Y/%m
+currency $
+account1 assets:myacct
+if Flubber
+  myaccount2 acct
+  comment cmt
+account2 %myaccount2
+
+---
+
+(source_file
+  (csv_line)
+  (rules_marker)
+  (directive)
+  (directive)
+  (directive)
+  (directive)
+  (conditional_block
+    (indented_line)
+    (indented_line))
+  (directive))
+
+==================
+42__rules_override_each_other_in_the_order_listed_in_the_file
+==================
+
+10/2009/09,Flubber Co,50
+RULES
+fields date, description, amount
+date-format %d/%Y/%m
+currency $
+account1 assets:myacct
+if Flubber
+  account2 foo
+  comment bar
+if 10/2009/09.*Flubber
+  account2 acct
+  comment cmt
+
+---
+
+(source_file
+  (csv_line)
+  (rules_marker)
+  (directive)
+  (directive)
+  (directive)
+  (directive)
+  (conditional_block
+    (indented_line)
+    (indented_line))
+  (conditional_block
+    (indented_line)
+    (indented_line)))
+
+==================
+43__attempt_to_use_space_as_a_separator_in_the_tabular_rules
+==================
+
+10/2009/09,Flubber Co,50
+10/2009/09,Blubber Co,150
+RULES
+fields date, description, amount
+date-format %d/%Y/%m
+currency $
+account1 assets:myacct
+if account2 comment
+%amount 150 acct2 
+%description Flubber acct
+
+---
+
+(source_file
+  (csv_line)
+  (csv_line)
+  (rules_marker)
+  (directive)
+  (directive)
+  (directive)
+  (directive)
+  (conditional_block)
+  (csv_line)
+  (csv_line))
+
+==================
+44__handle_matchers_with___prefix
+==================
+
+10/2009/09,Flubber Co,50
+10/2009/09,Blubber Co,50
+RULES
+fields date, description, amount
+date-format %d/%Y/%m
+currency $
+account1 assets:myacct
+if Flubber
+& %amount 50
+  account2 acct
+
+---
+
+(source_file
+  (csv_line)
+  (csv_line)
+  (rules_marker)
+  (directive)
+  (directive)
+  (directive)
+  (directive)
+  (conditional_block)
+  (conditional_block
+    (indented_line)))
+
+==================
+45__handle_matchers_with_both___and__
+==================
+
+10/2009/09,Flubber Co,50
+10/2009/09,Blubber Co,50
+RULES
+fields date, description, amount
+date-format %d/%Y/%m
+currency $
+account1 assets:myacct
+if Flubber
+&!%amount 50
+  account2 acct
+
+---
+
+(source_file
+  (csv_line)
+  (csv_line)
+  (rules_marker)
+  (directive)
+  (directive)
+  (directive)
+  (directive)
+  (conditional_block)
+  (conditional_block
+    (indented_line)))
+
+==================
+test_60
+==================
+
+2020-01-01,"1,000"
+2020-01-02,"1.000"
+RULES
+fields date,amount
+decimal-mark .
+
+---
+
+(source_file
+  (csv_line)
+  (csv_line)
+  (rules_marker)
+  (directive)
+  (directive))
+
+==================
+test_62
+==================
+
+2020-01-01,"1,000"
+2020-01-02,"1.000"
+RULES
+fields date,amount
+decimal-mark ,
+
+---
+
+(source_file
+  (csv_line)
+  (csv_line)
+  (rules_marker)
+  (directive)
+  (directive))
+
+==================
+48__account_aliases_work_when_reading_from_csv_
+==================
+
+2020-01-01,10
+RULES
+fields date,amount
+
+---
+
+(source_file
+  (csv_line)
+  (rules_marker)
+  (directive))
+
+==================
+49__allow_for_whitespace_in_csv_amounts
+==================
+
+2009-09-10,+ $20
+2009-09-10, $ +30
+2009-09-10, ( 40 ) 
+2009-09-10, $ - 50 
+2009-09-10,- $60 
+RULES
+fields date, amount
+date-format %Y-%m-%d
+account1 assets:myacct
+
+---
+
+(source_file
+  (csv_line)
+  (csv_line)
+  (csv_line)
+  (csv_line)
+  (csv_line)
+  (rules_marker)
+  (directive)
+  (directive)
+  (directive))
+
+==================
+50__handle_an_entry_with_all_zeros
+==================
+
+Date;Description;Category;Debit;Credit;Balance
+"2020-01-21","Client card point of sale fee",Fees,"0","0","1068.94"
+RULES
+skip 1
+fields date, description, category, amount-out, amount-in, balance
+currency $
+account1 assets:bank:checking
+
+---
+
+(source_file
+  (csv_line)
+  (csv_line)
+  (rules_marker)
+  (directive)
+  (directive)
+  (directive)
+  (directive))
+
+==================
+51__allow_unicode_field_references___1809_
+==================
+
+Date, Description, Id, Amount
+12/11/2019, Foo, 123, 10.23
+RULES
+skip         1
+fields       date, description, unicöde, amount
+date-format  %d/%m/%Y
+code         %unicöde
+
+---
+
+(source_file
+  (csv_line)
+  (csv_line)
+  (rules_marker)
+  (directive)
+  (directive)
+  (directive)
+  (directive))
+
+==================
+52__throw_an_error_when_unable_to_substitute_csv_templates
+==================
+
+"2021-12-23","caffe_siciliaexpenses:cibo:dolce","-10.5"
+RULES
+account1 assets:bank:checking
+fields date, description, account2, amount
+
+---
+
+(source_file
+  (csv_line)
+  (rules_marker)
+  (directive)
+  (directive))
+
+==================
+53__we_can_t_parse_double_quotes_inside_an_unquoted_field__or_other_non_rfc4180_data____1966_
+==================
+
+2022-01-01,B"B",C
+RULES
+fields date, b, c
+
+---
+
+(source_file
+  (csv_line)
+  (rules_marker)
+  (directive))
+
+==================
+54__a_top_level_skip_directive_is_able_to_skip_lines_which_would_fail_to_parse_as_csv____1967_
+==================
+
+2022-01-01,B"B",C
+RULES
+skip 1
+fields date, b, c
+
+---
+
+(source_file
+  (csv_line)
+  (rules_marker)
+  (directive)
+  (directive))
+
+==================
+test_72
+==================
+
+title
+date, amount
+2023-01-01, 1
+RULES
+skip 2
+fields date, amount
+
+---
+
+(source_file
+  (csv_line)
+  (directive)
+  (csv_line)
+  (rules_marker)
+  (directive)
+  (directive))
+
+==================
+test_74
+==================
+
+2022-01-01,1
+RULES
+fields date,amt
+account1 assets    %amt
+
+---
+
+(source_file
+  (csv_line)
+  (rules_marker)
+  (directive)
+  (directive))
+
+==================
+57__make_sure_transaction_tags_are_functional___2114___including_ones_on_subsequent_lines___2241_
+==================
+
+2020-01-01, 1
+RULES
+fields date, desc
+if %desc 1
+ comment  ttag:tval\nttag2:
+ comment1 ptag:pval\ndate:2022-02-02
+ account1 a
+
+---
+
+(source_file
+  (csv_line)
+  (rules_marker)
+  (directive)
+  (conditional_block
+    (indented_line)
+    (indented_line)
+    (indented_line)))
+
+==================
+59__handle_newlines_in_an_assignment_value__without_breaking_interpolations___2134_
+==================
+
+2023-01-01,1
+RULES
+fields date, amount
+account1 (a)
+comment \n %amount
+
+---
+
+(source_file
+  (csv_line)
+  (rules_marker)
+  (directive)
+  (directive)
+  (directive))
+
+==================
+60__specify_ssv_prefix_and_no_extension
+==================
+
+12/11/2019;Foo;123;10.23
+RULES
+fields date, description, , amount
+date-format %d/%m/%Y
+
+---
+
+(source_file
+  (csv_line)
+  (rules_marker)
+  (directive)
+  (directive))
+
+==================
+61__tabular_rules_with_comments
+==================
+
+10/2009/09,Flubber Co,50
+10/2009/09,Blubber Co,150
+RULES
+fields date, description, amount
+date-format %d/%Y/%m
+currency $
+account1 assets:myacct
+if|account2|comment
+; This rule is for Flubber
+%description Flubber|acct|
+; This rule is not for Flubber
+%amount 150|acct2|cmt2  
+; commented out: %description Flubber|acct3|
+
+---
+
+(source_file
+  (csv_line)
+  (csv_line)
+  (rules_marker)
+  (directive)
+  (directive)
+  (directive)
+  (directive)
+  (conditional_block)
+  (comment_line)
+  (csv_line)
+  (comment_line)
+  (csv_line)
+  (comment_line))
+
+==================
+62__single_ampersands_within_a_matcher_are_part_of_the_regexp__not_an_and_operator____2352_
+==================
+
+2025-01-01,STOP & SHOP,100
+RULES
+fields date,description,amount
+if
+%description STOP & SHOP
+    account1 expenses:food
+
+---
+
+(source_file
+  (csv_line)
+  (rules_marker)
+  (directive)
+  (conditional_block)
+  (csv_line)
+  (directive))
+
+==================
+test_0
+==================
+
+2009/1/1
+  a   $10 000.00
+  b  -$10 000.00
+
+---
+
+(source_file
+  (csv_line)
+  (csv_line)
+  (csv_line))

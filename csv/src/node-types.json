@@ -1,0 +1,185 @@
+[
+  {
+    "type": "comment_line",
+    "named": true,
+    "fields": {}
+  },
+  {
+    "type": "conditional_block",
+    "named": true,
+    "fields": {},
+    "children": {
+      "multiple": true,
+      "required": false,
+      "types": [
+        {
+          "type": "indented_line",
+          "named": true
+        }
+      ]
+    }
+  },
+  {
+    "type": "directive",
+    "named": true,
+    "fields": {}
+  },
+  {
+    "type": "indented_line",
+    "named": true,
+    "fields": {}
+  },
+  {
+    "type": "rules_marker",
+    "named": true,
+    "fields": {}
+  },
+  {
+    "type": "source_file",
+    "named": true,
+    "root": true,
+    "fields": {},
+    "children": {
+      "multiple": true,
+      "required": false,
+      "types": [
+        {
+          "type": "comment_line",
+          "named": true
+        },
+        {
+          "type": "conditional_block",
+          "named": true
+        },
+        {
+          "type": "csv_line",
+          "named": true
+        },
+        {
+          "type": "directive",
+          "named": true
+        },
+        {
+          "type": "rules_marker",
+          "named": true
+        }
+      ]
+    }
+  },
+  {
+    "type": "&",
+    "named": false
+  },
+  {
+    "type": "&!",
+    "named": false
+  },
+  {
+    "type": "RULES",
+    "named": false
+  },
+  {
+    "type": "account1",
+    "named": false
+  },
+  {
+    "type": "account2",
+    "named": false
+  },
+  {
+    "type": "amount",
+    "named": false
+  },
+  {
+    "type": "amount-in",
+    "named": false
+  },
+  {
+    "type": "amount-out",
+    "named": false
+  },
+  {
+    "type": "balance",
+    "named": false
+  },
+  {
+    "type": "balance1",
+    "named": false
+  },
+  {
+    "type": "balance2",
+    "named": false
+  },
+  {
+    "type": "code",
+    "named": false
+  },
+  {
+    "type": "comment",
+    "named": false
+  },
+  {
+    "type": "csv_line",
+    "named": true
+  },
+  {
+    "type": "currency",
+    "named": false
+  },
+  {
+    "type": "date",
+    "named": false
+  },
+  {
+    "type": "date-format",
+    "named": false
+  },
+  {
+    "type": "date2",
+    "named": false
+  },
+  {
+    "type": "decimal-mark",
+    "named": false
+  },
+  {
+    "type": "description",
+    "named": false
+  },
+  {
+    "type": "end",
+    "named": false
+  },
+  {
+    "type": "fields",
+    "named": false
+  },
+  {
+    "type": "if",
+    "named": false
+  },
+  {
+    "type": "include",
+    "named": false
+  },
+  {
+    "type": "newest-first",
+    "named": false
+  },
+  {
+    "type": "separator",
+    "named": false
+  },
+  {
+    "type": "skip",
+    "named": false
+  },
+  {
+    "type": "source",
+    "named": false
+  },
+  {
+    "type": "status",
+    "named": false
+  }
+]

@@ -1,0 +1,64 @@
+==================
+4__each_of_these_formats_is_parsed_as_exactly_0_25_
+==================
+
+2023-01-01
+a  .
+b  0.25
+c  .25
+d  0,25
+e  ,25
+f  15m
+g  0.25h
+
+---
+
+(source_file
+  (day
+    (date_header
+      (date))
+    (entry
+      (account)
+      (quantity))
+    (entry
+      (account)
+      (quantity))
+    (entry
+      (account)
+      (quantity))
+    (entry
+      (account)
+      (quantity))
+    (entry
+      (account)
+      (quantity))
+    (entry
+      (account)
+      (quantity))
+    (entry
+      (account)
+      (quantity))))
+
+==================
+5__lines_can_be_commented_by_a_leading___or____indented_or_not_
+==================
+
+2024-01-01
+;a
+ ;b
+#c
+ #d
+e
+
+---
+
+(source_file
+  (day
+    (date_header
+      (date))
+    (comment_line)
+    (comment_line)
+    (comment_line)
+    (comment_line)
+    (entry
+      (account))))

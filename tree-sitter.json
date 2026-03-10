@@ -1,13 +1,29 @@
 {
   "grammars": [
     {
-      "name": "tree-sitter-hledger",
-      "path": ".",
+      "name": "hledger",
+      "path": "journal",
       "scope": "source.hledger",
-      "grammar-path": "src/grammar.js",
-      "test-corpus-path": "test/corpus",
       "file-types": ["journal", "j", "hledger", "ledger"],
-      "highlights": "queries/highlights.scm"
+      "highlights": "queries/hledger/highlights.scm"
+    },
+    {
+      "name": "hledger_timeclock",
+      "path": "timeclock",
+      "scope": "source.hledger.timeclock",
+      "file-types": ["timeclock"]
+    },
+    {
+      "name": "hledger_timedot",
+      "path": "timedot",
+      "scope": "source.hledger.timedot",
+      "file-types": ["timedot"]
+    },
+    {
+      "name": "hledger_csv",
+      "path": "csv",
+      "scope": "source.hledger.csv",
+      "file-types": ["rules"]
     }
   ],
   "metadata": {

@@ -5,9 +5,9 @@
   "main": "src/index.js",
   "license": "MIT",
   "scripts": {
-    "build": "npx tree-sitter generate src/grammar.js",
-    "codegen": "node src/extract-tests.js && npm test -- --update",
-    "test": "npx tree-sitter test",
+    "build": "cd journal && npx tree-sitter generate && cd ../timeclock && npx tree-sitter generate && cd ../timedot && npx tree-sitter generate && cd ../csv && npx tree-sitter generate",
+    "codegen": "node src/extract-tests.js && cd journal && npx tree-sitter test --update && cd ../timeclock && npx tree-sitter test --update && cd ../timedot && npx tree-sitter test --update && cd ../csv && npx tree-sitter test --update",
+    "test": "cd journal && npx tree-sitter test && cd ../timeclock && npx tree-sitter test && cd ../timedot && npx tree-sitter test && cd ../csv && npx tree-sitter test",
     "fuzz": "node src/diff-fuzz.js",
     "fuzz:bugs": "node src/diff-fuzz.js --bugs"
   },
