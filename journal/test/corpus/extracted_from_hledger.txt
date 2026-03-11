@@ -479,7 +479,17 @@ alias /\./ = :
 
 ---
 
-(source_file)
+(source_file
+  (directive)
+  (transaction
+    (date)
+    (posting
+      (account
+        (account_name))
+      (amount))
+    (posting
+      (account
+        (account_name)))))
 
 ==================
 20__including_backslashes
@@ -492,7 +502,17 @@ alias /\\/ = :
 
 ---
 
-(source_file)
+(source_file
+  (directive)
+  (transaction
+    (date)
+    (posting
+      (account
+        (account_name))
+      (amount))
+    (posting
+      (account
+        (account_name)))))
 
 ==================
 test_3
@@ -3483,7 +3503,63 @@ balance_reports_with_multiple_commodities
 
 ---
 
-(source_file)
+(source_file
+  (transaction
+    (date)
+    (posting
+      (account
+        (account_name))
+      (amount))
+    (posting
+      (account
+        (account_name))
+      (amount))
+    (posting
+      (account
+        (account_name))
+      (amount)))
+  (transaction
+    (date)
+    (posting
+      (account
+        (account_name))
+      (amount))
+    (posting
+      (account
+        (account_name))
+      (amount))
+    (posting
+      (account
+        (account_name))
+      (amount)))
+  (transaction
+    (date)
+    (posting
+      (account
+        (account_name))
+      (amount))
+    (posting
+      (account
+        (account_name))
+      (amount))
+    (posting
+      (account
+        (account_name))
+      (amount)))
+  (transaction
+    (date)
+    (posting
+      (account
+        (account_name))
+      (amount))
+    (posting
+      (account
+        (account_name))
+      (amount))
+    (posting
+      (account
+        (account_name))
+      (amount))))
 
 ==================
 balance_command___no_total_and___no_elide_flags
@@ -4809,24 +4885,7 @@ test_8
 
 (source_file
   (transaction
-    (date))
-  (comment_line)
-  (comment_line)
-  (comment_line)
-  (comment_line)
-  (comment_line)
-  (comment_line)
-  (comment_line)
-  (comment_line)
-  (comment_line)
-  (comment_line)
-  (comment_line)
-  (comment_line)
-  (comment_line)
-  (comment_line)
-  (comment_line)
-  (comment_line)
-  (comment_line))
+    (date)))
 
 ==================
 test_10
@@ -5164,7 +5223,16 @@ test_2
 
 ---
 
-(source_file)
+(source_file
+  (transaction
+    (date)
+    (posting
+      (account
+        (account_name))
+      (amount))
+    (posting
+      (account
+        (account_name)))))
 
 ==================
 4__patterns_with_quotation_marks_in_them
@@ -5464,7 +5532,13 @@ commodity AAA 0.00000000
 
 ---
 
-(source_file)
+(source_file
+  (transaction
+    (date)
+    (posting
+      (account
+        (account_name))
+      (amount))))
 
 ==================
 17__close__and_print__should_add_trailing_decimal_marks_when_needed_to_posting_amounts_and_costs_
@@ -5787,7 +5861,6 @@ Y 2000
     (interval
       (date))
     (description))
-  (comment_line)
   (transaction
     (date)
     (description)))
@@ -5803,7 +5876,14 @@ Y 2000
 
 ---
 
-(source_file)
+(source_file
+  (directive)
+  (transaction
+    (interval)
+    (description))
+  (transaction
+    (date)
+    (description)))
 
 ==================
 6__y_also_sets_the_month_to_1__affecting_d_dates_
@@ -5816,7 +5896,14 @@ Y 2000
 
 ---
 
-(source_file)
+(source_file
+  (directive)
+  (transaction
+    (interval)
+    (description))
+  (transaction
+    (date)
+    (description)))
 
 ==================
 7__y_also_sets_the_day_to_1__affecting_relative_dates_
@@ -6254,7 +6341,42 @@ test_0
 
 ---
 
-(source_file)
+(source_file
+  (transaction
+    (date)
+    (description)
+    (posting
+      (account
+        (account_name))
+      (amount)
+      (cost_spec
+        (amount)))
+    (posting
+      (account
+        (account_name))
+      (comment)))
+  (transaction
+    (date)
+    (description)
+    (posting
+      (account
+        (account_name))
+      (amount))
+    (posting
+      (account
+        (account_name))
+      (amount)))
+  (transaction
+    (date)
+    (description)
+    (posting
+      (account
+        (account_name))
+      (amount))
+    (posting
+      (account
+        (account_name))
+      (amount))))
 
 ==================
 1__simple_statement_works
@@ -7033,7 +7155,6 @@ commodity 1 000  USD
       (account
         (account_name))
       (amount)))
-  (comment_line)
   (transaction
     (date)
     (posting
@@ -9082,7 +9203,19 @@ commodity 0. B
 
 ---
 
-(source_file)
+(source_file
+  (transaction
+    (date)
+    (posting
+      (account
+        (account_name))
+      (amount)))
+  (auto_posting_rule
+    (posting
+      (account
+        (account_name))
+      (amount)))
+  (directive))
 
 ==================
 18__auto_generated_postings_with_currency_matching_only_matches_amounts_with_that_currency_in_an_auto_posting___1582_
@@ -9344,7 +9477,20 @@ account_names_can_contain___or__not_at_start____
 
 ---
 
-(source_file)
+(source_file
+  (transaction
+    (date)
+    (posting
+      (account
+        (account_name))
+      (amount)
+      (comment))
+    (posting
+      (status)
+      (account
+        (account_name))
+      (amount)
+      (comment))))
 
 ==================
 5__register_does_not_show_comments_
@@ -10504,23 +10650,25 @@ account Expenses:Food
 
 ==================
 5__it_does_not_allow_parentheses_in_names_
+:error
 ==================
 
 account (a)
 
 ---
 
-(source_file)
+(ERROR)
 
 ==================
 6__it_does_not_allow_brackets_in_names_
+:error
 ==================
 
 account [a]
 
 ---
 
-(source_file)
+(ERROR)
 
 ==================
 1__requires_an_argument
@@ -10790,7 +10938,21 @@ D $1000.
 
 ---
 
-(source_file)
+(source_file
+  (directive
+    (amount))
+  (auto_posting_rule
+    (query)
+    (posting
+      (account
+        (account_name))
+      (amount)))
+  (transaction
+    (date)
+    (posting
+      (account
+        (account_name))
+      (amount))))
 
 ==================
 1__payee_ignores_subdirectives
@@ -10881,7 +11043,11 @@ test_4
 
 ---
 
-(source_file)
+(source_file
+  (transaction
+    (date))
+  (transaction
+    (date)))
 
 ==================
 test_1
@@ -11130,7 +11296,16 @@ include ~/included.journal
 
 ---
 
-(source_file)
+(source_file
+  (transaction
+    (date)
+    (posting
+      (account
+        (account_name))
+      (amount))
+    (posting
+      (account
+        (account_name)))))
 
 ==================
 4__no_digits_at_all
@@ -11142,7 +11317,16 @@ include ~/included.journal
 
 ---
 
-(source_file)
+(source_file
+  (transaction
+    (date)
+    (posting
+      (account
+        (account_name))
+      (amount))
+    (posting
+      (account
+        (account_name)))))
 
 ==================
 5__spaces_between_digit_groups__any_of_the_8_unicode_space_characters_we_support_
@@ -11351,7 +11535,20 @@ commodity ₴1,000.00
 
 ---
 
-(source_file)
+(source_file
+  (directive)
+  (transaction
+    (date)
+    (posting
+      (account
+        (account_name))
+      (amount)
+      (cost_spec
+        (amount)))
+    (posting
+      (account
+        (account_name))
+      (amount))))
 
 ==================
 15__adjacent_punctuation_chars
@@ -11363,7 +11560,17 @@ commodity ₴1,000.00
 
 ---
 
-(source_file)
+(source_file
+  (transaction
+    (date)
+    (posting
+      (account
+        (account_name))
+      (amount))
+    (posting
+      (account
+        (account_name))
+      (amount))))
 
 ==================
 16__adjacent_punctuation_chars_of_different_types
@@ -11375,7 +11582,17 @@ commodity ₴1,000.00
 
 ---
 
-(source_file)
+(source_file
+  (transaction
+    (date)
+    (posting
+      (account
+        (account_name))
+      (amount))
+    (posting
+      (account
+        (account_name))
+      (amount))))
 
 ==================
 17__separator_chars_vary
@@ -11387,7 +11604,17 @@ commodity ₴1,000.00
 
 ---
 
-(source_file)
+(source_file
+  (transaction
+    (date)
+    (posting
+      (account
+        (account_name))
+      (amount))
+    (posting
+      (account
+        (account_name))
+      (amount))))
 
 ==================
 18__number_begins_with_a_decimal_char
@@ -11421,7 +11648,17 @@ commodity ₴1,000.00
 
 ---
 
-(source_file)
+(source_file
+  (transaction
+    (date)
+    (posting
+      (account
+        (account_name))
+      (amount))
+    (posting
+      (account
+        (account_name))
+      (amount))))
 
 ==================
 20__long_numbers_in_multi_balance_reports
@@ -11495,37 +11732,14 @@ commodity 1 000. A  ; narrow no-break space
 
 ==================
 test_3
+:error
 ==================
 
 2018
 
 ---
 
-(source_file
-  (transaction
-    (date)
-    (description)
-    (posting
-      (account
-        (account_name))
-      (amount))
-    (posting
-      (account
-        (account_name))
-      (amount))
-    (posting
-      (account
-        (account_name))))
-  (transaction
-    (date)
-    (description)
-    (posting
-      (account
-        (account_name))
-      (amount))
-    (posting
-      (account
-        (account_name)))))
+(ERROR)
 
 ==================
 test_5
@@ -11901,8 +12115,7 @@ end comment
     (posting
       (account
         (account_name))
-      (amount)))
-  (comment_line))
+      (amount))))
 
 ==================
 test_9
@@ -13190,8 +13403,6 @@ comment
     (posting
       (account
         (account_name))))
-  (comment_line)
-  (comment_line)
   (comment_block))
 
 ==================
@@ -14247,8 +14458,7 @@ payee qux
     (posting
       (account
         (account_name))
-      (amount)))
-  (comment_line))
+      (amount))))
 
 ==================
 2__check_pivot_with_bal
@@ -14272,8 +14482,7 @@ payee qux
     (posting
       (account
         (account_name))
-      (amount)))
-  (comment_line))
+      (amount))))
 
 ==================
 3__check_with_another_example
@@ -14297,8 +14506,7 @@ payee qux
     (posting
       (account
         (account_name))
-      (amount)))
-  (comment_line))
+      (amount))))
 
 ==================
 4__query_on_account_will_find_either_effective_name_or_original_one
@@ -14314,7 +14522,22 @@ payee qux
 
 ---
 
-(source_file)
+(source_file
+  (transaction
+    (date)
+    (description)
+    (posting
+      (account
+        (account_name))
+      (amount))
+    (posting
+      (account
+        (account_name))
+      (amount))
+    (posting
+      (account
+        (account_name))
+      (amount))))
 
 ==================
 5__we_should_be_able_to_query_on_original_account_names
@@ -14894,7 +15117,17 @@ P 2023-01-01 B 3A
 
 ---
 
-(source_file)
+(source_file
+  (transaction
+    (date)
+    (posting
+      (account
+        (account_name))
+      (amount))
+    (posting
+      (account
+        (account_name))
+      (amount))))
 
 ==================
 3__commodity_symbols_are_converted_to_iso_4217_codes__or_encoded__to_suit_beancount_
@@ -14956,20 +15189,18 @@ test_9
 (source_file
   (transaction
     (date)
-    (description)
     (posting
       (account
         (account_name))
       (amount))
     (posting
       (account
-        (account_name))))
-  (transaction
-    (date)
-    (description)
+        (account_name))
+      (amount))
     (posting
       (account
-        (account_name)))
+        (account_name))
+      (amount))
     (posting
       (account
         (account_name))
@@ -14987,7 +15218,27 @@ test_11
 
 ---
 
-(source_file)
+(source_file
+  (transaction
+    (date)
+    (posting
+      (account
+        (account_name))
+      (amount)
+      (cost_spec
+        (amount)))
+    (posting
+      (account
+        (account_name))
+      (amount))
+    (posting
+      (account
+        (account_name))
+      (amount))
+    (posting
+      (account
+        (account_name))
+      (amount))))
 
 ==================
 test_13
@@ -15006,7 +15257,45 @@ test_13
 
 ---
 
-(source_file)
+(source_file
+  (transaction
+    (date)
+    (posting
+      (account
+        (account_name))
+      (amount)
+      (cost_spec
+        (amount)))
+    (posting
+      (account
+        (account_name))
+      (amount))
+    (posting
+      (account
+        (account_name))
+      (amount))
+    (posting
+      (account
+        (account_name))
+      (amount))
+    (posting
+      (account
+        (account_name))
+      (amount)
+      (cost_spec
+        (amount)))
+    (posting
+      (account
+        (account_name))
+      (amount))
+    (posting
+      (account
+        (account_name))
+      (amount))
+    (posting
+      (account
+        (account_name))
+      (amount))))
 
 ==================
 test_19
@@ -15038,12 +15327,6 @@ account assets:cash  ; type:C
   (transaction
     (date)
     (description))
-  (comment_line)
-  (comment_line)
-  (comment_line)
-  (comment_line)
-  (comment_line)
-  (comment_line)
   (transaction
     (date)
     (description)
@@ -15873,7 +16156,19 @@ test_4
 
 ---
 
-(source_file)
+(source_file
+  (transaction
+    (date)
+    (comment)
+    (posting
+      (account
+        (account_name))
+      (amount))
+    (posting
+      (account
+        (account_name))
+      (amount)
+      (comment))))
 
 ==================
 2__reports_can_filter_by_tag_existence
@@ -15942,7 +16237,38 @@ test_4
 
 ---
 
-(source_file)
+(source_file
+  (transaction
+    (date)
+    (comment)
+    (posting
+      (account
+        (account_name))
+      (amount))
+    (posting
+      (account
+        (account_name))
+      (amount)))
+  (transaction
+    (date)
+    (posting
+      (account
+        (account_name))
+      (amount))
+    (posting
+      (account
+        (account_name))
+      (amount)))
+  (transaction
+    (date)
+    (posting
+      (account
+        (account_name))
+      (amount))
+    (posting
+      (account
+        (account_name))
+      (amount))))
 
 ==================
 4__postings_inherit_their_transaction_s_tags
@@ -16015,7 +16341,49 @@ test_4
 
 ---
 
-(source_file)
+(source_file
+  (transaction
+    (date)
+    (description)
+    (posting
+      (account
+        (account_name))
+      (amount))
+    (posting
+      (account
+        (account_name))
+      (amount)))
+  (transaction
+    (date)
+    (posting
+      (account
+        (account_name))
+      (amount))
+    (posting
+      (account
+        (account_name))
+      (amount)))
+  (transaction
+    (date)
+    (posting
+      (account
+        (account_name))
+      (amount))
+    (posting
+      (account
+        (account_name))
+      (amount)))
+  (transaction
+    (date)
+    (code)
+    (posting
+      (account
+        (account_name))
+      (amount))
+    (posting
+      (account
+        (account_name))
+      (amount))))
 
 ==================
 test_10
@@ -17474,7 +17842,6 @@ test_5
       (account
         (account_name))
       (amount)))
-  (comment_line)
   (auto_posting_rule
     (query)
     (posting
@@ -17533,7 +17900,6 @@ test_5
       (account
         (account_name))
       (amount)))
-  (comment_line)
   (auto_posting_rule
     (query)
     (posting
@@ -17692,8 +18058,6 @@ test_9
     (posting
       (account
         (account_name))))
-  (comment_line)
-  (comment_line)
   (auto_posting_rule
     (query)
     (posting

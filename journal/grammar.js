@@ -15,7 +15,7 @@ module.exports = grammar({
       repeat(choice($.transaction, $.auto_posting_rule, $.directive, $.comment_block, $.comment_line, $._ignored_line, $._newline)),
 
     transaction: ($) =>
-      seq(
+      prec.right(seq(
         choice(
           $.date, // fixed
           seq("~", $.interval), // periodic
@@ -25,18 +25,21 @@ module.exports = grammar({
         optional($.description),
         optional($.comment),
         $._newline,
-        repeat($.posting),
-      ),
+        repeat(choice($.posting, $._posting_comment)),
+      )),
 
     // Auto-posting rules: = QUERY followed by postings
     auto_posting_rule: ($) =>
-      seq(
+      prec.right(seq(
         "=",
-        $.query,
+        optional($.query),
         optional($.comment),
         $._newline,
-        repeat($.posting),
-      ),
+        repeat(choice($.posting, $._posting_comment)),
+      )),
+
+    // Comment line within a transaction (between postings)
+    _posting_comment: ($) => prec(-1, seq($._comment, $._newline)),
 
     // Query pattern for auto-posting rules
     query: () => token(/[^\r\n;]+/),
@@ -51,9 +54,18 @@ module.exports = grammar({
         "yearly",
         // Complex "every ..." patterns (tokenized to capture full pattern)
         $._every_interval,
+        // Relative intervals
+        $._relative_interval,
         // Specific dates
         $.date,
+        // Day-only shorthand (e.g., "~ 15" for "every 15th")
+        $._day,
       ),
+
+    // Relative interval expressions like "next month", "last year", "this quarter"
+    _relative_interval: () => token(choice(
+      seq(choice("next", "last", "this"), / +/, choice("day", "week", "month", "quarter", "year")),
+    )),
 
     // Match entire "every ..." pattern as a token including optional date bounds
     _every_interval: () => {
@@ -109,6 +121,7 @@ module.exports = grammar({
     posting: ($) =>
       seq(
         $._whitespace, // postings must be indented
+        optional($.status),
         choice(
           $.account, // regular account
           seq("(", $.account, ")"), // virtual account
@@ -216,7 +229,9 @@ module.exports = grammar({
       // Star/percent/pipe comment lines
       "*", "%", "|",
       // Old-style directives with ! prefix
-      "!include",
+      seq("!", /[A-Za-z]/),
+      // Old-style @ directives
+      seq("@", /[a-z]/),
       // Command-line flags (ignored)
       /--[a-z]/,
     )),
@@ -236,9 +251,12 @@ module.exports = grammar({
     _commodity_prefix: () =>
       choice(
         // Unicode letter commodities - NO digits (so EUR6024 splits as EUR + 6024)
-        token(seq(/[\p{Lu}\p{Lt}]/u, /[\p{L}]*/u)),
+        // Includes Lu (uppercase), Lt (titlecase), Lo (CJK/other letters)
+        token(seq(/[\p{Lu}\p{Lt}\p{Lo}]/u, /[\p{L}]*/u)),
+        // Letter(s) followed by currency symbol (C$, R$, etc.)
+        token(seq(/[\p{L}]+/u, /[\$€£¥₹₿₴]/)),
         // Currency symbols
-        /\$|€|£|¥|₹|₿|元|руб/,
+        /\$|€|£|¥|₹|₿|₴|元|руб/,
         // Quoted commodities
         token(seq('"', /[^"]+/, '"')),
       ),
@@ -249,7 +267,7 @@ module.exports = grammar({
         // Unicode letter commodities (USD, EUR, VTI2, h, etc.)
         token(seq(/[\p{L}]/u, /[\p{L}\p{N}]*/u)),
         // Currency symbols
-        /\$|€|£|¥|₹|₿|元|руб/,
+        /\$|€|£|¥|₹|₿|₴|元|руб/,
         // Quoted commodities like "Chocolate Frogs"
         token(seq('"', /[^"]+/, '"')),
       ),
@@ -260,13 +278,12 @@ module.exports = grammar({
         // Letter commodities (A, USD, EUR, h)
         token(seq(/[\p{L}]/u, /[\p{L}]*/u)),
         // Currency symbols
-        /\$|€|£|¥|₹|₿|元|руб/,
+        /\$|€|£|¥|₹|₿|₴|元|руб/,
         // Quoted commodities
         token(seq('"', /[^"]+/, '"')),
       ),
 
     _number: () => {
-      // Reusable number components
       const digit = /\d+/;
       const thousand = /\d{3}/;
       const thousands_comma = seq(digit, repeat(seq(",", thousand))); // 1,234,567
@@ -277,18 +294,18 @@ module.exports = grammar({
 
       return token(
         seq(
-          optional("-"), // optional negative sign
+          optional("-"),
           choice(
             // Format 1: 1,234.56 (comma thousands, dot decimal)
             seq(thousands_comma, optional(decimal_dot)),
             // Format 2: 1.234,56 (dot thousands, comma decimal)
             seq(thousands_dot, optional(decimal_comma)),
-            // Format 3: Simple number with optional decimal
-            seq(digit, optional(seq(/[,.]/, digit))),
-            // Format 4: Leading decimal (.5 or ,5)
-            seq(/[,.]/, digit),
+            // Format 3: Simple number with optional decimal (including trailing dot: 1.)
+            seq(digit, optional(seq(/[,.]/, optional(digit)))),
+            // Format 4: Leading decimal/separator (.5, ,5, ,100.0, .100,0)
+            seq(/[,.]/, optional(seq(digit, optional(seq(/[,.]/, digit))))),
           ),
-          optional(scientific), // optional scientific notation
+          optional(scientific),
         ),
       );
     },
@@ -306,7 +323,7 @@ module.exports = grammar({
         seq($._month, ".", $._day), // MM.DD
       ),
 
-    _year: () => /\d{4,}/,
+    _year: () => token(prec(1, /\d\d\d\d\d*/)),
     _month: () => /\d{1,2}/,
     _day: () => /\d{1,2}/,
 

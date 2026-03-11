@@ -25,7 +25,7 @@
     "fields": {},
     "children": {
       "multiple": true,
-      "required": true,
+      "required": false,
       "types": [
         {
           "type": "comment",
@@ -192,6 +192,10 @@
         },
         {
           "type": "cost_spec",
+          "named": true
+        },
+        {
+          "type": "status",
           "named": true
         }
       ]

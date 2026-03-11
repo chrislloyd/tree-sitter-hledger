@@ -24,11 +24,11 @@ static bool is_letter(int32_t c) {
 }
 
 // Check if character can be part of an account name (not first char)
-// Allows: letters, digits, underscore, colon, slash, hyphen, and Unicode
 static bool is_account_char(int32_t c) {
   if (is_letter(c)) return true;
   if (c >= '0' && c <= '9') return true;
   if (c == '_' || c == ':' || c == '/' || c == '-') return true;
+  if (c == '.' || c == '\\' || c == '\'' || c == '*' || c == '!' || c == '?' || c == '+' || c == '$') return true;
   return false;
 }
 
@@ -36,7 +36,7 @@ static bool is_account_char(int32_t c) {
 static bool is_account_start_char(int32_t c) {
   if (is_letter(c)) return true;
   if (c >= '0' && c <= '9') return true;
-  if (c == '_') return true;
+  if (c == '_' || c == '\'') return true;
   return false;
 }
 
