@@ -70,6 +70,27 @@
             "type": "CHOICE",
             "members": [
               {
+                "type": "SEQ",
+                "members": [
+                  {
+                    "type": "STRING",
+                    "value": "="
+                  },
+                  {
+                    "type": "SYMBOL",
+                    "name": "date"
+                  }
+                ]
+              },
+              {
+                "type": "BLANK"
+              }
+            ]
+          },
+          {
+            "type": "CHOICE",
+            "members": [
+              {
                 "type": "SYMBOL",
                 "name": "status"
               },
@@ -222,24 +243,36 @@
       "type": "CHOICE",
       "members": [
         {
-          "type": "STRING",
-          "value": "daily"
+          "type": "PATTERN",
+          "value": "[Dd]aily"
         },
         {
-          "type": "STRING",
-          "value": "weekly"
+          "type": "PATTERN",
+          "value": "[Ww]eekly"
         },
         {
-          "type": "STRING",
-          "value": "monthly"
+          "type": "PATTERN",
+          "value": "[Mm]onthly"
         },
         {
-          "type": "STRING",
-          "value": "quarterly"
+          "type": "PATTERN",
+          "value": "[Qq]uarterly"
         },
         {
-          "type": "STRING",
-          "value": "yearly"
+          "type": "PATTERN",
+          "value": "[Yy]early"
+        },
+        {
+          "type": "PATTERN",
+          "value": "[Bb]iweekly"
+        },
+        {
+          "type": "PATTERN",
+          "value": "[Bb]imonthly"
+        },
+        {
+          "type": "PATTERN",
+          "value": "[Ff]ortnightly"
         },
         {
           "type": "SYMBOL",
@@ -281,6 +314,18 @@
                   {
                     "type": "STRING",
                     "value": "this"
+                  },
+                  {
+                    "type": "STRING",
+                    "value": "Next"
+                  },
+                  {
+                    "type": "STRING",
+                    "value": "Last"
+                  },
+                  {
+                    "type": "STRING",
+                    "value": "This"
                   }
                 ]
               },

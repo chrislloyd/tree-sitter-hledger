@@ -358,10 +358,6 @@
     "named": false
   },
   {
-    "type": "daily",
-    "named": false
-  },
-  {
     "type": "decimal-mark",
     "named": false
   },
@@ -382,15 +378,7 @@
     "named": false
   },
   {
-    "type": "monthly",
-    "named": false
-  },
-  {
     "type": "payee",
-    "named": false
-  },
-  {
-    "type": "quarterly",
     "named": false
   },
   {
@@ -406,15 +394,7 @@
     "named": false
   },
   {
-    "type": "weekly",
-    "named": false
-  },
-  {
     "type": "year",
-    "named": false
-  },
-  {
-    "type": "yearly",
     "named": false
   },
   {

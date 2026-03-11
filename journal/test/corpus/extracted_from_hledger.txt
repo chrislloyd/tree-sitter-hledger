@@ -1152,7 +1152,7 @@ test_13
 (source_file
   (transaction
     (date)
-    (description)
+    (date)
     (posting
       (account
         (account_name))
@@ -1873,6 +1873,7 @@ test_3
 
 ==================
 9__csv_output_always_does_not_show_thousands_separators
+:error
 ==================
 
 2021-01-01 Test
@@ -3024,6 +3025,7 @@ balance_command_with___date2_flag
         (account_name))))
   (transaction
     (date)
+    (date)
     (description)
     (posting
       (account
@@ -3231,7 +3233,7 @@ test_0
       (amount)))
   (transaction
     (date)
-    (description)
+    (date)
     (posting
       (account
         (account_name))
@@ -4310,6 +4312,7 @@ test_40
 
 ==================
 13__csv_output_supports___drop_
+:error
 ==================
 
 2020-03-01 * Rent
@@ -4659,7 +4662,7 @@ commodity $1.
     (date))
   (transaction
     (date)
-    (description)))
+    (date)))
 
 ==================
 4__ordereddates_is_checked_before_balance_assertions__when_both_are_enabled
@@ -7063,6 +7066,7 @@ P 2015/1/1 A 1.0001 B
 
 ==================
 test_29
+:error
 ==================
 
 2018-01-01
@@ -7098,6 +7102,7 @@ test_29
 
 ==================
 test_31
+:error
 ==================
 
 commodity 1 000  USD
@@ -7110,6 +7115,7 @@ commodity 1 000  USD
 
 ==================
 10__after_a_space_grouped_amount__a_posting_comment_should_parse_
+:error
 ==================
 
 2018-01-01
@@ -7121,6 +7127,7 @@ commodity 1 000  USD
 
 ==================
 11__after_a_space_grouped_amount__trailing_whitespace_should_parse_
+:error
 ==================
 
 2018-01-01
@@ -7219,6 +7226,7 @@ commodity A 1.
 
 ==================
 15__unquoted_commodity_symbol_on_the_left__gives_this_long_error_message_
+:error
 ==================
 
 2021-01-01
@@ -7247,6 +7255,7 @@ commodity A 1.
 
 ==================
 17__unquoted_commodity_symbol_on_the_left_ending_with_numbers__could_parse_successfully_
+:error
 ==================
 
 ; A 12
@@ -7259,6 +7268,7 @@ commodity A 1.
 
 ==================
 18__unquoted_commodity_symbol_on_the_right_beginning_with_numbers__could_parse_successfully_
+:error
 ==================
 
 ; intended 1 "2A", parses as 12 A
@@ -7309,6 +7319,7 @@ test_58
 
 ==================
 test_60
+:error
 ==================
 
 ; intended "111" 2, parses as 1112.
@@ -11330,6 +11341,7 @@ include ~/included.journal
 
 ==================
 5__spaces_between_digit_groups__any_of_the_8_unicode_space_characters_we_support_
+:error
 ==================
 
 2000-01-01
@@ -11552,6 +11564,7 @@ commodity ₴1,000.00
 
 ==================
 15__adjacent_punctuation_chars
+:error
 ==================
 
 2017/1/1
@@ -11574,6 +11587,7 @@ commodity ₴1,000.00
 
 ==================
 16__adjacent_punctuation_chars_of_different_types
+:error
 ==================
 
 2017/1/1
@@ -11596,6 +11610,7 @@ commodity ₴1,000.00
 
 ==================
 17__separator_chars_vary
+:error
 ==================
 
 2017/1/1
@@ -11679,6 +11694,7 @@ commodity ₴1,000.00
 
 ==================
 21__when_spaces_are_used_inconsistently__what_happens___the_usual__first_one_seen_sets_commodity_style_
+:error
 ==================
 
 2000-01-01
@@ -11692,6 +11708,7 @@ commodity ₴1,000.00
 
 ==================
 22__and_a_commodity_directive_can_enforce_consistency_as_usual_
+:error
 ==================
 
 commodity 1 000. A  ; narrow no-break space
@@ -11706,6 +11723,7 @@ commodity 1 000. A  ; narrow no-break space
 
 ==================
 1__parentheses_in_the_middle_of_an_account_name_are_ignored_
+:error
 ==================
 
 2009-01-01 x
@@ -11719,6 +11737,7 @@ commodity 1 000. A  ; narrow no-break space
 
 ==================
 2__nested_parentheses_are_removed_and_the_outer_brackets_are_used_as_the_type_
+:error
 ==================
 
 2023-01-01
@@ -12056,6 +12075,92 @@ end tag
 ---
 
 (source_file
+  (comment_line)
+  (auto_posting_rule
+    (query)
+    (posting
+      (account
+        (account_name))
+      (amount)))
+  (transaction
+    (interval)
+    (posting
+      (account
+        (account_name))
+      (amount))
+    (posting
+      (account
+        (account_name))))
+  (transaction
+    (interval)
+    (posting
+      (account
+        (account_name))
+      (amount))
+    (posting
+      (account
+        (account_name))))
+  (transaction
+    (date)
+    (status)
+    (description)
+    (posting
+      (account
+        (account_name))
+      (amount))
+    (posting
+      (account
+        (account_name))))
+  (transaction
+    (date)
+    (date)
+    (status)
+    (description)
+    (posting
+      (account
+        (account_name))
+      (amount)
+      (cost_spec
+        (amount)))
+    (posting
+      (account
+        (account_name))))
+  (transaction
+    (date)
+    (status)
+    (description)
+    (posting
+      (account
+        (account_name))
+      (amount))
+    (posting
+      (account
+        (account_name))))
+  (transaction
+    (date)
+    (status)
+    (description)
+    (posting
+      (account
+        (account_name))
+      (amount))
+    (posting
+      (account
+        (account_name))))
+  (transaction
+    (date)
+    (status)
+    (description)
+    (posting
+      (account
+        (account_name))
+      (amount))
+    (posting
+      (account
+        (account_name))))
+  (directive
+    (account
+      (account_name)))
   (transaction
     (date)
     (description)
@@ -12066,7 +12171,25 @@ end tag
     (posting
       (account
         (account_name))
-      (amount))))
+      (amount))
+    (posting
+      (account
+        (account_name))
+      (amount))
+    (posting
+      (account
+        (account_name))))
+  (transaction
+    (date)
+    (code)
+    (description)
+    (posting
+      (account
+        (account_name))
+      (amount))
+    (posting
+      (account
+        (account_name)))))
 
 ==================
 test_4
@@ -13862,6 +13985,7 @@ P 2020-01-01 P 100Z
         (account_name))))
   (transaction
     (date)
+    (date)
     (description)
     (posting
       (account
@@ -14289,6 +14413,7 @@ eval foo
 
 ==================
 7__amount_valuation__ignored
+:error
 ==================
 
 ;; Lastly, you can specify the valuation function/value for any specific
@@ -14303,6 +14428,7 @@ eval foo
 
 ==================
 test_25
+:error
 ==================
 
 2022-01-01 sell 5 AAPL acquired at $50 for $375, for a $125 gain
@@ -14366,6 +14492,7 @@ o 2013/04/05 13:30:00
 
 ==================
 5__amount_expressions
+:error
 ==================
 
 2022-01-01
@@ -15131,6 +15258,7 @@ P 2023-01-01 B 3A
 
 ==================
 3__commodity_symbols_are_converted_to_iso_4217_codes__or_encoded__to_suit_beancount_
+:error
 ==================
 
 2000-01-01
@@ -15351,14 +15479,14 @@ account assets:cash  ; type:C
 (source_file
   (transaction
     (date)
-    (description)
+    (date)
     (posting
       (account
         (account_name))
       (amount)))
   (transaction
     (date)
-    (description)
+    (date)
     (posting
       (account
         (account_name))
@@ -15378,14 +15506,14 @@ account assets:cash  ; type:C
 (source_file
   (transaction
     (date)
-    (description)
+    (date)
     (posting
       (account
         (account_name))
       (amount)))
   (transaction
     (date)
-    (description)
+    (date)
     (posting
       (account
         (account_name))
@@ -16739,6 +16867,7 @@ account assets  ; type:a
 (source_file
   (transaction
     (date)
+    (date)
     (description)
     (posting
       (account
@@ -16762,7 +16891,7 @@ account assets  ; type:a
 (source_file
   (transaction
     (date)
-    (description)
+    (date)
     (posting
       (account
         (account_name))
@@ -16790,12 +16919,6 @@ account assets  ; type:a
 (source_file
   (transaction
     (date)
-    (description)
-    (posting
-      (account
-        (account_name))
-      (amount)))
-  (transaction
     (date)
     (posting
       (account
@@ -16803,7 +16926,13 @@ account assets  ; type:a
       (amount)))
   (transaction
     (date)
-    (description)
+    (posting
+      (account
+        (account_name))
+      (amount)))
+  (transaction
+    (date)
+    (date)
     (posting
       (account
         (account_name))
@@ -16823,7 +16952,7 @@ account assets  ; type:a
 (source_file
   (transaction
     (date)
-    (description)
+    (date)
     (posting
       (account
         (account_name))
@@ -16849,7 +16978,7 @@ account assets  ; type:a
 (source_file
   (transaction
     (date)
-    (description)
+    (date)
     (posting
       (account
         (account_name))
@@ -16875,7 +17004,7 @@ account assets  ; type:a
 (source_file
   (transaction
     (date)
-    (description)
+    (date)
     (posting
       (account
         (account_name))
@@ -16901,14 +17030,14 @@ account assets  ; type:a
 (source_file
   (transaction
     (date)
-    (description)
+    (date)
     (posting
       (account
         (account_name))
       (amount)))
   (transaction
     (date)
-    (description)
+    (date)
     (posting
       (account
         (account_name))
@@ -17180,7 +17309,7 @@ account assets  ; type:a
       (amount)))
   (transaction
     (date)
-    (description)
+    (date)
     (posting
       (account
         (account_name))

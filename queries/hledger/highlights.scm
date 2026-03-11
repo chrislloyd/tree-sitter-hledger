@@ -53,13 +53,7 @@
 
 ; Periodic transaction marker and intervals
 "~" @keyword.repeat
-[
-  "daily"
-  "weekly"
-  "monthly"
-  "quarterly"
-  "yearly"
-] @keyword.repeat
+(interval) @keyword.repeat
 
 ; Punctuation
 [

@@ -20,6 +20,7 @@ module.exports = grammar({
           $.date, // fixed
           seq("~", $.interval), // periodic
         ),
+        optional(seq("=", $.date)), // secondary/auxiliary date
         optional($.status),
         optional($.code),
         optional($.description),
@@ -46,12 +47,15 @@ module.exports = grammar({
 
     interval: ($) =>
       choice(
-        // Simple intervals
-        "daily",
-        "weekly",
-        "monthly",
-        "quarterly",
-        "yearly",
+        // Simple intervals (case-insensitive)
+        /[Dd]aily/,
+        /[Ww]eekly/,
+        /[Mm]onthly/,
+        /[Qq]uarterly/,
+        /[Yy]early/,
+        /[Bb]iweekly/,
+        /[Bb]imonthly/,
+        /[Ff]ortnightly/,
         // Complex "every ..." patterns (tokenized to capture full pattern)
         $._every_interval,
         // Relative intervals
@@ -64,7 +68,7 @@ module.exports = grammar({
 
     // Relative interval expressions like "next month", "last year", "this quarter"
     _relative_interval: () => token(choice(
-      seq(choice("next", "last", "this"), / +/, choice("day", "week", "month", "quarter", "year")),
+      seq(choice("next", "last", "this", "Next", "Last", "This"), / +/, choice("day", "week", "month", "quarter", "year")),
     )),
 
     // Match entire "every ..." pattern as a token including optional date bounds
