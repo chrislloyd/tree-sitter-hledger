@@ -342,10 +342,6 @@
     "named": false
   },
   {
-    "type": "apply",
-    "named": false
-  },
-  {
     "type": "code",
     "named": true
   },
@@ -371,10 +367,6 @@
   },
   {
     "type": "end",
-    "named": false
-  },
-  {
-    "type": "end comment",
     "named": false
   },
   {

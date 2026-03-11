@@ -4695,7 +4695,11 @@ tag atag  ; this is atag. tags: on tags are not allowed and will be ignored.
 
 ---
 
-(source_file)
+(source_file
+  (directive
+    (account
+      (account_name))
+    (comment)))
 
 ==================
 2__check_tags_succeeds_when_all_tags_are_declared
@@ -5175,7 +5179,29 @@ test_2
 
 ---
 
-(source_file)
+(source_file
+  (transaction
+    (date)
+    (description)
+    (posting
+      (account
+        (account_name))
+      (amount))
+    (posting
+      (account
+        (account_name))
+      (amount)))
+  (transaction
+    (date)
+    (description)
+    (posting
+      (account
+        (account_name))
+      (amount))
+    (posting
+      (account
+        (account_name))
+      (amount))))
 
 ==================
 close_command
@@ -6896,7 +6922,22 @@ P 2015/1/1 A 1.0001 B
 
 ---
 
-(source_file)
+(source_file
+  (directive)
+  (directive
+    (date)
+    (commodity)
+    (amount))
+  (transaction
+    (date)
+    (posting
+      (account
+        (account_name))
+      (amount))
+    (posting
+      (account
+        (account_name))
+      (amount))))
 
 ==================
 test_29
@@ -6981,7 +7022,28 @@ commodity 1 000  USD
 
 ---
 
-(source_file)
+(source_file
+  (transaction
+    (date)
+    (posting
+      (account
+        (account_name))
+      (amount))
+    (posting
+      (account
+        (account_name))
+      (amount)))
+  (comment_line)
+  (transaction
+    (date)
+    (posting
+      (account
+        (account_name))
+      (amount))
+    (posting
+      (account
+        (account_name))
+      (amount))))
 
 ==================
 13__a_commodity_s_display_style_should_come_from_the_first_parsed_amount
@@ -9194,7 +9256,16 @@ commodity 0. B
 
 ---
 
-(source_file)
+(source_file
+  (transaction
+    (date)
+    (posting
+      (account
+        (account_name))
+      (amount))
+    (posting
+      (account
+        (account_name)))))
 
 ==================
 2__same__but_no_separator_space_after_the_date
@@ -10340,7 +10411,7 @@ test_91
 (source_file
   (transaction
     (date)
-    (description)
+    (status)
     (posting
       (account
         (account_name))
@@ -10426,7 +10497,10 @@ account Expenses:Food
 
 ---
 
-(source_file)
+(source_file
+  (directive
+    (account
+      (account_name))))
 
 ==================
 5__it_does_not_allow_parentheses_in_names_
@@ -10456,7 +10530,8 @@ commodity
 
 ---
 
-(source_file)
+(source_file
+  (directive))
 
 ==================
 2__should_require_an_amount__not_just_a_symbol__but_doesn_t__todo_
@@ -10511,7 +10586,8 @@ commodity A
 
 ---
 
-(source_file)
+(source_file
+  (directive))
 
 ==================
 7__which_also_requires_an_amount_argument
@@ -10522,7 +10598,8 @@ commodity A
 
 ---
 
-(source_file)
+(source_file
+  (directive))
 
 ==================
 8__which_must_have_the_same_commodity_symbol
@@ -10533,7 +10610,8 @@ commodity A
 
 ---
 
-(source_file)
+(source_file
+  (directive))
 
 ==================
 test_11
@@ -10544,7 +10622,8 @@ commodity A 1.
 
 ---
 
-(source_file)
+(source_file
+  (directive))
 
 ==================
 10__it_ignores_unrecognised_subdirectives
@@ -10559,7 +10638,8 @@ commodity USD
 
 ---
 
-(source_file)
+(source_file
+  (directive))
 
 ==================
 2__include_file_with_different_decimal_mark
@@ -10722,7 +10802,8 @@ payee KFC
 
 ---
 
-(source_file)
+(source_file
+  (directive))
 
 ==================
 test_2
@@ -10742,37 +10823,24 @@ end apply account
 ---
 
 (source_file
-  (directive
-    (account
-      (account_name))
-    (comment))
-  (directive
-    (account
-      (account_name))
-    (comment))
-  (directive
-    (account
-      (account_name))
-    (comment))
-  (directive
-    (account
-      (account_name))
-    (comment))
-  (directive
-    (account
-      (account_name)))
+  (directive)
   (transaction
     (date)
     (posting
       (account
         (account_name))
       (amount)))
+  (directive)
+  (directive)
   (transaction
     (date)
     (posting
       (account
         (account_name))
-      (amount))
+      (amount)))
+  (directive)
+  (transaction
+    (date)
     (posting
       (account
         (account_name))
@@ -13094,7 +13162,37 @@ comment
 
 ---
 
-(source_file)
+(source_file
+  (comment_line)
+  (directive
+    (date)
+    (commodity)
+    (amount))
+  (directive
+    (date)
+    (commodity)
+    (amount))
+  (directive
+    (date)
+    (commodity)
+    (amount))
+  (directive
+    (date)
+    (commodity)
+    (amount))
+  (comment_line)
+  (transaction
+    (date)
+    (posting
+      (account
+        (account_name))
+      (amount))
+    (posting
+      (account
+        (account_name))))
+  (comment_line)
+  (comment_line)
+  (comment_block))
 
 ==================
 9__normal_print_output_
@@ -13351,19 +13449,15 @@ P 2020-11-02 A B 0.40
     (posting
       (account
         (account_name))
-      (amount))
-    (posting
-      (account
-        (account_name))
-      (amount))
-    (posting
-      (account
-        (account_name))))
-  (transaction
+      (amount)))
+  (directive
     (date)
-    (posting
-      (account
-        (account_name)))))
+    (commodity)
+    (amount))
+  (directive
+    (date)
+    (commodity)
+    (amount)))
 
 ==================
 29___1402_it_should_pick_the_direct_b__a_price_here__not_the_indirect_b__c__a_price_
@@ -13864,7 +13958,20 @@ end apply account
 
 ---
 
-(source_file)
+(source_file
+  (directive)
+  (transaction
+    (date)
+    (posting
+      (account
+        (account_name))
+      (amount)
+      (comment))
+    (posting
+      (account
+        (account_name))
+      (comment)))
+  (directive))
 
 ==================
 2___d_amt__set_a_default_commodity_and_its_format
@@ -13963,7 +14070,11 @@ eval foo
 
 ---
 
-(source_file)
+(source_file
+  (directive)
+  (directive
+    (account
+      (account_name))))
 
 ==================
 7__amount_valuation__ignored
@@ -14014,7 +14125,11 @@ end
 
 ---
 
-(source_file)
+(source_file
+  (directive)
+  (directive)
+  (directive)
+  (directive))
 
 ==================
 3___test___a_synonym_for__comment_
@@ -14024,7 +14139,8 @@ test
 
 ---
 
-(source_file)
+(source_file
+  (comment_block))
 
 ==================
 4___i__i__o__o__b__h__embedded_timeclock_entries
@@ -16835,7 +16951,13 @@ test_24
 
 ---
 
-(source_file)
+(source_file
+  (transaction
+    (interval)
+    (posting
+      (account
+        (account_name))
+      (amount))))
 
 ==================
 test_42
@@ -16924,7 +17046,27 @@ test_42
 
 ---
 
-(source_file)
+(source_file
+  (transaction
+    (date)
+    (description)
+    (posting
+      (account
+        (account_name))
+      (amount))
+    (posting
+      (account
+        (account_name))))
+  (transaction
+    (date)
+    (description)
+    (posting
+      (account
+        (account_name))
+      (amount))
+    (posting
+      (account
+        (account_name)))))
 
 ==================
 2____sort_with_two_expressions_sorts_correctly
@@ -16939,7 +17081,27 @@ test_42
 
 ---
 
-(source_file)
+(source_file
+  (transaction
+    (date)
+    (description)
+    (posting
+      (account
+        (account_name))
+      (amount))
+    (posting
+      (account
+        (account_name))))
+  (transaction
+    (date)
+    (description)
+    (posting
+      (account
+        (account_name))
+      (amount))
+    (posting
+      (account
+        (account_name)))))
 
 ==================
 3____sort_with_negation_reverses
@@ -16954,7 +17116,27 @@ test_42
 
 ---
 
-(source_file)
+(source_file
+  (transaction
+    (date)
+    (description)
+    (posting
+      (account
+        (account_name))
+      (amount))
+    (posting
+      (account
+        (account_name))))
+  (transaction
+    (date)
+    (description)
+    (posting
+      (account
+        (account_name))
+      (amount))
+    (posting
+      (account
+        (account_name)))))
 
 ==================
 4____sort_with_negation_and_multiple_accounts
@@ -16969,7 +17151,27 @@ test_42
 
 ---
 
-(source_file)
+(source_file
+  (transaction
+    (date)
+    (description)
+    (posting
+      (account
+        (account_name))
+      (amount))
+    (posting
+      (account
+        (account_name))))
+  (transaction
+    (date)
+    (description)
+    (posting
+      (account
+        (account_name))
+      (amount))
+    (posting
+      (account
+        (account_name)))))
 
 ==================
 5____sort_with_date__reversed
@@ -16984,7 +17186,27 @@ test_42
 
 ---
 
-(source_file)
+(source_file
+  (transaction
+    (date)
+    (description)
+    (posting
+      (account
+        (account_name))
+      (amount))
+    (posting
+      (account
+        (account_name))))
+  (transaction
+    (date)
+    (description)
+    (posting
+      (account
+        (account_name))
+      (amount))
+    (posting
+      (account
+        (account_name)))))
 
 ==================
 6____sort_with_description
@@ -16999,7 +17221,27 @@ test_42
 
 ---
 
-(source_file)
+(source_file
+  (transaction
+    (date)
+    (description)
+    (posting
+      (account
+        (account_name))
+      (amount))
+    (posting
+      (account
+        (account_name))))
+  (transaction
+    (date)
+    (description)
+    (posting
+      (account
+        (account_name))
+      (amount))
+    (posting
+      (account
+        (account_name)))))
 
 ==================
 7____sort_with_absamount
@@ -18239,7 +18481,41 @@ P 2021-01-01 $ 73.88
 
 ---
 
-(source_file)
+(source_file
+  (transaction
+    (date)
+    (description)
+    (posting
+      (account
+        (account_name))
+      (amount))
+    (posting
+      (account
+        (account_name))))
+  (transaction
+    (date)
+    (description)
+    (posting
+      (account
+        (account_name))
+      (amount))
+    (posting
+      (account
+        (account_name))
+      (amount))
+    (posting
+      (account
+        (account_name))))
+  (transaction
+    (date)
+    (description)
+    (posting
+      (account
+        (account_name))
+      (amount))
+    (posting
+      (account
+        (account_name)))))
 
 ==================
 14__should_support_begin_date_before_first_transaction_where_first_transaction_has_pnl
@@ -18343,7 +18619,41 @@ P 2019-12-30 "IE00B4L5Y983" 56.59000000 "EUR"
 
 ---
 
-(source_file)
+(source_file
+  (directive
+    (amount))
+  (transaction
+    (date)
+    (description)
+    (posting
+      (account
+        (account_name)))
+    (posting
+      (account
+        (account_name))
+      (amount)))
+  (directive
+    (date)
+    (commodity)
+    (amount))
+  (directive
+    (date)
+    (commodity)
+    (amount))
+  (transaction
+    (date)
+    (description)
+    (posting
+      (account
+        (account_name)))
+    (posting
+      (account
+        (account_name))
+      (amount)))
+  (directive
+    (date)
+    (commodity)
+    (amount)))
 
 ==================
 17__avoids_fencepost_problem_when_allocating_pnl_to_periods
@@ -18362,7 +18672,46 @@ P 2024-12-31 B 1.0018 CHF
 
 ---
 
-(source_file)
+(source_file
+  (directive)
+  (directive
+    (date)
+    (commodity)
+    (amount))
+  (directive
+    (date)
+    (commodity)
+    (amount))
+  (transaction
+    (date)
+    (description)
+    (posting
+      (account
+        (account_name))
+      (amount))
+    (posting
+      (account
+        (account_name))
+      (amount)
+      (cost_spec
+        (amount))))
+  (transaction
+    (date)
+    (description)
+    (posting
+      (account
+        (account_name))
+      (amount))
+    (posting
+      (account
+        (account_name))
+      (amount)
+      (cost_spec
+        (amount))))
+  (directive
+    (date)
+    (commodity)
+    (amount)))
 
 ==================
 2__included_files_should_be_listed_in_parse_order

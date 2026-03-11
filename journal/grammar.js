@@ -12,7 +12,7 @@ module.exports = grammar({
 
   rules: {
     source_file: ($) =>
-      repeat(choice($.transaction, $.auto_posting_rule, $.directive, $.comment_block, $.comment_line, $._newline)),
+      repeat(choice($.transaction, $.auto_posting_rule, $.directive, $.comment_block, $.comment_line, $._ignored_line, $._newline)),
 
     transaction: ($) =>
       seq(
@@ -20,9 +20,9 @@ module.exports = grammar({
           $.date, // fixed
           seq("~", $.interval), // periodic
         ),
-        optional(seq($._whitespace, $.status)),
-        optional(seq(optional($._whitespace), $.code)),
-        optional(seq(optional($._whitespace), $.description)),
+        optional($.status),
+        optional($.code),
+        optional($.description),
         optional($.comment),
         $._newline,
         repeat($.posting),
@@ -32,7 +32,6 @@ module.exports = grammar({
     auto_posting_rule: ($) =>
       seq(
         "=",
-        optional($._whitespace),
         $.query,
         optional($.comment),
         $._newline,
@@ -57,26 +56,22 @@ module.exports = grammar({
       ),
 
     // Match entire "every ..." pattern as a token including optional date bounds
-    _every_interval: () =>
-      token(
+    _every_interval: () => {
+      const WEEKDAY = /[Mm]onday|[Tt]uesday|[Ww]ednesday|[Tt]hursday|[Ff]riday|[Ss]aturday|[Ss]unday|[Mm]on|[Tt]ue|[Ww]ed|[Tt]hu|[Ff]ri|[Ss]at|[Ss]un/;
+      const MONTH = /[Jj]anuary|[Ff]ebruary|[Mm]arch|[Aa]pril|[Mm]ay|[Jj]une|[Jj]uly|[Aa]ugust|[Ss]eptember|[Oo]ctober|[Nn]ovember|[Dd]ecember|[Jj]an|[Ff]eb|[Mm]ar|[Aa]pr|[Jj]un|[Jj]ul|[Aa]ug|[Ss]ep|[Oo]ct|[Nn]ov|[Dd]ec/;
+      return token(
         seq(
           "every",
           / +/,
           choice(
-            // "every N days/weeks/months/quarters/years"
             seq(/\d+/, / +/, /(days?|weeks?|months?|quarters?|years?)/),
-            // "every Nth day [of month]"
             seq(/\d+(st|nd|rd|th)/, / +/, "day", optional(seq(/ +/, "of", / +/, "month"))),
-            // "every Nth weekday"
-            seq(/\d+(st|nd|rd|th)/, / +/, /(monday|tuesday|wednesday|thursday|friday|saturday|sunday|mon|tue|wed|thu|fri|sat|sun)/),
-            // "every month Nth" or "every Nth month"
-            seq(/(january|february|march|april|may|june|july|august|september|october|november|december|jan|feb|mar|apr|jun|jul|aug|sep|oct|nov|dec)/, / +/, /\d+(st|nd|rd|th)/),
-            seq(/\d+(st|nd|rd|th)/, / +/, /(january|february|march|april|may|june|july|august|september|october|november|december|jan|feb|mar|apr|jun|jul|aug|sep|oct|nov|dec)/),
-            // Special weekday patterns
+            seq(/\d+(st|nd|rd|th)/, / +/, WEEKDAY),
+            seq(MONTH, / +/, /\d+(st|nd|rd|th)/),
+            seq(/\d+(st|nd|rd|th)/, / +/, MONTH),
             "weekday",
             "weekendday",
-            // Just a weekday
-            /(monday|tuesday|wednesday|thursday|friday|saturday|sunday|mon|tue|wed|thu|fri|sat|sun)/,
+            WEEKDAY,
           ),
           // Optional date bounds
           optional(
@@ -84,14 +79,17 @@ module.exports = grammar({
               / +/,
               choice(
                 seq("from", / +/, /\d+[-/.]\d+([-/.]\d+)?/, / +/, "to", / +/, /\d+[-/.]\d+([-/.]\d+)?/),
+                seq("from", / +/, /\d{4}/, / +/, "to", / +/, /\d{4}/),
                 seq("from", / +/, /\d+[-/.]\d+([-/.]\d+)?/),
-                seq("from", / +/, /\d{4}/),  // year only
+                seq("from", / +/, /\d{4}/),
                 seq("to", / +/, /\d+[-/.]\d+([-/.]\d+)?/),
+                seq("to", / +/, /\d{4}/),
               ),
             ),
           ),
         ),
-      ),
+      );
+    },
 
     status: () => choice("*", "!"),
 
@@ -117,18 +115,15 @@ module.exports = grammar({
           seq("[", $.account, "]"), // balanced virtual account
         ),
         optional(
-          seq(
-            $._whitespace,
-            choice(
-              seq(
-                optional("*"), // multiplier modifier for auto-posting rules
-                $.amount,
-                optional($.cost_spec),
-                optional($.balance_assertion),
-              ),
-              seq($.cost_spec, optional($.balance_assertion)),
-              $.balance_assertion,
+          choice(
+            seq(
+              optional("*"), // multiplier modifier for auto-posting rules
+              $.amount,
+              optional($.cost_spec),
+              optional($.balance_assertion),
             ),
+            seq($.cost_spec, optional($.balance_assertion)),
+            $.balance_assertion,
           ),
         ),
         optional($.comment),
@@ -171,7 +166,7 @@ module.exports = grammar({
       seq(
         choice(
           seq("account", $.account),
-          seq("commodity", $._rest_of_line),
+          seq("commodity", optional($._rest_of_line)),
           seq("P", $.date, $.commodity, $.amount),
           seq("decimal-mark", field("mark", choice(".", ","))),
           seq("payee", field("payee", $._rest_of_line)),
@@ -180,31 +175,51 @@ module.exports = grammar({
           seq("D", $.amount),
           seq("Y", $._rest_of_line),
           seq("year", $._rest_of_line),
-          seq("apply", choice(
-            seq("year", $._rest_of_line),
-            seq("account", $._rest_of_line),
-          )),
-          seq("end", optional(choice(
-            seq("apply", optional("account")),
-            "comment",
-          ))),
+          // Tokenize multi-word directives to avoid _whitespace/extras ambiguity
+          seq(token(seq("apply", / +/, "year")), $._rest_of_line),
+          seq(token(seq("apply", / +/, "account")), $._rest_of_line),
+          token(seq("end", / +/, "apply", / +/, "account")),
+          token(seq("end", / +/, "apply", / +/, "year")),
+          token(seq("end", / +/, "apply")),
+          token(seq("end", / +/, "comment")),
+          "end",
           seq("alias", $._rest_of_line),
         ),
         optional($.comment),
         $._newline,
+        repeat($._subdirective),
       ),
 
+    _subdirective: ($) => seq($._whitespace, /[^\r\n]*/, $._newline),
+
     comment_block: ($) =>
-      seq(
+      prec.right(seq(
         choice("comment", "test"),
         $._newline,
         repeat(seq(/[^\r\n]*/, $._newline)),
-        "end comment",
-        $._newline,
-      ),
+        optional(seq(token(seq("end", / +/, "comment")), $._newline)),
+      )),
 
     comment_line: ($) => prec.right(seq($._comment, optional($._newline))),
-    comment: ($) => seq(optional($._whitespace), $._comment),
+    comment: ($) => $._comment,
+
+    // Lines ignored by the parser: legacy directives, embedded timeclock, etc.
+    _ignored_line: ($) => seq($._ignored_keyword, optional(/[^\r\n]+/), $._newline, repeat($._subdirective)),
+    _ignored_keyword: () => token(choice(
+      // Embedded timeclock entries
+      seq(/[io]/, / +/),
+      // Legacy ledger directives
+      "apply fixed", "apply tag", "assert", "bucket",
+      /A /, /C /, "capture", "check", "define",
+      "end apply fixed", "end apply tag", "end tag",
+      "expr", /N /, "value", "python", "eval",
+      // Star/percent/pipe comment lines
+      "*", "%", "|",
+      // Old-style directives with ! prefix
+      "!include",
+      // Command-line flags (ignored)
+      /--[a-z]/,
+    )),
 
     filepath: () =>
       token(
